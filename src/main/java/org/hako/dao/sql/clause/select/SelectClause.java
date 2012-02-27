@@ -1,0 +1,41 @@
+package org.hako.dao.sql.clause.select;
+
+import java.util.List;
+
+import org.hako.dao.sql.Clause;
+import org.hako.dao.sql.util.MultipleSqlUtils;
+
+public class SelectClause implements Clause {
+
+  private final SelectClauseBean bean;
+
+  /**
+   * Create.
+   * 
+   * @param bean
+   * @throws IllegalArgumentException if selection and table is none in bean
+   */
+  public SelectClause(SelectClauseBean bean) throws IllegalArgumentException {
+    super();
+    if (!bean.hasSelection() || !bean.hasTable()) {
+      throw new IllegalArgumentException("selection and table are required");
+    }
+    this.bean = bean;
+  }
+
+  public String toPrepared() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("SELECT ").append(bean.getSelection().toPrepared());
+    builder.append(" FROM ").append(bean.getTable().toPrepared()).toString();
+    if (bean.hasWhereCond()) {
+      builder.append(" WHERE ").append(bean.getWhereCond().toPrepared());
+    }
+    return builder.toString();
+  }
+
+  public List<Object> getParams() {
+    return MultipleSqlUtils.getParams(bean.getSelection(), bean.getTable(),
+        bean.getWhereCondOpt());
+  }
+
+}

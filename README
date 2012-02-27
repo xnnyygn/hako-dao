@@ -1,0 +1,21 @@
+============
+INTRODUCTION
+============
+If you want some feature like gorm in Grails(http://grails.org/), or model 
+level in Django (https://www.djangoproject.com/), and you have to use some 
+low-level DAO framework like IBATIS(http://ibatis.apache.org/) even JDBC for 
+performance purpose, hako-dao is your choice. 
+
+hako-dao provides mapping from user model and low-level SQL, in another word, 
+hako-dao dynamically create SQL by common SQL model. The SQL model refer to 
+SQL grammar of H2 database (http://www.h2database.com/html/grammar.html) and
+some database specified functions called SQL dialect in hako-dao like in 
+Hibernate(http://www.hibernate.org/). However, hako-dao don't focus on 
+relationship between entities, it is a framework help you get rid of writing
+and maintaining SQL. Feel free to use it. 
+
+============
+DEVELOPER
+============
+This project was developed by XnnYygn. If you have any problem, please send 
+email to xnnyygn@gmail.com.
