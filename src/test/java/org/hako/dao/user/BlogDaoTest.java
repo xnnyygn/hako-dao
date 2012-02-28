@@ -75,4 +75,9 @@ public class BlogDaoTest {
     System.out.println(dao.save(props));
   }
 
+  @Test
+  public void testList(){
+    // System.out.println(dao.list());
+  }
+  
 }

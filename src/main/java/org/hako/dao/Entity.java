@@ -159,4 +159,7 @@ public abstract class Entity<T, PK> {
     return (PK) client.insertAndGet(builder.toInsertClause());
   }
 
+  public List<T> list(ListParams params){
+    throw new UnsupportedOperationException();
+  }
 }

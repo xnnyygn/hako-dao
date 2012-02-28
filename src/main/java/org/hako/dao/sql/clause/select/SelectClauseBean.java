@@ -3,6 +3,7 @@ package org.hako.dao.sql.clause.select;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
+import org.hako.dao.sql.clause.select.orderby.OrderBy;
 import org.hako.dao.sql.clause.select.selection.AsteriskSelection;
 import org.hako.dao.sql.clause.select.selection.Selection;
 import org.hako.dao.sql.clause.select.table.Table;
@@ -13,6 +14,7 @@ public class SelectClauseBean {
   private Option<Selection> selectionOpt = new Some<Selection>(new AsteriskSelection());
   private Option<Table> tableOpt = new None<Table>();
   private Option<Condition> whereCondOpt = new None<Condition>();
+  private Option<OrderBy> orderByOpt = new None<OrderBy>();
 
   public Option<Selection> getSelectionOpt() {
     return selectionOpt;
@@ -62,4 +64,26 @@ public class SelectClauseBean {
     this.whereCondOpt = whereCondOpt;
   }
 
+  /**
+   * @return the orderByOpt
+   */
+  public Option<OrderBy> getOrderByOpt() {
+    return orderByOpt;
+  }
+
+  /**
+   * @param orderByOpt the orderByOpt to set
+   */
+  public void setOrderByOpt(Option<OrderBy> orderByOpt) {
+    this.orderByOpt = orderByOpt;
+  }
+
+  public boolean hasOrderBy(){
+    return orderByOpt.hasValue();
+  }
+  
+  public OrderBy getOrderBy(){
+    return orderByOpt.get();
+  }
+  
 }

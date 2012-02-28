@@ -143,4 +143,25 @@ public class SelectClauseBuilderTest {
     System.out.println(select.getParams());
   }
 
+  @Test
+  public void testBuild7() {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.from("BLOG");
+    builder.addOrderBy(1, false, true);
+    builder.addOrderBy(new ColumnName("date_created"), false, false);
+    SelectClause select = builder.toSelectClause();
+    System.out.println(select.toPrepared());
+    System.out.println(select.getParams());
+  }
+  
+  @Test
+  public void testBuild8() {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.from("BLOG");
+    builder.addOrderBy(1, false, true);
+    builder.addOrderBy(new ColumnName("date_created"), false, false);
+    SelectClause select = builder.toSelectClause();
+    System.out.println(select.toPrepared());
+    System.out.println(select.getParams());
+  }
 }

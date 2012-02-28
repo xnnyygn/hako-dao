@@ -30,12 +30,15 @@ public class SelectClause implements Clause {
     if (bean.hasWhereCond()) {
       builder.append(" WHERE ").append(bean.getWhereCond().toPrepared());
     }
+    if (bean.hasOrderBy()) {
+      builder.append(" ORDER BY ").append(bean.getOrderBy().toPrepared());
+    }
     return builder.toString();
   }
 
   public List<Object> getParams() {
     return MultipleSqlUtils.getParams(bean.getSelection(), bean.getTable(),
-        bean.getWhereCondOpt());
+        bean.getWhereCondOpt(), bean.getOrderByOpt());
   }
 
 }
