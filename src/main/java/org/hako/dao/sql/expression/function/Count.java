@@ -13,15 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql;
+package org.hako.dao.sql.expression.function;
+
+import org.hako.dao.sql.expression.Expression;
 
 /**
- * Expression.
+ * SQL count function.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface Expression extends Sql {
+public class Count extends UnaryFunction {
+
+  /**
+   * @param name
+   * @param expression
+   */
+  public Count(Expression expression) {
+    super("COUNT", expression);
+  }
 
 }

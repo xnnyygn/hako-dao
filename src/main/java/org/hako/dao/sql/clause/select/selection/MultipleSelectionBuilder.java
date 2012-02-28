@@ -28,7 +28,7 @@ public class MultipleSelectionBuilder {
   }
 
   public MultipleSelectionBuilder addTableAll(String tableAlias) {
-    return add(new TableAsteriskSelection(tableAlias));
+    return add(new TableAliasAsteriskSelection(tableAlias));
   }
 
   public MultipleSelection toMultipleSelection() {

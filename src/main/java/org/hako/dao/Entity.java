@@ -32,13 +32,16 @@ import org.hako.dao.db.client.DbClient;
 import org.hako.dao.sql.clause.delete.DeleteClause;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.clause.select.selection.ExpressionSelection;
 import org.hako.dao.sql.clause.select.selection.MultipleSelection;
 import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
 import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
+import org.hako.dao.sql.expression.AsteriskExpression;
 import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
+import org.hako.dao.sql.expression.function.FunctionFactory;
 import org.hako.dao.sql.expression.value.ValueFactory;
 
 /**
@@ -218,4 +221,14 @@ public abstract class Entity<T, PK> {
     builder.where(createPkCondition(id));
     return client.update(builder.toUpdateClause());
   }
+
+  public int count() {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(new ExpressionSelection(FunctionFactory
+        .count(new AsteriskExpression())));
+    builder.from(tableName);
+    return ((Number) client.selectObject(builder.toSelectClause()).get())
+        .intValue();
+  }
+
 }

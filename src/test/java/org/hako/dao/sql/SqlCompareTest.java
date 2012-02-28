@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 import org.hako.dao.sql.clause.select.selection.AsteriskSelection;
-import org.hako.dao.sql.clause.select.selection.TableAsteriskSelection;
+import org.hako.dao.sql.clause.select.selection.TableAliasAsteriskSelection;
 import org.junit.Test;
 
 /**
@@ -38,9 +38,9 @@ public class SqlCompareTest {
 
   @Test
   public void testCompareTableAsteriskSelection() {
-    assertNotSame(new TableAsteriskSelection("a"), new TableAsteriskSelection(
+    assertNotSame(new TableAliasAsteriskSelection("a"), new TableAliasAsteriskSelection(
         "b"));
-    assertEquals(new TableAsteriskSelection("b"), new TableAsteriskSelection(
+    assertEquals(new TableAliasAsteriskSelection("b"), new TableAliasAsteriskSelection(
         "b"));
   }
 }

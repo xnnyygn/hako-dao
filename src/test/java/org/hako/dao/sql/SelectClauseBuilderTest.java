@@ -4,7 +4,7 @@ import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.select.selection.ExpressionSelection;
 import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
-import org.hako.dao.sql.clause.select.selection.TableAsteriskSelection;
+import org.hako.dao.sql.clause.select.selection.TableAliasAsteriskSelection;
 import org.hako.dao.sql.clause.select.table.AkaTable;
 import org.hako.dao.sql.clause.select.table.JoinType;
 import org.hako.dao.sql.clause.select.table.JoinWithConditionTable;
@@ -134,7 +134,7 @@ public class SelectClauseBuilderTest {
      * NULL
      */
     SelectClauseBuilder selectBuilder = new SelectClauseBuilder();
-    selectBuilder.select(new TableAsteriskSelection("c"));
+    selectBuilder.select(new TableAliasAsteriskSelection("c"));
     selectBuilder.from(new JoinWithConditionTable(new AkaTable(new SimpleTable(
         "customers"), "c"), JoinType.LEFT, new SimpleTable("orders"),
         new IsNullCondition(new TableColumnName("orders", "customer_id"))));

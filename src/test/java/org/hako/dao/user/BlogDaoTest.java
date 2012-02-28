@@ -92,5 +92,10 @@ public class BlogDaoTest {
     props.put(BlogDao.FIELD_TITLE, oldTitle);
     dao.update(props, 1l);
   }
+  
+  @Test
+  public void testCount(){
+    System.out.println(dao.count());
+  }
 
 }

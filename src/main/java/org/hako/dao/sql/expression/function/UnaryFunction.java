@@ -13,41 +13,41 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql;
+package org.hako.dao.sql.expression.function;
 
 import java.util.List;
 
+import org.hako.dao.sql.expression.Expression;
+
 /**
- * Column name.
+ * Unary function.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class ColumnName implements Expression {
+public abstract class UnaryFunction extends AbstractFunction {
 
-  private final String name;
+  protected final Expression expression;
 
   /**
    * Create.
    * 
    * @param name
+   * @param expression
    */
-  public ColumnName(String name) {
-    super();
-    this.name = name;
-  }
-
-  public String toPlain() {
-    return name;
+  public UnaryFunction(String name, Expression expression) {
+    super(name);
+    this.expression = expression;
   }
 
   public String toPrepared() {
-    return toPlain();
+    return new StringBuilder(name).append('(').append(expression.toPrepared())
+        .append(')').toString();
   }
 
   public List<Object> getParams() {
-    return NO_PARAM;
+    return expression.getParams();
   }
 
 }

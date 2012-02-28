@@ -13,15 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hako.dao.sql;
+package org.hako.dao.sql.expression.function;
 
 /**
- * Boolean expression.
+ * Abstract function.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface BooleanExpression extends Expression {
+public abstract class AbstractFunction implements Function {
+
+  protected final String name;
+  
+  /**
+   * Create.
+   * 
+   * @param name
+   */
+  public AbstractFunction(String name) {
+    super();
+    this.name = name;
+  }
 
 }
