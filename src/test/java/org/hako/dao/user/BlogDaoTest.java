@@ -82,4 +82,9 @@ public class BlogDaoTest {
         BlogDao.FIELD_DATE_CREATED, false)));
   }
 
+  @Test
+  public void testDeleteById() {
+    System.out.println(dao.deleteById(1l));
+  }
+  
 }

@@ -27,6 +27,7 @@ import org.hako.Tuple2;
 import org.hako.TupleUtils;
 import org.hako.dao.ListParams.OrderBy;
 import org.hako.dao.db.client.DbClient;
+import org.hako.dao.sql.clause.delete.DeleteClause;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.select.selection.MultipleSelection;
@@ -179,4 +180,16 @@ public abstract class Entity<T, PK> {
     }
     return convert(client.selectMultipleRows(builder.toSelectClause()));
   }
+
+  /**
+   * Delete entity by id.
+   * 
+   * @param id id
+   * @return deleted records
+   * @see DbClient#delete(DeleteClause)
+   */
+  public int deleteById(PK id) {
+    return client.delete(new DeleteClause(tableName, createPkCondition(id)));
+  }
+
 }

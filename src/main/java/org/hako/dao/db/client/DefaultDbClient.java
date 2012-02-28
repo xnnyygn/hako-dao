@@ -138,20 +138,15 @@ public class DefaultDbClient implements DbClient {
     }
     return new None<Object>();
   }
-  
+
   public int insert(InsertClause clause) {
-    throw new UnsupportedOperationException();
+    return executeUpdate(clause);
   }
 
-  // TODO refactor
-  public Object insertAndGet(InsertClause clause) {
+  public Object insertAndGet(InsertClause clause) throws DatabaseException,
+      GetGeneratedKeyFailureException {
     PreparedStatement ps = createPreparedStatement(clause);
-    // execute update
-    try {
-      ps.executeUpdate();
-    } catch (SQLException e) {
-      throw new DatabaseException(e);
-    }
+    executeUpdate(ps);
     return getGeneratedKey(ps);
   }
 
@@ -167,11 +162,24 @@ public class DefaultDbClient implements DbClient {
   }
 
   public int update(UpdateClause clause) {
-    throw new UnsupportedOperationException();
+    return executeUpdate(clause);
   }
 
-  public int delete(DeleteClause clause) {
-    throw new UnsupportedOperationException();
+  public int delete(DeleteClause clause) throws DatabaseException {
+    return executeUpdate(clause);
+  }
+
+  private int executeUpdate(Clause clause) throws DatabaseException {
+    return executeUpdate(createPreparedStatement(clause));
+  }
+
+  private int executeUpdate(PreparedStatement ps) throws DatabaseException {
+    // execute update
+    try {
+      return ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new DatabaseException(e);
+    }
   }
 
   /**

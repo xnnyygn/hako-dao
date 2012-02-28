@@ -72,8 +72,10 @@ public interface DbClient {
    * 
    * @param clause
    * @return auto generated value
+   * @throws DatabaseException TODO
+   * @throws GetGeneratedKeyFailureException TODO
    */
-  public Object insertAndGet(InsertClause clause);
+  public Object insertAndGet(InsertClause clause) throws DatabaseException, GetGeneratedKeyFailureException;
 
   /**
    * Perform SQL update operation.
@@ -88,7 +90,8 @@ public interface DbClient {
    * 
    * @param clause
    * @return count of deleted records
+   * @throws DatabaseException TODO
    */
-  public int delete(DeleteClause clause);
+  public int delete(DeleteClause clause) throws DatabaseException;
   
 }
