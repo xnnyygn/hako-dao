@@ -25,6 +25,8 @@ import org.hako.dao.Field;
 import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.connector.DbcpConnector;
+import org.hako.dao.restriction.RestrictionBuilder;
+import org.hako.dao.restriction.Restrictions;
 import org.junit.Test;
 
 
@@ -92,10 +94,18 @@ public class BlogDaoTest {
     props.put(BlogDao.FIELD_TITLE, oldTitle);
     dao.update(props, 1l);
   }
-  
+
   @Test
-  public void testCount(){
+  public void testCount() {
     System.out.println(dao.count());
+  }
+
+  @Test
+  public void testFindBy() {
+    RestrictionBuilder builder = new RestrictionBuilder();
+    builder.add(Restrictions.eq(BlogDao.FIELD_ID, 4l));
+    builder.add(Restrictions.eq(BlogDao.FIELD_USER_ID, 1l));
+    System.out.println(dao.findBy(builder.build()));
   }
 
 }

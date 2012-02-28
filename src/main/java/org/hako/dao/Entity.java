@@ -29,6 +29,7 @@ import org.hako.Tuple2;
 import org.hako.TupleUtils;
 import org.hako.dao.ListParams.OrderBy;
 import org.hako.dao.db.client.DbClient;
+import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.clause.delete.DeleteClause;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
@@ -222,6 +223,11 @@ public abstract class Entity<T, PK> {
     return client.update(builder.toUpdateClause());
   }
 
+  /**
+   * Count entity.
+   * 
+   * @return count
+   */
   public int count() {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(new ExpressionSelection(FunctionFactory
@@ -229,6 +235,14 @@ public abstract class Entity<T, PK> {
     builder.from(tableName);
     return ((Number) client.selectObject(builder.toSelectClause()).get())
         .intValue();
+  }
+
+  public Option<T> findBy(Restriction restriction) {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(createSelection(allFields));
+    builder.from(tableName);
+    builder.where(restriction.toCondition());
+    return convert(client.selectSingleRow(builder.toSelectClause()));
   }
 
 }
