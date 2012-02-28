@@ -78,7 +78,7 @@ public class BlogDaoTest {
 
   @Test
   public void testList() {
-    System.out.println(dao.list(new ListParams(10, 0,
+    System.out.println(dao.list(new ListParams(2, 1,
         BlogDao.FIELD_DATE_CREATED, false)));
   }
 

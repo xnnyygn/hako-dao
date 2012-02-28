@@ -15,52 +15,47 @@
  */
 package org.hako.dao.sql.clause.select;
 
-import java.sql.PreparedStatement;
-import java.util.List;
-
-import org.hako.None;
-import org.hako.Option;
-import org.hako.Some;
-import org.hako.dao.sql.util.MultipleSqlUtils;
 
 /**
- * Limit. TODO use {@link PreparedStatement#setMaxRows(int)}, {@link PreparedStatement#setFetchSize(int)}
+ * Limit.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class Limit implements SelectOnlySql {
+public class Limit {
 
   private final int max;
-  private final Option<Integer> offsetOpt;
-
-  public Limit(int max) {
-    this(max, new None<Integer>());
-  }
-
-  public Limit(int max, int offset) {
-    this(max, new Some<Integer>(Integer.valueOf(offset)));
-  }
+  private final int offset;
 
   /**
    * Create.
    * 
    * @param max
-   * @param offsetOpt
+   * @param offset
    */
-  private Limit(int max, Option<Integer> offsetOpt) {
+  public Limit(int max, int offset) {
     super();
     this.max = max;
-    this.offsetOpt = offsetOpt;
+    this.offset = offset;
   }
 
-  public String toPrepared() {
-    return "LIMIT ?" + (offsetOpt.hasValue() ? " OFFSET ?" : "");
+  /**
+   * Get max.
+   * 
+   * @return the max
+   */
+  public int getMax() {
+    return max;
   }
 
-  public List<Object> getParams() {
-    return MultipleSqlUtils.mergeParams(max, offsetOpt);
+  /**
+   * Get offset.
+   * 
+   * @return the offset
+   */
+  public int getOffset() {
+    return offset;
   }
 
 }

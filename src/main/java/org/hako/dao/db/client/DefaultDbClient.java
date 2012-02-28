@@ -35,6 +35,7 @@ import org.hako.dao.db.connector.DbConnector;
 import org.hako.dao.sql.Clause;
 import org.hako.dao.sql.clause.delete.DeleteClause;
 import org.hako.dao.sql.clause.insert.InsertClause;
+import org.hako.dao.sql.clause.select.Limit;
 import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.clause.update.UpdateClause;
 
@@ -61,9 +62,15 @@ public class DefaultDbClient implements DbClient {
 
   public List<Map<String, Object>> selectMultipleRows(SelectClause clause)
       throws HakoDaoException {
+    PreparedStatement ps = createPreparedStatement(clause, false);
     try {
-      return getRowValues(createPreparedStatement(clause, false).executeQuery());
-    } catch (Exception e) {
+      if (clause.hasLimit()) {
+        Limit limit = clause.getLimit();
+        ps.setFetchSize(limit.getOffset());
+        ps.setMaxRows(limit.getMax());
+      }
+      return getRowValues(ps.executeQuery());
+    } catch (SQLException e) {
       throw convertException(e);
     }
   }

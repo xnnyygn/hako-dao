@@ -33,9 +33,6 @@ public class SelectClause implements Clause {
     if (bean.hasOrderBy()) {
       builder.append(" ORDER BY ").append(bean.getOrderBy().toPrepared());
     }
-    if (bean.hasLimit()) {
-      builder.append(' ').append(bean.getLimit().toPrepared());
-    }
     return builder.toString();
   }
 
@@ -44,4 +41,12 @@ public class SelectClause implements Clause {
         bean.getWhereCondOpt(), bean.getOrderByOpt(), bean.getLimitOpt());
   }
 
+  public boolean hasLimit(){
+    return bean.hasLimit();
+  }
+  
+  public Limit getLimit(){
+    return bean.getLimit();
+  }
+  
 }
