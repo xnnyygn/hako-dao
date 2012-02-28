@@ -13,11 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao;
+package org.hako.dao.user;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.hako.dao.Entity;
+import org.hako.dao.Field;
 import org.hako.dao.db.client.DbClient;
 
 /**
@@ -34,6 +37,8 @@ public class BlogDao extends Entity<Blog, Long> {
       false);
   public final static Field<String> FIELD_CONTENT = new Field<String>(
       "content", false);
+  public final static Field<Timestamp> FIELD_DATE_CREATED =
+      new Field<Timestamp>("date_created", "dateCreated", false);
   public final static Field<Long> FIELD_USER_ID = new Field<Long>("user_id",
       "userId", false);
 
@@ -45,7 +50,7 @@ public class BlogDao extends Entity<Blog, Long> {
   @SuppressWarnings("unchecked")
   public BlogDao(DbClient client) {
     super(client, "BLOG", Arrays.asList((Field<?>) FIELD_ID, FIELD_TITLE,
-        FIELD_CONTENT, FIELD_USER_ID));
+        FIELD_CONTENT, FIELD_DATE_CREATED, FIELD_USER_ID));
   }
 
   @Override

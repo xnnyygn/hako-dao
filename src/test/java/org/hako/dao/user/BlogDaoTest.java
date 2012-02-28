@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao;
+package org.hako.dao.user;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.apache.commons.io.IOUtils;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.connector.DbcpConnector;
 import org.junit.Test;
+
 
 /**
  * Test of {@link BlogDao}.
@@ -41,7 +43,7 @@ public class BlogDaoTest {
   private static DefaultDbClient createDefaultDbClient() {
     Map<String, Object> props = new HashMap<String, Object>();
     props.put("driverClassName", "org.h2.Driver");
-    props.put("url", "jdbc:h2:mem");
+    props.put("url", "jdbc:h2:mem:");
     props.put("username", "sa");
     props.put("password", "");
     props.put("connectionInitSqls", loadInitSqls());
@@ -61,6 +63,16 @@ public class BlogDaoTest {
   @Test
   public void testGet() {
     System.out.println(dao.get(1l));
+  }
+
+  @Test
+  public void testSave() {
+    Map<String, Object> props = new HashMap<String, Object>();
+    props.put("title", "title0");
+    props.put("content", "content0");
+    props.put("dateCreated", new Timestamp(System.currentTimeMillis()));
+    props.put("userId", 1l);
+    System.out.println(dao.save(props));
   }
 
 }

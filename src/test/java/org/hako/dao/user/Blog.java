@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hako.dao;
+package org.hako.dao.user;
 
 import java.util.Map;
 

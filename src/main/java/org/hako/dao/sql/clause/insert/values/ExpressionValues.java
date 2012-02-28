@@ -5,6 +5,13 @@ import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
 
+/**
+ * Expression values.
+ * 
+ * @author xnnyygn
+ * @version %I%, %G%
+ * @since 1.0.0
+ */
 public class ExpressionValues implements Values {
 
   private final List<Expression> expressions;
@@ -13,9 +20,14 @@ public class ExpressionValues implements Values {
    * Create.
    * 
    * @param expressions
+   * @throws IllegalArgumentException if expressions is empty
    */
-  public ExpressionValues(List<Expression> expressions) {
+  public ExpressionValues(List<Expression> expressions)
+      throws IllegalArgumentException {
     super();
+    if (expressions.isEmpty()) {
+      throw new IllegalArgumentException("expressions cannot be empty");
+    }
     this.expressions = expressions;
   }
 

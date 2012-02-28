@@ -138,13 +138,32 @@ public class DefaultDbClient implements DbClient {
     }
     return new None<Object>();
   }
-
+  
   public int insert(InsertClause clause) {
     throw new UnsupportedOperationException();
   }
 
+  // TODO refactor
   public Object insertAndGet(InsertClause clause) {
-    throw new UnsupportedOperationException();
+    PreparedStatement ps = createPreparedStatement(clause);
+    // execute update
+    try {
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new DatabaseException(e);
+    }
+    return getGeneratedKey(ps);
+  }
+
+  private Object getGeneratedKey(PreparedStatement ps)
+      throws GetGeneratedKeyFailureException {
+    try {
+      ResultSet rs = ps.getGeneratedKeys();
+      if (rs.next()) return rs.getObject(1);
+    } catch (SQLException e) {
+      throw new GetGeneratedKeyFailureException(e);
+    }
+    throw new GetGeneratedKeyFailureException("failed to get key");
   }
 
   public int update(UpdateClause clause) {
@@ -169,14 +188,15 @@ public class DefaultDbClient implements DbClient {
   protected PreparedStatement createPreparedStatement(Clause clause)
       throws ConnectException, DatabaseException {
     try {
-      PreparedStatement stat =
-          connector.connect().prepareStatement(clause.toPrepared());
+      String preparedSql = clause.toPrepared();
+      System.out.println(preparedSql);
+      PreparedStatement ps = connector.connect().prepareStatement(preparedSql);
       List<Object> params = clause.getParams();
       int count = params.size();
       for (int i = 1; i <= count; i++) {
-        stat.setObject(i, params.get(i - 1));
+        ps.setObject(i, params.get(i - 1));
       }
-      return stat;
+      return ps;
     } catch (Exception e) {
       throw convertException(e);
     }

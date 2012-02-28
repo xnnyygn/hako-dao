@@ -26,6 +26,7 @@ import org.hako.Some;
 import org.hako.Tuple2;
 import org.hako.TupleUtils;
 import org.hako.dao.db.client.DbClient;
+import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.select.selection.MultipleSelection;
 import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
@@ -141,4 +142,21 @@ public abstract class Entity<T, PK> {
   protected Condition createComplexPkCondition(PK id) {
     throw new UnsupportedOperationException();
   }
+
+  /**
+   * Save entity.
+   * 
+   * @param props properties
+   * @return id
+   */
+  @SuppressWarnings("unchecked")
+  public PK save(Map<String, Object> props) {
+    InsertClauseBuilder builder = new InsertClauseBuilder(tableName);
+    for (Field<?> f : otherFields) {
+      builder.addColumn(f.getColumnName());
+      builder.addValue(ValueFactory.create(props.get(f.getPropertyName())));
+    }
+    return (PK) client.insertAndGet(builder.toInsertClause());
+  }
+
 }
