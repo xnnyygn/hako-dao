@@ -27,6 +27,7 @@ import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.connector.DbcpConnector;
 import org.hako.dao.restriction.RestrictionBuilder;
 import org.hako.dao.restriction.Restrictions;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -85,6 +86,7 @@ public class BlogDaoTest {
   }
 
   @Test
+  @Ignore
   public void testUpdateTitle() {
     String oldTitle = dao.get(1l, BlogDao.FIELD_TITLE).get().getTitle();
     Map<Field<?>, Object> props = new HashMap<Field<?>, Object>();
@@ -124,6 +126,11 @@ public class BlogDaoTest {
   @Test
   public void testCountBy(){
     System.out.println(dao.countBy(Restrictions.eq(BlogDao.FIELD_USER_ID, 1l)));
+  }
+  
+  @Test
+  public void testJoin(){
+    System.out.println(dao.listWithUserName());
   }
   
 }

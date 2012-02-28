@@ -24,6 +24,7 @@ package org.hako.dao;
  */
 public class Field<T> {
 
+  private final String tableAlias;
   private final String columnName;
   private final String propertyName;
   private final boolean pk;
@@ -34,23 +35,28 @@ public class Field<T> {
    * @param name column name and property name
    * @param pk is primary key
    */
-  public Field(String name, boolean pk) {
-    this(name, name, pk);
+  public Field(String tableAlias, String name, boolean pk) {
+    this(tableAlias, name, name, pk);
   }
 
   /**
    * Create.
    * 
+   * @param tableAlias
    * @param columnName
    * @param propertyName
-   * @param pk is primary key?
+   * @param pk
    */
-  public Field(String columnName, String propertyName, boolean pk) {
+  public Field(String tableAlias, String columnName, String propertyName,
+      boolean pk) {
     super();
+    this.tableAlias = tableAlias;
     this.columnName = columnName;
     this.propertyName = propertyName;
     this.pk = pk;
   }
+
+
 
   /**
    * @return the columnName
@@ -73,6 +79,15 @@ public class Field<T> {
    */
   public boolean isPk() {
     return pk;
+  }
+
+  /**
+   * Get table alias.
+   * 
+   * @return the tableAlias
+   */
+  public String getTableAlias() {
+    return tableAlias;
   }
 
 }

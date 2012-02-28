@@ -22,7 +22,13 @@ import java.util.Map;
 
 import org.hako.dao.Entity;
 import org.hako.dao.Field;
+import org.hako.dao.GenericDao;
 import org.hako.dao.db.client.DbClient;
+import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.clause.select.table.JoinWithConditionTable;
+import org.hako.dao.sql.clause.select.table.TableFactory;
+import org.hako.dao.sql.expression.TableColumnName;
+import org.hako.dao.sql.expression.condition.Conditions;
 
 /**
  * DAO of {@link Blog}.
@@ -31,17 +37,20 @@ import org.hako.dao.db.client.DbClient;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class BlogDao extends Entity<Blog, Long> {
+public class BlogDao extends GenericDao<Blog, Long> {
 
-  public final static Field<Long> FIELD_ID = new Field<Long>("id", true);
-  public final static Field<String> FIELD_TITLE = new Field<String>("title",
-      false);
+  public final static String TABLE_NAME = "blog";
+  public final static String TABLE_ALIAS = "b";
+  public final static Field<Long> FIELD_ID = new Field<Long>(TABLE_ALIAS, "id",
+      true);
+  public final static Field<String> FIELD_TITLE = new Field<String>(
+      TABLE_ALIAS, "title", false);
   public final static Field<String> FIELD_CONTENT = new Field<String>(
-      "content", false);
+      TABLE_ALIAS, "content", false);
   public final static Field<Timestamp> FIELD_DATE_CREATED =
-      new Field<Timestamp>("date_created", "dateCreated", false);
-  public final static Field<Long> FIELD_USER_ID = new Field<Long>("user_id",
-      "userId", false);
+      new Field<Timestamp>(TABLE_ALIAS, "date_created", "dateCreated", false);
+  public final static Field<Long> FIELD_USER_ID = new Field<Long>(TABLE_ALIAS,
+      "user_id", "userId", false);
   @SuppressWarnings("unchecked")
   public final static List<Field<?>> FIELD_ALL = Arrays.asList(
       (Field<?>) FIELD_ID, FIELD_TITLE, FIELD_CONTENT, FIELD_DATE_CREATED,
@@ -53,7 +62,7 @@ public class BlogDao extends Entity<Blog, Long> {
    * @param client
    */
   public BlogDao(DbClient client) {
-    super(client, "blog", FIELD_ALL);
+    super(client, new Entity(TABLE_NAME, TABLE_ALIAS, FIELD_ALL));
   }
 
   @Override
@@ -61,4 +70,18 @@ public class BlogDao extends Entity<Blog, Long> {
     return new Blog(props);
   }
 
+  @SuppressWarnings("unchecked")
+  public List<Map<String, Object>> listWithUserName() {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(createSelection(Arrays.asList(FIELD_ID,
+        (Field<?>) FIELD_TITLE, FIELD_CONTENT, FIELD_DATE_CREATED,
+        UserDao.FIELD_NAME)));
+    builder.from(new JoinWithConditionTable(TableFactory.createSimpleAkaTable(
+        TABLE_NAME, TABLE_ALIAS), TableFactory.createSimpleAkaTable(
+        UserDao.TABLE_NAME, UserDao.TABLE_ALIAS), Conditions.eq(
+        new TableColumnName(TABLE_ALIAS, FIELD_ID.getColumnName()),
+        new TableColumnName(UserDao.TABLE_ALIAS, UserDao.FIELD_ID
+            .getColumnName()))));
+    return client.selectMultipleRows(builder.toSelectClause());
+  }
 }
