@@ -121,4 +121,9 @@ public class BlogDaoTest {
     System.out.println(dao.listBy(Restrictions.eq(BlogDao.FIELD_USER_ID, 2l)));
   }
 
+  @Test
+  public void testCountBy(){
+    System.out.println(dao.countBy(Restrictions.eq(BlogDao.FIELD_USER_ID, 1l)));
+  }
+  
 }

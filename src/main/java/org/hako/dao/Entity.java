@@ -259,10 +259,21 @@ public abstract class Entity<T, PK> {
    * @return count
    */
   public int count() {
+    return countBy(new None<Restriction>());
+  }
+
+  public int countBy(Restriction restriction) {
+    return countBy(new Some<Restriction>(restriction));
+  }
+
+  private int countBy(Option<Restriction> rOption) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(new ExpressionSelection(FunctionFactory
         .count(new AsteriskExpression())));
     builder.from(tableName);
+    if (rOption.hasValue()) {
+      builder.where(rOption.get().toCondition());
+    }
     return ((Number) client.selectObject(builder.toSelectClause()).get())
         .intValue();
   }
