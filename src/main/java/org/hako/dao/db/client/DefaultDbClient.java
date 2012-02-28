@@ -66,8 +66,14 @@ public class DefaultDbClient implements DbClient {
     try {
       if (clause.hasLimit()) {
         Limit limit = clause.getLimit();
-        ps.setFetchSize(limit.getOffset());
-        ps.setMaxRows(limit.getMax());
+        // ignore negative offset
+        if (limit.getOffset() >= 0) {
+          ps.setFetchSize(limit.getOffset());
+        }
+        // ignore negative and zero
+        if (limit.getMax() > 0) {
+          ps.setMaxRows(limit.getMax());
+        }
       }
       return getRowValues(ps.executeQuery());
     } catch (SQLException e) {

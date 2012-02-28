@@ -187,14 +187,44 @@ public abstract class Entity<T, PK> {
     return (PK) client.insertAndGet(builder.toInsertClause());
   }
 
+  public List<T> list() {
+    return listBy(new None<Restriction>(), new None<ListParams>());
+  }
+
   public List<T> list(ListParams params) {
+    return listBy(new None<Restriction>(), new Some<ListParams>(params));
+  }
+
+  public List<T> listBy(Restriction restriction) {
+    return listBy(new Some<Restriction>(restriction), new None<ListParams>());
+  }
+
+  public List<T> listBy(ListParams params) {
+    return listBy(new None<Restriction>(), new Some<ListParams>(params));
+  }
+
+  public List<T> listBy(Restriction restriction, ListParams params) {
+    return listBy(new Some<Restriction>(restriction), new Some<ListParams>(
+        params));
+  }
+
+  private List<T> listBy(Option<Restriction> rOpt, Option<ListParams> lpOpt) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(createSelection(allFields));
     builder.from(tableName);
-    builder.limit(params.getMax(), params.getOffset());
-    for (OrderBy orderBy : params.getOrderBys()) {
-      builder.addOrderBy(new ColumnName(orderBy.getField().getPropertyName()),
-          orderBy.isAsc());
+    // handle where
+    if (rOpt.hasValue()) {
+      builder.where(rOpt.get().toCondition());
+    }
+    // handle limit and order by
+    if (lpOpt.hasValue()) {
+      ListParams params = lpOpt.get();
+      builder.limit(params.getMax(), params.getOffset());
+      for (OrderBy orderBy : params.getOrderBys()) {
+        builder.addOrderBy(
+            new ColumnName(orderBy.getField().getPropertyName()),
+            orderBy.isAsc());
+      }
     }
     return convert(client.selectMultipleRows(builder.toSelectClause()));
   }

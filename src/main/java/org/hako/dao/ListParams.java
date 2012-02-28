@@ -18,8 +18,13 @@ package org.hako.dao;
 import java.util.Arrays;
 import java.util.List;
 
+import org.hako.dao.db.client.DefaultDbClient;
+
 /**
- * List parameters.
+ * List parameters. If max is less than or equals zero or offset is negative,
+ * max or offset will be ignored in
+ * {@link DefaultDbClient#selectMultipleRows(org.hako.dao.sql.clause.select.SelectClause)}
+ * ,
  * 
  * @author xnnyygn
  * @version %I%, %G%

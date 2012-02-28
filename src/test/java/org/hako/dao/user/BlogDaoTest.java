@@ -108,4 +108,17 @@ public class BlogDaoTest {
     System.out.println(dao.findBy(builder.build()));
   }
 
+  @Test
+  public void testFindByNotExist() {
+    RestrictionBuilder builder = new RestrictionBuilder();
+    builder.add(Restrictions.eq(BlogDao.FIELD_ID, 4l));
+    builder.add(Restrictions.eq(BlogDao.FIELD_USER_ID, 2l));
+    System.out.println(dao.findBy(builder.build()));
+  }
+
+  @Test
+  public void testListBy() {
+    System.out.println(dao.listBy(Restrictions.eq(BlogDao.FIELD_USER_ID, 2l)));
+  }
+
 }
