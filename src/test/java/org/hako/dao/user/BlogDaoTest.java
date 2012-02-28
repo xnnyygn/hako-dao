@@ -15,15 +15,13 @@
  */
 package org.hako.dao.user;
 
-import java.io.FileReader;
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
+import org.hako.dao.Field;
 import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.connector.DbcpConnector;
@@ -43,23 +41,23 @@ public class BlogDaoTest {
 
   private static DefaultDbClient createDefaultDbClient() {
     Map<String, Object> props = new HashMap<String, Object>();
-    props.put("driverClassName", "org.h2.Driver");
-    props.put("url", "jdbc:h2:mem:");
-    props.put("username", "sa");
-    props.put("password", "");
-    props.put("connectionInitSqls", loadInitSqls());
+    props.put("driverClassName", "com.mysql.jdbc.Driver");
+    props.put("url", "jdbc:mysql://localhost/hako_dao_test");
+    props.put("username", "hako_dao");
+    props.put("password", "hako_dao");
+    // props.put("connectionInitSqls", loadInitSqls());
     return new DefaultDbClient(new DbcpConnector(props));
   }
 
-  private static List<String> loadInitSqls() {
-    try {
-      return Arrays.asList(IOUtils.toString(new FileReader(
-          "src/test/resources/blog-init.sql")));
-    } catch (IOException e) {
-      // convert to runtime exception
-      throw new RuntimeException(e);
-    }
-  }
+  // private static List<String> loadInitSqls() {
+  // try {
+  // return Arrays.asList(IOUtils.toString(new FileReader(
+  // "src/test/resources/blog-init.sql")));
+  // } catch (IOException e) {
+  // // convert to runtime exception
+  // throw new RuntimeException(e);
+  // }
+  // }
 
   @Test
   public void testGet() {
@@ -67,13 +65,15 @@ public class BlogDaoTest {
   }
 
   @Test
-  public void testSave() {
+  public void testSaveAndDelete() {
     Map<String, Object> props = new HashMap<String, Object>();
     props.put("title", "title0");
     props.put("content", "content0");
     props.put("dateCreated", new Timestamp(System.currentTimeMillis()));
     props.put("userId", 1l);
-    System.out.println(dao.save(props));
+    Long id = dao.save(props);
+    System.out.println(id);
+    System.out.println(dao.deleteById(id));
   }
 
   @Test
@@ -83,8 +83,14 @@ public class BlogDaoTest {
   }
 
   @Test
-  public void testDeleteById() {
-    System.out.println(dao.deleteById(1l));
+  public void testUpdateTitle() {
+    String oldTitle = dao.get(1l, BlogDao.FIELD_TITLE).get().getTitle();
+    Map<Field<?>, Object> props = new HashMap<Field<?>, Object>();
+    props.put(BlogDao.FIELD_TITLE, "title1");
+    System.out.println(dao.update(props, 1l));
+    assertEquals("title1", dao.get(1l, BlogDao.FIELD_TITLE).get().getTitle());
+    props.put(BlogDao.FIELD_TITLE, oldTitle);
+    dao.update(props, 1l);
   }
-  
+
 }

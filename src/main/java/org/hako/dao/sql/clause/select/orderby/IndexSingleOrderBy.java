@@ -33,10 +33,9 @@ public class IndexSingleOrderBy extends AbstractSingleOrderBy {
    * 
    * @param index
    * @param asc
-   * @param nullsFirst
    */
-  public IndexSingleOrderBy(int index, boolean asc, boolean nullsFirst) {
-    super(asc, nullsFirst);
+  public IndexSingleOrderBy(int index, boolean asc) {
+    super(asc);
     this.index = index;
   }
 

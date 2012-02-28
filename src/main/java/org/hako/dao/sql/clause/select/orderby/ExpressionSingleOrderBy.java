@@ -35,11 +35,9 @@ public class ExpressionSingleOrderBy extends AbstractSingleOrderBy {
    * 
    * @param expression
    * @param asc
-   * @param nullsFirst
    */
-  public ExpressionSingleOrderBy(Expression expression, boolean asc,
-      boolean nullsFirst) {
-    super(asc, nullsFirst);
+  public ExpressionSingleOrderBy(Expression expression, boolean asc) {
+    super(asc);
     this.expression = expression;
   }
 

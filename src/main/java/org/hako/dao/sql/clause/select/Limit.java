@@ -15,6 +15,7 @@
  */
 package org.hako.dao.sql.clause.select;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.hako.None;
@@ -23,7 +24,7 @@ import org.hako.Some;
 import org.hako.dao.sql.util.MultipleSqlUtils;
 
 /**
- * Limit.
+ * Limit. TODO use {@link PreparedStatement#setMaxRows(int)}, {@link PreparedStatement#setFetchSize(int)}
  * 
  * @author xnnyygn
  * @version %I%, %G%

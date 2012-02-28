@@ -16,6 +16,8 @@
 package org.hako.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +34,9 @@ import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.select.selection.MultipleSelection;
 import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
+import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.ColumnName;
+import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.value.ValueFactory;
@@ -112,6 +116,7 @@ public abstract class Entity<T, PK> {
     return list;
   }
 
+
   /**
    * Get entity by id.
    * 
@@ -119,8 +124,17 @@ public abstract class Entity<T, PK> {
    * @return some entity instance of none
    */
   public Option<T> get(PK id) {
+    return get(id, allFields);
+  }
+
+
+  public Option<T> get(PK id, Field<?>... fields) {
+    return get(id, Arrays.asList(fields));
+  }
+
+  public Option<T> get(PK id, List<Field<?>> fields) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(createSelection(allFields));
+    builder.select(createSelection(fields));
     builder.from(tableName);
     builder.where(createPkCondition(id));
     return convert(client.selectSingleRow(builder.toSelectClause()));
@@ -176,7 +190,7 @@ public abstract class Entity<T, PK> {
     builder.limit(params.getMax(), params.getOffset());
     for (OrderBy orderBy : params.getOrderBys()) {
       builder.addOrderBy(new ColumnName(orderBy.getField().getPropertyName()),
-          orderBy.isAsc(), true);
+          orderBy.isAsc());
     }
     return convert(client.selectMultipleRows(builder.toSelectClause()));
   }
@@ -192,4 +206,16 @@ public abstract class Entity<T, PK> {
     return client.delete(new DeleteClause(tableName, createPkCondition(id)));
   }
 
+  public int update(Map<Field<?>, Object> props, PK id) {
+    UpdateClauseBuilder builder = new UpdateClauseBuilder();
+    builder.update(tableName);
+    Map<String, Expression> valueSetMap = new HashMap<String, Expression>();
+    for (Map.Entry<Field<?>, Object> entry : props.entrySet()) {
+      valueSetMap.put(entry.getKey().getColumnName(),
+          ValueFactory.create(entry.getValue()));
+    }
+    builder.set(valueSetMap);
+    builder.where(createPkCondition(id));
+    return client.update(builder.toUpdateClause());
+  }
 }

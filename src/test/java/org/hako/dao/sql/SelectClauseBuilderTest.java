@@ -147,8 +147,8 @@ public class SelectClauseBuilderTest {
   public void testBuild7() {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.from("BLOG");
-    builder.addOrderBy(1, false, true);
-    builder.addOrderBy(new ColumnName("date_created"), false, false);
+    builder.addOrderBy(1, false);
+    builder.addOrderBy(new ColumnName("date_created"), false);
     SelectClause select = builder.toSelectClause();
     System.out.println(select.toPrepared());
     System.out.println(select.getParams());
@@ -158,7 +158,7 @@ public class SelectClauseBuilderTest {
   public void testBuild8() {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.from("BLOG");
-    builder.addOrderBy(1, false, true);
+    builder.addOrderBy(1, false);
     builder.limit(20, 10);
     SelectClause select = builder.toSelectClause();
     System.out.println(select.toPrepared());

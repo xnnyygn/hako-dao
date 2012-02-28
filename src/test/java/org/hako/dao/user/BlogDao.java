@@ -17,6 +17,7 @@ package org.hako.dao.user;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.hako.dao.Entity;
@@ -41,16 +42,18 @@ public class BlogDao extends Entity<Blog, Long> {
       new Field<Timestamp>("date_created", "dateCreated", false);
   public final static Field<Long> FIELD_USER_ID = new Field<Long>("user_id",
       "userId", false);
+  @SuppressWarnings("unchecked")
+  public final static List<Field<?>> FIELD_ALL = Arrays.asList(
+      (Field<?>) FIELD_ID, FIELD_TITLE, FIELD_CONTENT, FIELD_DATE_CREATED,
+      FIELD_USER_ID);
 
   /**
    * Create.
    * 
    * @param client
    */
-  @SuppressWarnings("unchecked")
   public BlogDao(DbClient client) {
-    super(client, "BLOG", Arrays.asList((Field<?>) FIELD_ID, FIELD_TITLE,
-        FIELD_CONTENT, FIELD_DATE_CREATED, FIELD_USER_ID));
+    super(client, "blog", FIELD_ALL);
   }
 
   @Override

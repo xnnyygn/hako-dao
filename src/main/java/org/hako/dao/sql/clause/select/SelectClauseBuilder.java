@@ -43,15 +43,13 @@ public class SelectClauseBuilder {
     return this;
   }
 
-  public SelectClauseBuilder addOrderBy(int index, boolean asc,
-      boolean nullsFirst) {
-    orderBys.add(new IndexSingleOrderBy(index, asc, nullsFirst));
+  public SelectClauseBuilder addOrderBy(int index, boolean asc) {
+    orderBys.add(new IndexSingleOrderBy(index, asc));
     return this;
   }
 
-  public SelectClauseBuilder addOrderBy(Expression expression, boolean asc,
-      boolean nullsFirst) {
-    orderBys.add(new ExpressionSingleOrderBy(expression, asc, nullsFirst));
+  public SelectClauseBuilder addOrderBy(Expression expression, boolean asc) {
+    orderBys.add(new ExpressionSingleOrderBy(expression, asc));
     return this;
   }
 

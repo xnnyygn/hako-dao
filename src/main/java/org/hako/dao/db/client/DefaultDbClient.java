@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,7 @@ public class DefaultDbClient implements DbClient {
   public List<Map<String, Object>> selectMultipleRows(SelectClause clause)
       throws HakoDaoException {
     try {
-      return getRowValues(createPreparedStatement(clause).executeQuery());
+      return getRowValues(createPreparedStatement(clause, false).executeQuery());
     } catch (Exception e) {
       throw convertException(e);
     }
@@ -145,7 +146,7 @@ public class DefaultDbClient implements DbClient {
 
   public Object insertAndGet(InsertClause clause) throws DatabaseException,
       GetGeneratedKeyFailureException {
-    PreparedStatement ps = createPreparedStatement(clause);
+    PreparedStatement ps = createPreparedStatement(clause, true);
     executeUpdate(ps);
     return getGeneratedKey(ps);
   }
@@ -170,7 +171,7 @@ public class DefaultDbClient implements DbClient {
   }
 
   private int executeUpdate(Clause clause) throws DatabaseException {
-    return executeUpdate(createPreparedStatement(clause));
+    return executeUpdate(createPreparedStatement(clause, false));
   }
 
   private int executeUpdate(PreparedStatement ps) throws DatabaseException {
@@ -188,18 +189,24 @@ public class DefaultDbClient implements DbClient {
    * please inherit this method and change the logic.
    * 
    * @param clause
+   * @param generateKey should generate key
    * @return prepared statement
    * @throws ConnectException if failed to connect to database
    * @throws DatabaseException if database error occurred
    * @see DbConnector#connect()
    */
-  protected PreparedStatement createPreparedStatement(Clause clause)
-      throws ConnectException, DatabaseException {
+  protected PreparedStatement createPreparedStatement(Clause clause,
+      boolean generateKey) throws ConnectException, DatabaseException {
     try {
       String preparedSql = clause.toPrepared();
       System.out.println(preparedSql);
-      PreparedStatement ps = connector.connect().prepareStatement(preparedSql);
+      PreparedStatement ps =
+          connector.connect().prepareStatement(
+              preparedSql,
+              (generateKey ? Statement.RETURN_GENERATED_KEYS
+                  : Statement.NO_GENERATED_KEYS));
       List<Object> params = clause.getParams();
+      System.out.println(params);
       int count = params.size();
       for (int i = 1; i <= count; i++) {
         ps.setObject(i, params.get(i - 1));

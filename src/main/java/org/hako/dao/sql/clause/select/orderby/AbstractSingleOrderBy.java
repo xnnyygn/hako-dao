@@ -25,7 +25,6 @@ package org.hako.dao.sql.clause.select.orderby;
 public abstract class AbstractSingleOrderBy implements OrderBy {
 
   private final boolean asc;
-  private final boolean nullsFirst;
 
   /**
    * Create.
@@ -33,15 +32,14 @@ public abstract class AbstractSingleOrderBy implements OrderBy {
    * @param asc
    * @param nullsFirst
    */
-  public AbstractSingleOrderBy(boolean asc, boolean nullsFirst) {
+  public AbstractSingleOrderBy(boolean asc) {
     super();
     this.asc = asc;
-    this.nullsFirst = nullsFirst;
   }
 
   public String toPrepared() {
-    return (asc ? "ASC" : "DESC")
-        + (nullsFirst ? " NULLS FIRST" : " NULLS LAST");
+    return (asc ? "ASC" : "DESC");
+
   }
 
 }
