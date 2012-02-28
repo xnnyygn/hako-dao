@@ -55,6 +55,15 @@ public class SelectClauseBuilder {
     return this;
   }
 
+  public SelectClauseBuilder limit(int max, int offset) {
+    bean.setLimitOpt(new Some<Limit>(new Limit(max, offset)));
+    return this;
+  }
+
+  public SelectClauseBuilder limit(int max) {
+    return limit(max, 0);
+  }
+
   public SelectClause toSelectClause() throws IllegalArgumentException {
     if (!orderBys.isEmpty()) {
       bean.setOrderByOpt(new Some<OrderBy>(new MultipleOrderBy(orderBys)));

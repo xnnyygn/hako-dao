@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.connector.DbcpConnector;
 import org.junit.Test;
@@ -76,8 +77,9 @@ public class BlogDaoTest {
   }
 
   @Test
-  public void testList(){
-    // System.out.println(dao.list());
+  public void testList() {
+    System.out.println(dao.list(new ListParams(10, 0,
+        BlogDao.FIELD_DATE_CREATED, false)));
   }
-  
+
 }

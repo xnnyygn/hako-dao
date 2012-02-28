@@ -25,6 +25,7 @@ import org.hako.OptionUtils;
 import org.hako.Some;
 import org.hako.Tuple2;
 import org.hako.TupleUtils;
+import org.hako.dao.ListParams.OrderBy;
 import org.hako.dao.db.client.DbClient;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
@@ -102,6 +103,14 @@ public abstract class Entity<T, PK> {
         .get())) : new None<T>();
   }
 
+  public List<T> convert(List<Map<String, Object>> propsList) {
+    List<T> list = new ArrayList<T>();
+    for (Map<String, Object> props : propsList) {
+      list.add(convert(props));
+    }
+    return list;
+  }
+
   /**
    * Get entity by id.
    * 
@@ -159,7 +168,15 @@ public abstract class Entity<T, PK> {
     return (PK) client.insertAndGet(builder.toInsertClause());
   }
 
-  public List<T> list(ListParams params){
-    throw new UnsupportedOperationException();
+  public List<T> list(ListParams params) {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(createSelection(allFields));
+    builder.from(tableName);
+    builder.limit(params.getMax(), params.getOffset());
+    for (OrderBy orderBy : params.getOrderBys()) {
+      builder.addOrderBy(new ColumnName(orderBy.getField().getPropertyName()),
+          orderBy.isAsc(), true);
+    }
+    return convert(client.selectMultipleRows(builder.toSelectClause()));
   }
 }

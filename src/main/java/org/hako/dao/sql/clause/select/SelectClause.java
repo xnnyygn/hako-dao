@@ -18,7 +18,7 @@ public class SelectClause implements Clause {
   public SelectClause(SelectClauseBean bean) throws IllegalArgumentException {
     super();
     if (!bean.hasSelection() || !bean.hasTable()) {
-      throw new IllegalArgumentException("selection and table are required");
+      throw new IllegalArgumentException("selection or table cannot be none");
     }
     this.bean = bean;
   }
@@ -33,12 +33,15 @@ public class SelectClause implements Clause {
     if (bean.hasOrderBy()) {
       builder.append(" ORDER BY ").append(bean.getOrderBy().toPrepared());
     }
+    if (bean.hasLimit()) {
+      builder.append(' ').append(bean.getLimit().toPrepared());
+    }
     return builder.toString();
   }
 
   public List<Object> getParams() {
     return MultipleSqlUtils.getParams(bean.getSelection(), bean.getTable(),
-        bean.getWhereCondOpt(), bean.getOrderByOpt());
+        bean.getWhereCondOpt(), bean.getOrderByOpt(), bean.getLimitOpt());
   }
 
 }

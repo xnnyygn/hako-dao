@@ -11,10 +11,12 @@ import org.hako.dao.sql.expression.condition.Condition;
 
 public class SelectClauseBean {
 
-  private Option<Selection> selectionOpt = new Some<Selection>(new AsteriskSelection());
+  private Option<Selection> selectionOpt = new Some<Selection>(
+      new AsteriskSelection());
   private Option<Table> tableOpt = new None<Table>();
   private Option<Condition> whereCondOpt = new None<Condition>();
   private Option<OrderBy> orderByOpt = new None<OrderBy>();
+  private Option<Limit> limitOpt = new None<Limit>();
 
   public Option<Selection> getSelectionOpt() {
     return selectionOpt;
@@ -78,12 +80,34 @@ public class SelectClauseBean {
     this.orderByOpt = orderByOpt;
   }
 
-  public boolean hasOrderBy(){
+  public boolean hasOrderBy() {
     return orderByOpt.hasValue();
   }
-  
-  public OrderBy getOrderBy(){
+
+  public OrderBy getOrderBy() {
     return orderByOpt.get();
   }
+
+  /**
+   * @return the limitOpt
+   */
+  public Option<Limit> getLimitOpt() {
+    return limitOpt;
+  }
+
+  /**
+   * @param limitOpt the limitOpt to set
+   */
+  public void setLimitOpt(Option<Limit> limitOpt) {
+    this.limitOpt = limitOpt;
+  }
+
+  public boolean hasLimit() {
+    return limitOpt.hasValue();
+  }
   
+  public Limit getLimit(){
+    return limitOpt.get();
+  }
+
 }

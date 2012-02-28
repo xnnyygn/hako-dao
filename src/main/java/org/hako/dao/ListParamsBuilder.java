@@ -72,19 +72,19 @@ public class ListParamsBuilder {
    * @return this
    * @see #addOrderBy(String, boolean)
    */
-  public ListParamsBuilder addOrderBy(String columnName) {
-    return addOrderBy(columnName, true);
+  public ListParamsBuilder addOrderBy(Field<?> field) {
+    return addOrderBy(field, true);
   }
 
   /**
    * Add order by.
    * 
-   * @param columnName column name
+   * @param field
    * @param asc
    * @return this
    */
-  public ListParamsBuilder addOrderBy(String columnName, boolean asc) {
-    orderBys.add(new OrderBy(columnName, asc));
+  public ListParamsBuilder addOrderBy(Field<?> field, boolean asc) {
+    orderBys.add(new OrderBy(field, asc));
     return this;
   }
 

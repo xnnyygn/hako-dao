@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.hako.None;
 import org.hako.Some;
 import org.hako.dao.sql.Sql;
 
@@ -91,4 +92,23 @@ public class MultipleSqlUtils {
     return all;
   }
 
+  /**
+   * Merge parameter, get value from some, omit none.
+   * 
+   * @param objects
+   * @return
+   */
+  public static List<Object> mergeParams(Object... objects) {
+    List<Object> all = new ArrayList<Object>();
+    for (Object obj : objects) {
+      if (obj instanceof None<?>) {
+        continue;
+      } else if (obj instanceof Some<?>) {
+        all.add(((Some<?>) obj).get());;
+      } else {
+        all.add(obj);
+      }
+    }
+    return all;
+  }
 }
