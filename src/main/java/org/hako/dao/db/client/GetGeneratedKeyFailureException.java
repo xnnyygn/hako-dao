@@ -15,7 +15,6 @@
  */
 package org.hako.dao.db.client;
 
-import org.hako.dao.HakoDaoException;
 import org.hako.dao.db.DatabaseException;
 
 /**
