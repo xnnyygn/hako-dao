@@ -13,28 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.field;
+package org.hako.dao.mapping;
 
+import org.junit.Test;
 
 /**
- * Field.
+ * Mapping test.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface Field {
-  
-  public static final String OPTION_COLUMN_NAME = "columnName";
-  public static final String OPTION_PROPERY_NAME = "propertyName";
-  public static final String OPTION_IS_PK = "isPk";
-  public static final String OPTION_OWNER = "owner";
+public class MappingTest {
 
-  /**
-   * Check if field is primary key.
-   * 
-   * @return true if is, otherwise false
-   */
-  public boolean isPk();
+  @Test
+  public void testSetup() {
+    DefaultMapping mapping = new DefaultMapping();
+    mapping.setup(Blog.class);
+  }
 
 }

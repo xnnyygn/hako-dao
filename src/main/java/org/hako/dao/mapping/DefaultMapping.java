@@ -13,28 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.field;
+package org.hako.dao.mapping;
+
+import org.hako.dao.field.Field;
 
 
 /**
- * Field.
+ * Default mapping.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface Field {
-  
-  public static final String OPTION_COLUMN_NAME = "columnName";
-  public static final String OPTION_PROPERY_NAME = "propertyName";
-  public static final String OPTION_IS_PK = "isPk";
-  public static final String OPTION_OWNER = "owner";
+// TODO rename
+public class DefaultMapping {
 
-  /**
-   * Check if field is primary key.
-   * 
-   * @return true if is, otherwise false
-   */
-  public boolean isPk();
+  public void setup(Class<?> entityClass) {
+    
+    for (java.lang.reflect.Field f : entityClass.getDeclaredFields()) {
+      if (f.getType().isAssignableFrom(Field.class)) {
+        System.out.println(f.getName());
+      }
+    }
+  }
 
 }

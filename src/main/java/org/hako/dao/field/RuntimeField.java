@@ -15,26 +15,13 @@
  */
 package org.hako.dao.field;
 
-import org.hako.dao.Entity;
-
 /**
- * Long field.
+ * Runtime field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class LongField extends AbstractField<Long> {
-
-  /**
-   * Create.
-   * 
-   * @param pwner
-   * @param name
-   * @param pk
-   */
-  public LongField(Entity pwner, FieldName name, boolean pk) {
-    super(pwner, name, pk);
-  }
+public interface RuntimeField extends Field {
 
 }

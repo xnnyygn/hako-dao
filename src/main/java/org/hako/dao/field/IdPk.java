@@ -15,45 +15,20 @@
  */
 package org.hako.dao.field;
 
-import java.util.Map;
-
-import org.hako.dao.Entity;
+import java.util.HashMap;
 
 /**
- * Abstract field.
+ * Id primary key.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class AbstractField implements Field {
+public class IdPk extends AbstractField {
 
-  private final Map<String, Object> options;
-
-  /**
-   * Create with options.
-   * 
-   * @param options
-   */
-  public AbstractField(Map<String, Object> options) {
-    super();
-    this.options = options;
-  }
-
-  public String getColumnName() {
-    return (String) options.get(OPTION_COLUMN_NAME);
-  }
-
-  public String getPropertyName() {
-    return (String) options.get(OPTION_PROPERY_NAME);
-  }
-
-  public boolean isPk() {
-    return (Boolean) options.get(OPTION_IS_PK);
-  }
-
-  public Entity getOwner() {
-    throw new UnsupportedOperationException();
+  public IdPk() {
+    // TODO add options
+    super(new HashMap<String, Object>());
   }
 
 }

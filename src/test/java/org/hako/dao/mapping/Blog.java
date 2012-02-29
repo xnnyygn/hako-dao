@@ -13,28 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.field;
+package org.hako.dao.mapping;
 
+import org.hako.dao.field.Field;
+import org.hako.dao.field.IdPk;
+import org.hako.dao.field.NormalField;
 
 /**
- * Field.
+ * Blog.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface Field {
+public class Blog {
+
+  public static final Field id = new IdPk();
+  public static final Field title = new NormalField();
+  public static final Field content = new NormalField();
+  public static final Field dateCreated = new NormalField();
+  // public static final Field userId = new ForeignField(targetCls);
   
-  public static final String OPTION_COLUMN_NAME = "columnName";
-  public static final String OPTION_PROPERY_NAME = "propertyName";
-  public static final String OPTION_IS_PK = "isPk";
-  public static final String OPTION_OWNER = "owner";
-
-  /**
-   * Check if field is primary key.
-   * 
-   * @return true if is, otherwise false
-   */
-  public boolean isPk();
-
 }
