@@ -13,29 +13,46 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.field;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
+import org.hako.dao.Entity;
 
 /**
- * Base class of single database connector.
+ * Field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class SingleDbConnector extends AbstractDbConnector {
+public interface Field<T> {
 
   /**
-   * Delegate to {@link #connect()}.
+   * Get column name. A column name is raw name in database.
    * 
-   * @see #connect()
+   * @return column name.
    */
-  public Connection connect(Object key) throws NoSuchConnectorException,
-      ConnectException {
-    return connect();
-  }
+  public String getColumnName();
 
+  /**
+   * Get property name. A property name is the name in properties. Maybe same to
+   * {@link #getColumnName()}.
+   * 
+   * @return property name
+   */
+  public String getPropertyName();
+
+  /**
+   * Check if field is primary key.
+   * 
+   * @return true if is, otherwise false
+   */
+  public boolean isPk();
+
+  /**
+   * Get owner.
+   * 
+   * @return owner
+   */
+  public Entity getOwner();
+  
 }

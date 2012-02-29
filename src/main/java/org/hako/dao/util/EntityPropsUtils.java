@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hako.dao.Field;
+import org.hako.dao.field.SimpleField;
 
 /**
  * Entity properties utilities.
@@ -41,7 +41,7 @@ public class EntityPropsUtils {
    * @see #collectFieldPropertyNames(List)
    */
   public static Map<String, Object> fixCase(Map<String, Object> srcProps,
-      List<Field<?>> fields) {
+      List<SimpleField<?>> fields) {
     Map<String, Object> destProps = new HashMap<String, Object>();
     Map<String, String> propertyNames = collectFieldPropertyNames(fields);
     for (Map.Entry<String, Object> entry : srcProps.entrySet()) {
@@ -59,13 +59,13 @@ public class EntityPropsUtils {
    * 
    * @param fields fields
    * @return field property lower case name and name
-   * @see Field#getPropertyName()
+   * @see SimpleField#getPropertyName()
    * @see String#toLowerCase()
    */
   private static Map<String, String> collectFieldPropertyNames(
-      List<Field<?>> fields) {
+      List<SimpleField<?>> fields) {
     Map<String, String> names = new HashMap<String, String>();
-    for (Field<?> f : fields) {
+    for (SimpleField<?> f : fields) {
       String propertyName = f.getPropertyName();
       names.put(propertyName.toLowerCase(), propertyName);
     }

@@ -15,7 +15,7 @@
  */
 package org.hako.dao.user;
 
-import org.hako.dao.Field;
+import org.hako.dao.field.SimpleField;
 
 /**
  * User.
@@ -28,9 +28,9 @@ public class UserDao {
 
   public final static String TABLE_NAME = "user";
   public final static String TABLE_ALIAS = "u";
-  public final static Field<Long> FIELD_ID = new Field<Long>(TABLE_ALIAS, "id",
+  public final static SimpleField<Long> FIELD_ID = new SimpleField<Long>(TABLE_ALIAS, "id",
       true);
-  public final static Field<String> FIELD_NAME = new Field<String>(TABLE_ALIAS,
+  public final static SimpleField<String> FIELD_NAME = new SimpleField<String>(TABLE_ALIAS,
       "name", false);
 
 }

@@ -2,6 +2,7 @@ package org.hako.dao.sql.clause.select;
 
 import java.util.List;
 
+import org.hako.Option;
 import org.hako.dao.sql.Clause;
 import org.hako.dao.sql.util.MultipleSqlUtils;
 
@@ -41,12 +42,13 @@ public class SelectClause implements Clause {
         bean.getWhereCondOpt(), bean.getOrderByOpt(), bean.getLimitOpt());
   }
 
-  public boolean hasLimit(){
-    return bean.hasLimit();
-  }
-  
-  public Limit getLimit(){
-    return bean.getLimit();
+  /**
+   * Get limit option.
+   * 
+   * @return limit option
+   */
+  public Option<Limit> getLimitOpt(){
+    return bean.getLimitOpt();
   }
   
 }

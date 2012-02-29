@@ -13,29 +13,51 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.field;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
+import org.hako.dao.Entity;
 
 /**
- * Base class of single database connector.
+ * Abstract field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class SingleDbConnector extends AbstractDbConnector {
+public abstract class AbstractField<T> implements Field<T> {
+
+  protected final Entity owner;
+  protected final FieldName name;
+  protected final boolean pk;
 
   /**
-   * Delegate to {@link #connect()}.
+   * Create.
    * 
-   * @see #connect()
+   * @param pwner
+   * @param name
+   * @param pk
    */
-  public Connection connect(Object key) throws NoSuchConnectorException,
-      ConnectException {
-    return connect();
+  public AbstractField(Entity pwner, FieldName name, boolean pk) {
+    super();
+    this.owner = pwner;
+    this.name = name;
+    this.pk = pk;
+  }
+
+  public String getColumnName() {
+    return name.getColumnName();
+  }
+
+  public String getPropertyName() {
+    return name.getPrpertyName();
+  }
+
+  public boolean isPk() {
+    return pk;
+  }
+
+  public Entity getOwner() {
+    return owner;
   }
 
 }

@@ -47,4 +47,12 @@ public interface DbConnector {
   public Connection connect(Object key) throws NoSuchConnectorException,
       ConnectException;
 
+  /**
+   * Release connection quietly.
+   * 
+   * @param connection connection to release
+   * @throws ReleaseConnectionException
+   */
+  public void releaseQuietly(Connection connection);
+  
 }

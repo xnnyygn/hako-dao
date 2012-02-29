@@ -15,7 +15,7 @@
  */
 package org.hako.dao.restriction.compare;
 
-import org.hako.dao.Field;
+import org.hako.dao.field.SimpleField;
 import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
@@ -37,7 +37,7 @@ public class EqualsRestriction extends AbstractCompareRestriction {
    * @param field
    * @param value
    */
-  public EqualsRestriction(Field<?> field, Object value) {
+  public EqualsRestriction(SimpleField<?> field, Object value) {
     super(field, value);
   }
 

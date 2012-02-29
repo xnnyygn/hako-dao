@@ -13,29 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
+package org.hako.dao.mapper.implict;
 
 /**
- * Base class of single database connector.
+ * Customized implicit entity.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class SingleDbConnector extends AbstractDbConnector {
+public interface CustomizedImplicitEntity {
 
   /**
-   * Delegate to {@link #connect()}.
+   * After setup.
    * 
-   * @see #connect()
+   * @param builder
    */
-  public Connection connect(Object key) throws NoSuchConnectorException,
-      ConnectException {
-    return connect();
-  }
-
+  public void postSetup(ImplicitEntityBuilder builder);
+  
 }

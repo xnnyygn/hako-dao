@@ -13,28 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hako.dao.db.client;
-
-import org.hako.dao.HakoDaoException;
+package org.hako.dao.mapper.annotation;
 
 /**
- * If database error occurred, this exception will be thrown.
+ * Primary key.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class DatabaseException extends HakoDaoException {
+public @interface Pk {
 
-  private static final long serialVersionUID = 3476893194144963452L;
-
-  /**
-   * Create.
-   * 
-   * @param cause
-   */
-  public DatabaseException(Throwable cause) {
-    super(cause);
-  }
-  
 }

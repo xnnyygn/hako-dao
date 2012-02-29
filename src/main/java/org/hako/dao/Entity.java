@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.hako.Tuple2;
 import org.hako.TupleUtils;
+import org.hako.dao.field.SimpleField;
 
 /**
  * Entity.
@@ -32,9 +33,9 @@ public class Entity {
 
   private final String tableName;
   private final String tableAlias;
-  private final List<Field<?>> pkFields;
-  private final List<Field<?>> otherFields;
-  private final List<Field<?>> allFields;
+  private final List<SimpleField<?>> pkFields;
+  private final List<SimpleField<?>> otherFields;
+  private final List<SimpleField<?>> allFields;
   
   /**
    * Create.
@@ -44,7 +45,7 @@ public class Entity {
    * @param fields
    * @throws IllegalArgumentException
    */
-  public Entity(String tableName, String tableAlias, List<Field<?>> fields)
+  public Entity(String tableName, String tableAlias, List<SimpleField<?>> fields)
       throws IllegalArgumentException {
     super();
     if (fields.isEmpty()) {
@@ -53,18 +54,18 @@ public class Entity {
     this.tableName = tableName;
     this.tableAlias = tableAlias;
     // split fields
-    Tuple2<List<Field<?>>, List<Field<?>>> splitedFields =
+    Tuple2<List<SimpleField<?>>, List<SimpleField<?>>> splitedFields =
         splitFieldsByIsPk(fields);
     this.pkFields = splitedFields._1;
     this.otherFields = splitedFields._2;
     this.allFields = fields;
   }
 
-  private Tuple2<List<Field<?>>, List<Field<?>>> splitFieldsByIsPk(
-      List<Field<?>> fields) {
-    List<Field<?>> pkFields = new ArrayList<Field<?>>();
-    List<Field<?>> otherFields = new ArrayList<Field<?>>();
-    for (Field<?> f : fields) {
+  private Tuple2<List<SimpleField<?>>, List<SimpleField<?>>> splitFieldsByIsPk(
+      List<SimpleField<?>> fields) {
+    List<SimpleField<?>> pkFields = new ArrayList<SimpleField<?>>();
+    List<SimpleField<?>> otherFields = new ArrayList<SimpleField<?>>();
+    for (SimpleField<?> f : fields) {
       if (f.isPk()) {
         pkFields.add(f);
       } else {
@@ -91,21 +92,21 @@ public class Entity {
   /**
    * @return the pkFields
    */
-  public List<Field<?>> getPkFields() {
+  public List<SimpleField<?>> getPkFields() {
     return pkFields;
   }
 
   /**
    * @return the otherFields
    */
-  public List<Field<?>> getOtherFields() {
+  public List<SimpleField<?>> getOtherFields() {
     return otherFields;
   }
 
   /**
    * @return the allFields
    */
-  public List<Field<?>> getAllFields() {
+  public List<SimpleField<?>> getAllFields() {
     return allFields;
   }
   

@@ -15,6 +15,7 @@
  */
 package org.hako.dao.db.client;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -30,7 +31,7 @@ import org.hako.Option;
 import org.hako.OptionUtils;
 import org.hako.Some;
 import org.hako.dao.HakoDaoException;
-import org.hako.dao.db.connector.ConnectException;
+import org.hako.dao.db.DatabaseException;
 import org.hako.dao.db.connector.DbConnector;
 import org.hako.dao.sql.Clause;
 import org.hako.dao.sql.clause.delete.DeleteClause;
@@ -49,36 +50,64 @@ import org.hako.dao.sql.clause.update.UpdateClause;
 public class DefaultDbClient implements DbClient {
 
   protected final DbConnector connector;
+  protected final boolean printSql;
+
+  /**
+   * Create without print sql.
+   * 
+   * @param connector
+   */
+  public DefaultDbClient(DbConnector connector) {
+    this(connector, false);
+  }
 
   /**
    * Create.
    * 
    * @param connector
+   * @param printSql print SQL
    */
-  public DefaultDbClient(DbConnector connector) {
+  public DefaultDbClient(DbConnector connector, boolean printSql) {
     super();
     this.connector = connector;
+    this.printSql = printSql;
   }
 
   public List<Map<String, Object>> selectMultipleRows(SelectClause clause)
       throws HakoDaoException {
-    PreparedStatement ps = createPreparedStatement(clause, false);
     try {
-      if (clause.hasLimit()) {
-        Limit limit = clause.getLimit();
-        // ignore negative offset
-        if (limit.getOffset() >= 0) {
-          ps.setFetchSize(limit.getOffset());
-        }
-        // ignore negative and zero
-        if (limit.getMax() > 0) {
-          ps.setMaxRows(limit.getMax());
-        }
-      }
-      return getRowValues(ps.executeQuery());
+      return getRowValues(limitStatement(
+          createPreparedStatement(clause, false), clause.getLimitOpt())
+          .executeQuery());
     } catch (SQLException e) {
       throw convertException(e);
     }
+  }
+
+  /**
+   * Limit statement.
+   * 
+   * @param ps prepared statement
+   * @param limitOpt limit option
+   * @return limited statement
+   * @throws SQLException if database error occurred
+   * @see PreparedStatement#setFetchSize(int)
+   * @see PreparedStatement#setMaxRows(int)
+   */
+  private PreparedStatement limitStatement(PreparedStatement ps,
+      Option<Limit> limitOpt) throws SQLException {
+    if (limitOpt.hasValue()) {
+      Limit limit = limitOpt.get();
+      // ignore negative offset
+      if (limit.getOffset() >= 0) {
+        ps.setFetchSize(limit.getOffset());
+      }
+      // ignore negative and zero
+      if (limit.getMax() > 0) {
+        ps.setMaxRows(limit.getMax());
+      }
+    }
+    return ps;
   }
 
   /**
@@ -183,12 +212,29 @@ public class DefaultDbClient implements DbClient {
     return executeUpdate(clause);
   }
 
+  /**
+   * Execute update with clause. And update don't need to generate key.
+   * 
+   * @param clause
+   * @return updated record
+   * @throws DatabaseException if database error occurred
+   * @see #createPreparedStatement(Clause, boolean)
+   * @see #executeUpdate(PreparedStatement)
+   */
   private int executeUpdate(Clause clause) throws DatabaseException {
     return executeUpdate(createPreparedStatement(clause, false));
   }
 
+  /**
+   * Execute update and convert {@link SQLException} to
+   * {@link DatabaseException}.
+   * 
+   * @param ps prepared statement
+   * @return update record
+   * @throws DatabaseException if database error occurred
+   * @see SQLException
+   */
   private int executeUpdate(PreparedStatement ps) throws DatabaseException {
-    // execute update
     try {
       return ps.executeUpdate();
     } catch (SQLException e) {
@@ -204,30 +250,54 @@ public class DefaultDbClient implements DbClient {
    * @param clause
    * @param generateKey should generate key
    * @return prepared statement
-   * @throws ConnectException if failed to connect to database
    * @throws DatabaseException if database error occurred
    * @see DbConnector#connect()
+   * @see #createPreparedStatement(Connection, String, boolean, List)
    */
   protected PreparedStatement createPreparedStatement(Clause clause,
-      boolean generateKey) throws ConnectException, DatabaseException {
+      boolean generateKey) throws DatabaseException {
+    String preparedSql = clause.toPrepared();
+    if (printSql) System.out.println(preparedSql);
+    Connection conn = connector.connect();
     try {
-      String preparedSql = clause.toPrepared();
-      System.out.println(preparedSql);
-      PreparedStatement ps =
-          connector.connect().prepareStatement(
-              preparedSql,
-              (generateKey ? Statement.RETURN_GENERATED_KEYS
-                  : Statement.NO_GENERATED_KEYS));
-      List<Object> params = clause.getParams();
-      System.out.println(params);
-      int count = params.size();
-      for (int i = 1; i <= count; i++) {
-        ps.setObject(i, params.get(i - 1));
-      }
-      return ps;
+      return createPreparedStatement(conn, preparedSql, generateKey,
+          clause.getParams());
     } catch (Exception e) {
       throw convertException(e);
+    } finally {
+      connector.releaseQuietly(conn);
     }
+  }
+
+  /**
+   * Create prepared statement with connection, prepared SQL, generate key and
+   * parameters.
+   * 
+   * @param connection
+   * @param preparedSql
+   * @param generateKey
+   * @param params
+   * @return prepared statement
+   * @throws SQLException if database error occurred
+   * @see Connection#prepareStatement(String)
+   * @see PreparedStatement#setObject(int, Object)
+   */
+  protected PreparedStatement createPreparedStatement(Connection connection,
+      String preparedSql, boolean generateKey, List<Object> params)
+      throws SQLException {
+    // create prepared statement
+    PreparedStatement ps =
+        connection.prepareStatement(preparedSql, (generateKey
+            ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS));
+    // set parameters
+    System.out.println(params);
+    int count = params.size();
+    int i = 0;
+    while (i < count) {
+      Object value = params.get(i++);
+      ps.setObject(i, value);
+    }
+    return ps;
   }
 
   /**

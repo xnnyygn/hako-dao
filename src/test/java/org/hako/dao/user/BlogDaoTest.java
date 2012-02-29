@@ -17,19 +17,22 @@ package org.hako.dao.user;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.hako.dao.Field;
+import org.apache.commons.io.IOUtils;
 import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.connector.DbcpConnector;
+import org.hako.dao.field.SimpleField;
 import org.hako.dao.restriction.RestrictionBuilder;
 import org.hako.dao.restriction.Restrictions;
-import org.junit.Ignore;
 import org.junit.Test;
-
 
 /**
  * Test of {@link BlogDao}.
@@ -42,25 +45,35 @@ public class BlogDaoTest {
 
   private static BlogDao dao = new BlogDao(createDefaultDbClient());
 
+  /**
+   * Create default database client instance.
+   * 
+   * @return instance
+   */
   private static DefaultDbClient createDefaultDbClient() {
     Map<String, Object> props = new HashMap<String, Object>();
-    props.put("driverClassName", "com.mysql.jdbc.Driver");
-    props.put("url", "jdbc:mysql://localhost/hako_dao_test");
-    props.put("username", "hako_dao");
-    props.put("password", "hako_dao");
-    // props.put("connectionInitSqls", loadInitSqls());
-    return new DefaultDbClient(new DbcpConnector(props));
+    props.put("driverClassName", "org.h2.Driver");
+    props.put("url", "jdbc:h2:mem:blogDev");
+    props.put("username", "sa");
+    props.put("password", "");
+    props.put("connectionInitSqls", loadInitSqls());
+    return new DefaultDbClient(new DbcpConnector(props), true);
   }
 
-  // private static List<String> loadInitSqls() {
-  // try {
-  // return Arrays.asList(IOUtils.toString(new FileReader(
-  // "src/test/resources/blog-init.sql")));
-  // } catch (IOException e) {
-  // // convert to runtime exception
-  // throw new RuntimeException(e);
-  // }
-  // }
+  /**
+   * Load initializing SQL from file.
+   * 
+   * @return SQLs
+   */
+  private static List<String> loadInitSqls() {
+    try {
+      return Arrays.asList(IOUtils.toString(new FileReader(
+          "src/test/resources/blog-init.sql")));
+    } catch (IOException e) {
+      // convert to runtime exception
+      throw new RuntimeException(e);
+    }
+  }
 
   @Test
   public void testGet() {
@@ -86,10 +99,9 @@ public class BlogDaoTest {
   }
 
   @Test
-  @Ignore
   public void testUpdateTitle() {
     String oldTitle = dao.get(1l, BlogDao.FIELD_TITLE).get().getTitle();
-    Map<Field<?>, Object> props = new HashMap<Field<?>, Object>();
+    Map<SimpleField<?>, Object> props = new HashMap<SimpleField<?>, Object>();
     props.put(BlogDao.FIELD_TITLE, "title1");
     System.out.println(dao.update(props, 1l));
     assertEquals("title1", dao.get(1l, BlogDao.FIELD_TITLE).get().getTitle());
@@ -124,13 +136,13 @@ public class BlogDaoTest {
   }
 
   @Test
-  public void testCountBy(){
+  public void testCountBy() {
     System.out.println(dao.countBy(Restrictions.eq(BlogDao.FIELD_USER_ID, 1l)));
   }
-  
+
   @Test
-  public void testJoin(){
+  public void testJoin() {
     System.out.println(dao.listWithUserName());
   }
-  
+
 }

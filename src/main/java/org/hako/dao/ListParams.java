@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hako.dao.db.client.DefaultDbClient;
+import org.hako.dao.field.SimpleField;
 
 /**
  * List parameters. If max is less than or equals zero or offset is negative,
@@ -40,7 +41,7 @@ public class ListParams {
    * @since 1.0.0
    */
   public static class OrderBy {
-    private final Field<?> field;
+    private final SimpleField<?> field;
     private final boolean asc;
 
     /**
@@ -49,7 +50,7 @@ public class ListParams {
      * @param field
      * @param asc
      */
-    public OrderBy(Field<?> field, boolean asc) {
+    public OrderBy(SimpleField<?> field, boolean asc) {
       super();
       this.field = field;
       this.asc = asc;
@@ -58,7 +59,7 @@ public class ListParams {
     /**
      * @return the field
      */
-    public Field<?> getField() {
+    public SimpleField<?> getField() {
       return field;
     }
 
@@ -85,7 +86,7 @@ public class ListParams {
    * @param field
    * @param asc
    */
-  public ListParams(int max, int offset, Field<?> field, boolean asc) {
+  public ListParams(int max, int offset, SimpleField<?> field, boolean asc) {
     this(max, offset, Arrays.asList(new OrderBy(field, asc)));
   }
 

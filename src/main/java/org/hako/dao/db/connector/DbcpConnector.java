@@ -15,6 +15,7 @@
  */
 package org.hako.dao.db.connector;
 
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,6 +94,11 @@ public class DbcpConnector extends DataSourceAdapter {
       // convert to runtime exception
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public void releaseQuietly(Connection connection) {
+    // do nothing
   }
 
 }

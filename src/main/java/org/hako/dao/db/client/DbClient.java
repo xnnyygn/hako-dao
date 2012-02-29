@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.hako.Option;
 import org.hako.dao.HakoDaoException;
+import org.hako.dao.db.DatabaseException;
 import org.hako.dao.sql.clause.delete.DeleteClause;
 import org.hako.dao.sql.clause.insert.InsertClause;
 import org.hako.dao.sql.clause.select.SelectClause;

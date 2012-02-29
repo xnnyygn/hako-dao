@@ -27,6 +27,7 @@ import org.hako.OptionUtils;
 import org.hako.Some;
 import org.hako.dao.ListParams.OrderBy;
 import org.hako.dao.db.client.DbClient;
+import org.hako.dao.field.SimpleField;
 import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.clause.delete.DeleteClause;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
@@ -101,11 +102,11 @@ public abstract class GenericDao<T, PK> {
   }
 
 
-  public Option<T> get(PK id, Field<?>... fields) {
+  public Option<T> get(PK id, SimpleField<?>... fields) {
     return get(id, Arrays.asList(fields));
   }
 
-  public Option<T> get(PK id, List<Field<?>> fields) {
+  public Option<T> get(PK id, List<SimpleField<?>> fields) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(createSelection(fields));
     builder.from(entity.getTableName(), entity.getTableAlias());
@@ -119,9 +120,9 @@ public abstract class GenericDao<T, PK> {
    * @param fields fields
    * @return multiple selection
    */
-  protected MultipleSelection createSelection(List<Field<?>> fields) {
+  protected MultipleSelection createSelection(List<SimpleField<?>> fields) {
     MultipleSelectionBuilder builder = new MultipleSelectionBuilder();
-    for (Field<?> f : fields) {
+    for (SimpleField<?> f : fields) {
       builder.addExpressionAka(
           new TableColumnName(f.getTableAlias(), f.getColumnName()),
           f.getPropertyName());
@@ -151,7 +152,7 @@ public abstract class GenericDao<T, PK> {
   public PK save(Map<String, Object> props) {
     InsertClauseBuilder builder =
         new InsertClauseBuilder(entity.getTableName());
-    for (Field<?> f : entity.getOtherFields()) {
+    for (SimpleField<?> f : entity.getOtherFields()) {
       builder.addColumn(f.getColumnName());
       builder.addValue(ValueFactory.create(props.get(f.getPropertyName())));
     }
@@ -212,11 +213,11 @@ public abstract class GenericDao<T, PK> {
         createPkCondition(id)));
   }
 
-  public int update(Map<Field<?>, Object> props, PK id) {
+  public int update(Map<SimpleField<?>, Object> props, PK id) {
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
     builder.update(entity.getTableName());
     Map<String, Expression> valueSetMap = new HashMap<String, Expression>();
-    for (Map.Entry<Field<?>, Object> entry : props.entrySet()) {
+    for (Map.Entry<SimpleField<?>, Object> entry : props.entrySet()) {
       valueSetMap.put(entry.getKey().getColumnName(),
           ValueFactory.create(entry.getValue()));
     }

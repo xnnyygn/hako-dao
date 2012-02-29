@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hako.dao.ListParams.OrderBy;
+import org.hako.dao.field.SimpleField;
 
 /**
  * Builder of {@link ListParams}.
@@ -72,7 +73,7 @@ public class ListParamsBuilder {
    * @return this
    * @see #addOrderBy(String, boolean)
    */
-  public ListParamsBuilder addOrderBy(Field<?> field) {
+  public ListParamsBuilder addOrderBy(SimpleField<?> field) {
     return addOrderBy(field, true);
   }
 
@@ -83,7 +84,7 @@ public class ListParamsBuilder {
    * @param asc
    * @return this
    */
-  public ListParamsBuilder addOrderBy(Field<?> field, boolean asc) {
+  public ListParamsBuilder addOrderBy(SimpleField<?> field, boolean asc) {
     orderBys.add(new OrderBy(field, asc));
     return this;
   }

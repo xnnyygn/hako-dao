@@ -18,24 +18,21 @@ package org.hako.dao.db.connector;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-
 /**
- * Base class of single database connector.
+ * Abstract database connector.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class SingleDbConnector extends AbstractDbConnector {
+public abstract class AbstractDbConnector implements DbConnector {
 
-  /**
-   * Delegate to {@link #connect()}.
-   * 
-   * @see #connect()
-   */
-  public Connection connect(Object key) throws NoSuchConnectorException,
-      ConnectException {
-    return connect();
+  public void releaseQuietly(Connection connection) {
+    try {
+      connection.close();
+    } catch (SQLException e) {
+      // ignore exception
+    }
   }
 
 }

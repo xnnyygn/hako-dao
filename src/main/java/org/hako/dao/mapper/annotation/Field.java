@@ -13,29 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
+package org.hako.dao.mapper.annotation;
 
 /**
- * Base class of single database connector.
+ * Field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class SingleDbConnector extends AbstractDbConnector {
+public @interface Field {
 
   /**
-   * Delegate to {@link #connect()}.
+   * Column name in table. Default value is empty string, {@code ""}, which
+   * means use bean field name as column name. Other blank string will also be
+   * treated to use bean field name.
    * 
-   * @see #connect()
+   * @return column name
    */
-  public Connection connect(Object key) throws NoSuchConnectorException,
-      ConnectException {
-    return connect();
-  }
+  String columnName() default "";
 
 }

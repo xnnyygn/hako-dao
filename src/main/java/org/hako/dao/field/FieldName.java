@@ -13,52 +13,44 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao;
+package org.hako.dao.field;
 
 /**
- * Field.
+ * Field name, consist of column name and property name.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class Field<T> {
+public class FieldName {
 
-  private final String tableAlias;
   private final String columnName;
-  private final String propertyName;
-  private final boolean pk;
+  private final String prpertyName;
 
   /**
-   * Create.
+   * Create with same column and property name.
    * 
-   * @param name column name and property name
-   * @param pk is primary key
+   * @param name
    */
-  public Field(String tableAlias, String name, boolean pk) {
-    this(tableAlias, name, name, pk);
+  public FieldName(String name){
+    this(name, name);
   }
-
+  
   /**
    * Create.
    * 
-   * @param tableAlias
    * @param columnName
-   * @param propertyName
-   * @param pk
+   * @param prpertyName
    */
-  public Field(String tableAlias, String columnName, String propertyName,
-      boolean pk) {
+  public FieldName(String columnName, String prpertyName) {
     super();
-    this.tableAlias = tableAlias;
     this.columnName = columnName;
-    this.propertyName = propertyName;
-    this.pk = pk;
+    this.prpertyName = prpertyName;
   }
 
-
-
   /**
+   * Get column name.
+   * 
    * @return the columnName
    */
   public String getColumnName() {
@@ -66,28 +58,23 @@ public class Field<T> {
   }
 
   /**
-   * @return the propertyName
-   */
-  public String getPropertyName() {
-    return propertyName;
-  }
-
-  /**
-   * If field is primary key.
+   * Get property name.
    * 
-   * @return true if is, otherwise false
+   * @return the prpertyName
    */
-  public boolean isPk() {
-    return pk;
+  public String getPrpertyName() {
+    return prpertyName;
   }
 
-  /**
-   * Get table alias.
-   * 
-   * @return the tableAlias
-   */
-  public String getTableAlias() {
-    return tableAlias;
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("FieldName [columnName=");
+    builder.append(columnName);
+    builder.append(", prpertyName=");
+    builder.append(prpertyName);
+    builder.append("]");
+    return builder.toString();
   }
-
+  
 }

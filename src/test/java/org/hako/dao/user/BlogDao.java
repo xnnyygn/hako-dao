@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.hako.dao.Entity;
-import org.hako.dao.Field;
 import org.hako.dao.GenericDao;
 import org.hako.dao.db.client.DbClient;
+import org.hako.dao.field.SimpleField;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.select.table.JoinWithConditionTable;
 import org.hako.dao.sql.clause.select.table.TableFactory;
@@ -41,19 +41,19 @@ public class BlogDao extends GenericDao<Blog, Long> {
 
   public final static String TABLE_NAME = "blog";
   public final static String TABLE_ALIAS = "b";
-  public final static Field<Long> FIELD_ID = new Field<Long>(TABLE_ALIAS, "id",
+  public final static SimpleField<Long> FIELD_ID = new SimpleField<Long>(TABLE_ALIAS, "id",
       true);
-  public final static Field<String> FIELD_TITLE = new Field<String>(
+  public final static SimpleField<String> FIELD_TITLE = new SimpleField<String>(
       TABLE_ALIAS, "title", false);
-  public final static Field<String> FIELD_CONTENT = new Field<String>(
+  public final static SimpleField<String> FIELD_CONTENT = new SimpleField<String>(
       TABLE_ALIAS, "content", false);
-  public final static Field<Timestamp> FIELD_DATE_CREATED =
-      new Field<Timestamp>(TABLE_ALIAS, "date_created", "dateCreated", false);
-  public final static Field<Long> FIELD_USER_ID = new Field<Long>(TABLE_ALIAS,
+  public final static SimpleField<Timestamp> FIELD_DATE_CREATED =
+      new SimpleField<Timestamp>(TABLE_ALIAS, "date_created", "dateCreated", false);
+  public final static SimpleField<Long> FIELD_USER_ID = new SimpleField<Long>(TABLE_ALIAS,
       "user_id", "userId", false);
   @SuppressWarnings("unchecked")
-  public final static List<Field<?>> FIELD_ALL = Arrays.asList(
-      (Field<?>) FIELD_ID, FIELD_TITLE, FIELD_CONTENT, FIELD_DATE_CREATED,
+  public final static List<SimpleField<?>> FIELD_ALL = Arrays.asList(
+      (SimpleField<?>) FIELD_ID, FIELD_TITLE, FIELD_CONTENT, FIELD_DATE_CREATED,
       FIELD_USER_ID);
 
   /**
@@ -74,7 +74,7 @@ public class BlogDao extends GenericDao<Blog, Long> {
   public List<Map<String, Object>> listWithUserName() {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(createSelection(Arrays.asList(FIELD_ID,
-        (Field<?>) FIELD_TITLE, FIELD_CONTENT, FIELD_DATE_CREATED,
+        (SimpleField<?>) FIELD_TITLE, FIELD_CONTENT, FIELD_DATE_CREATED,
         UserDao.FIELD_NAME)));
     builder.from(new JoinWithConditionTable(TableFactory.createSimpleAkaTable(
         TABLE_NAME, TABLE_ALIAS), TableFactory.createSimpleAkaTable(

@@ -13,29 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.mapper.annotation;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
+import java.io.Serializable;
 
 /**
- * Base class of single database connector.
+ * Annotation mapper.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class SingleDbConnector extends AbstractDbConnector {
+public class AnnotationMapper {
 
-  /**
-   * Delegate to {@link #connect()}.
-   * 
-   * @see #connect()
-   */
-  public Connection connect(Object key) throws NoSuchConnectorException,
-      ConnectException {
-    return connect();
+  public org.hako.dao.Entity setup(Class<? extends Serializable> entityCls) {
+    throw new UnsupportedOperationException();
   }
-
+  
 }

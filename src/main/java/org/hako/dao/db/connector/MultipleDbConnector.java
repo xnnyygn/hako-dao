@@ -28,7 +28,7 @@ import java.util.Map;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class MultipleDbConnector implements DbConnector {
+public class MultipleDbConnector extends AbstractDbConnector {
 
   private final Map<Object, DbConnector> connectorMap;
 

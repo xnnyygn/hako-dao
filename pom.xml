@@ -8,6 +8,11 @@
 	<description>model level of hako</description>
 
 	<dependencies>
+		<!-- dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+		</dependency-->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>

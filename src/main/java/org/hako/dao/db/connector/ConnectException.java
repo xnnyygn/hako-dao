@@ -17,7 +17,7 @@ package org.hako.dao.db.connector;
 
 import javax.sql.DataSource;
 
-import org.hako.dao.HakoDaoException;
+import org.hako.dao.db.DatabaseException;
 
 /**
  * If failed to connect to database, this exception will be thrown.
@@ -27,7 +27,7 @@ import org.hako.dao.HakoDaoException;
  * @since 1.0.0
  * @see DataSource#getConnection()
  */
-public class ConnectException extends HakoDaoException {
+public class ConnectException extends DatabaseException {
 
   private static final long serialVersionUID = 4504123052939465907L;
 
