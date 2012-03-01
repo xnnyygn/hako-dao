@@ -243,6 +243,14 @@ public class GenericDao {
         createPkCondition(id, false)));
   }
 
+  /**
+   * Update entity.
+   * 
+   * @param props properties
+   * @param id primary key
+   * @return updated record
+   * @see DbClient#update(org.hako.dao.sql.clause.update.UpdateClause)
+   */
   public int update(Map<MappedField<?>, Object> props, Object id) {
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
     builder.update(entity.getTableName().getName());
@@ -252,7 +260,7 @@ public class GenericDao {
           ValueFactory.create(entry.getValue()));
     }
     builder.set(valueSetMap);
-    builder.where(createPkCondition(id, true));
+    builder.where(createPkCondition(id, false));
     return client.update(builder.toUpdateClause());
   }
 

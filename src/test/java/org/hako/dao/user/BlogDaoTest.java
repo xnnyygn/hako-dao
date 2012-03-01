@@ -15,6 +15,8 @@
  */
 package org.hako.dao.user;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -97,19 +99,21 @@ public class BlogDaoTest {
 
   @Test
   public void testList() {
-    System.out.println(blogDao.list(new ListParams(2, 1, Blog.dateCreated, false)));
+    System.out.println(blogDao.list(new ListParams(2, 1, Blog.dateCreated,
+        false)));
   }
 
-  // @Test
-  // public void testUpdateTitle() {
-  // String oldTitle = dao.get(1l, BlogDao.FIELD_TITLE).get().getTitle();
-  // Map<SimpleField<?>, Object> props = new HashMap<SimpleField<?>, Object>();
-  // props.put(BlogDao.FIELD_TITLE, "title1");
-  // System.out.println(dao.update(props, 1l));
-  // assertEquals("title1", dao.get(1l, BlogDao.FIELD_TITLE).get().getTitle());
-  // props.put(BlogDao.FIELD_TITLE, oldTitle);
-  // dao.update(props, 1l);
-  // }
+  @Test
+  public void testUpdateTitle() {
+    String oldTitle = blogDao.get(1l).get().get(Blog.title).get();
+    Map<MappedField<?>, Object> props = new HashMap<MappedField<?>, Object>();
+    String newTitle = "newTitle";
+    props.put(Blog.title, newTitle);
+    System.out.println(blogDao.update(props, 1l));
+    assertEquals(newTitle, blogDao.get(1l).get().get(Blog.title).get());
+    props.put(Blog.title, oldTitle);
+    blogDao.update(props, 1l);
+  }
 
   @Test
   public void testCount() {
