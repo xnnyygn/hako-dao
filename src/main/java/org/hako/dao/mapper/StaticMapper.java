@@ -51,8 +51,8 @@ public class StaticMapper {
       if (f.getType().isAssignableFrom(MappedField.class)) {
         MappedField<?> field = getMappedField(f);
         String fieldName = f.getName();
-        builder.updateFieldMeta(field, new FieldMeta(fieldName,
-            toDashSeparatedColumnName(fieldName), field.isPk()));
+        builder.updateFieldMeta(field, new FieldMeta(
+            toDashSeparatedColumnName(fieldName), fieldName, field.isPk()));
       }
     }
     postSetup(entityClass, builder);
