@@ -143,7 +143,21 @@ public class EntityMeta {
    * @return some alias or none
    */
   public Option<String> getColumnAliasName(MappedField<?> field) {
-    return fieldMap.containsKey(field) ? new Some<String>(tableName.getAlias()
-        + "_" + fieldMap.get(field).getColumnName()) : new None<String>();
+    return fieldMap.containsKey(field) ? new Some<String>(
+        createColumnAliasName(fieldMap.get(field).getColumnName()))
+        : new None<String>();
+  }
+
+  public Map<String, FieldMeta> collectColumnAliasNames() {
+    Map<String, FieldMeta> nameMap = new HashMap<String, FieldMeta>();
+    for (FieldMeta meta : fields) {
+      nameMap.put(createColumnAliasName(meta.getColumnName()).toLowerCase(),
+          meta);
+    }
+    return nameMap;
+  }
+
+  private String createColumnAliasName(String columnName) {
+    return tableName.getAlias() + "_" + columnName;
   }
 }

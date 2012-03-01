@@ -55,7 +55,7 @@ import org.hako.dao.sql.expression.value.ValueFactory;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class GenericDao<T, PK> {
+public class GenericDao {
 
   protected final DbClient client;
   protected final EntityMeta entity;
@@ -78,21 +78,24 @@ public abstract class GenericDao<T, PK> {
    * @param props properties
    * @return entity instance
    */
-  protected abstract T convert(Map<String, Object> props);
-
-  private Option<T> convert(Option<Map<String, Object>> propsOpt) {
-    return propsOpt instanceof Some<?> ? OptionUtils.some(convert(propsOpt
-        .get())) : new None<T>();
+  protected Record convert(Map<String, Object> props) {
+    return new Record(props, entity);
   }
 
-  public List<T> convert(List<Map<String, Object>> propsList) {
-    List<T> list = new ArrayList<T>();
+  private Option<Record> convert(Option<Map<String, Object>> propsOpt) {
+    if (propsOpt.hasValue()) {
+      return OptionUtils.some(convert(propsOpt.get()));
+    }
+    return new None<Record>();
+  }
+
+  public List<Record> convert(List<Map<String, Object>> propsList) {
+    List<Record> list = new ArrayList<Record>();
     for (Map<String, Object> props : propsList) {
       list.add(convert(props));
     }
     return list;
   }
-
 
   /**
    * Get entity by id.
@@ -100,7 +103,7 @@ public abstract class GenericDao<T, PK> {
    * @param id id
    * @return some entity instance of none
    */
-  public Option<T> get(PK id) {
+  public Option<Record> get(Object id) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(createSelection(entity.getFields()));
     TableName tableName = entity.getTableName();
@@ -125,7 +128,7 @@ public abstract class GenericDao<T, PK> {
     return builder.toMultipleSelection();
   }
 
-  private Condition createPkCondition(PK id, boolean withTableAlias) {
+  private Condition createPkCondition(Object id, boolean withTableAlias) {
     if (entity.getPkFields().size() == 1) {
       String columnName = entity.getPkFields().get(0).getColumnName();
       Expression pk =
@@ -137,7 +140,7 @@ public abstract class GenericDao<T, PK> {
     return createComplexPkCondition(id);
   }
 
-  protected Condition createComplexPkCondition(PK id) {
+  protected Condition createComplexPkCondition(Object id) {
     throw new UnsupportedOperationException();
   }
 
@@ -147,39 +150,38 @@ public abstract class GenericDao<T, PK> {
    * @param props properties
    * @return id
    */
-  @SuppressWarnings("unchecked")
-  public PK save(Map<MappedField<?>, Object> props) {
+  public Object save(Map<MappedField<?>, Object> props) {
     InsertClauseBuilder builder =
         new InsertClauseBuilder(entity.getTableName().getName());
     for (FieldMeta f : entity.getNormalFields()) {
       builder.addColumn(f.getColumnName());
       builder.addValue(ValueFactory.create(props.get(f.getField())));
     }
-    return (PK) client.insertAndGet(builder.toInsertClause());
+    return client.insertAndGet(builder.toInsertClause());
   }
 
-  public List<T> list() {
+  public List<Record> list() {
     return listBy(new None<Restriction>(), new None<ListParams>());
   }
 
-  public List<T> list(ListParams params) {
+  public List<Record> list(ListParams params) {
     return listBy(new None<Restriction>(), new Some<ListParams>(params));
   }
 
-  public List<T> listBy(Restriction restriction) {
+  public List<Record> listBy(Restriction restriction) {
     return listBy(new Some<Restriction>(restriction), new None<ListParams>());
   }
 
-  public List<T> listBy(ListParams params) {
+  public List<Record> listBy(ListParams params) {
     return listBy(new None<Restriction>(), new Some<ListParams>(params));
   }
 
-  public List<T> listBy(Restriction restriction, ListParams params) {
+  public List<Record> listBy(Restriction restriction, ListParams params) {
     return listBy(new Some<Restriction>(restriction), new Some<ListParams>(
         params));
   }
 
-  private List<T> listBy(Option<Restriction> rOpt, Option<ListParams> lpOpt) {
+  private List<Record> listBy(Option<Restriction> rOpt, Option<ListParams> lpOpt) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(createSelection(entity.getFields()));
     TableName tableName = entity.getTableName();
@@ -209,17 +211,17 @@ public abstract class GenericDao<T, PK> {
    * @return deleted records
    * @see DbClient#delete(DeleteClause)
    */
-  public int deleteById(PK id) {
+  public int deleteById(Object id) {
     return client.delete(new DeleteClause(entity.getTableName().getName(),
         createPkCondition(id, false)));
   }
 
-  public int update(Map<SimpleField<?>, Object> props, PK id) {
+  public int update(Map<MappedField<?>, Object> props, Object id) {
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
     builder.update(entity.getTableName().getName());
     Map<String, Expression> valueSetMap = new HashMap<String, Expression>();
-    for (Map.Entry<SimpleField<?>, Object> entry : props.entrySet()) {
-      valueSetMap.put(entry.getKey().getColumnName(),
+    for (Map.Entry<MappedField<?>, Object> entry : props.entrySet()) {
+      valueSetMap.put(entity.getColumnName(entry.getKey()).get(),
           ValueFactory.create(entry.getValue()));
     }
     builder.set(valueSetMap);
@@ -253,7 +255,7 @@ public abstract class GenericDao<T, PK> {
         .intValue();
   }
 
-  public Option<T> findBy(Restriction restriction) {
+  public Option<Record> findBy(Restriction restriction) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(createSelection(entity.getFields()));
     TableName tableName = entity.getTableName();

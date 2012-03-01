@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.hako.dao.GenericDao;
 import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.vendor.DbcpVendor;
@@ -43,7 +44,8 @@ import org.junit.Test;
  */
 public class BlogDaoTest {
 
-  private static BlogDao dao = new BlogDao(createDefaultDbClient());
+  private static GenericDao blogDao = new GenericDao(createDefaultDbClient(),
+      Blog.class);
 
   /**
    * Create default database client instance.
@@ -78,7 +80,7 @@ public class BlogDaoTest {
 
   @Test
   public void testGet() {
-    System.out.println(dao.get(1l));
+    System.out.println(blogDao.get(1l));
   }
 
   @Test
@@ -88,14 +90,14 @@ public class BlogDaoTest {
     props.put(Blog.content, "content0");
     props.put(Blog.dateCreated, new Timestamp(System.currentTimeMillis()));
     props.put(Blog.userId, 1l);
-    Long id = dao.save(props);
+    Long id = (Long) blogDao.save(props);
     System.out.println(id);
-    System.out.println(dao.deleteById(id));
+    System.out.println(blogDao.deleteById(id));
   }
 
   @Test
   public void testList() {
-    System.out.println(dao.list(new ListParams(2, 1, Blog.dateCreated, false)));
+    System.out.println(blogDao.list(new ListParams(2, 1, Blog.dateCreated, false)));
   }
 
   // @Test
@@ -111,7 +113,7 @@ public class BlogDaoTest {
 
   @Test
   public void testCount() {
-    System.out.println(dao.count());
+    System.out.println(blogDao.count());
   }
 
   @Test
@@ -119,7 +121,7 @@ public class BlogDaoTest {
     RestrictionBuilder builder = new RestrictionBuilder();
     builder.add(Restrictions.eq(Blog.id, 4l));
     builder.add(Restrictions.eq(Blog.userId, 1l));
-    System.out.println(dao.findBy(builder.build()));
+    System.out.println(blogDao.findBy(builder.build()));
   }
 
   @Test
@@ -127,17 +129,17 @@ public class BlogDaoTest {
     RestrictionBuilder builder = new RestrictionBuilder();
     builder.add(Restrictions.eq(Blog.id, 4l));
     builder.add(Restrictions.eq(Blog.userId, 2l));
-    System.out.println(dao.findBy(builder.build()));
+    System.out.println(blogDao.findBy(builder.build()));
   }
 
   @Test
   public void testListBy() {
-    System.out.println(dao.listBy(Restrictions.eq(Blog.userId, 2l)));
+    System.out.println(blogDao.listBy(Restrictions.eq(Blog.userId, 2l)));
   }
 
   @Test
   public void testCountBy() {
-    System.out.println(dao.countBy(Restrictions.eq(Blog.userId, 1l)));
+    System.out.println(blogDao.countBy(Restrictions.eq(Blog.userId, 1l)));
   }
 
   // @Test

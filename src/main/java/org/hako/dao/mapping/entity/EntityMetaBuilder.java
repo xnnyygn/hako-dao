@@ -54,11 +54,13 @@ public class EntityMetaBuilder {
    * Update field meta.
    * 
    * @param field
-   * @param meta
+   * @param columnName
+   * @param propertyName
    * @return this
    */
-  public EntityMetaBuilder updateFieldMeta(MappedField<?> field, String columnName) {
-    fields.put(field, new FieldMeta(columnName, field));
+  public EntityMetaBuilder updateFieldMeta(MappedField<?> field,
+      String columnName, String propertyName) {
+    fields.put(field, new FieldMeta(columnName, propertyName, field));
     return this;
   }
 

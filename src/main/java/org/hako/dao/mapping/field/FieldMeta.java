@@ -26,17 +26,20 @@ package org.hako.dao.mapping.field;
 public class FieldMeta {
 
   private final String columnName;
+  private final String propertyName;
   private final MappedField<?> field;
 
   /**
    * Create.
    * 
    * @param columnName
+   * @param propertyName
    * @param field
    */
-  public FieldMeta(String columnName, MappedField<?> field) {
+  public FieldMeta(String columnName, String propertyName, MappedField<?> field) {
     super();
     this.columnName = columnName;
+    this.propertyName = propertyName;
     this.field = field;
   }
 
@@ -58,4 +61,13 @@ public class FieldMeta {
     return field;
   }
 
+  /**
+   * Get property name.
+   * 
+   * @return property name
+   */
+  public String getPropertyName() {
+    return propertyName;
+  }
+  
 }
