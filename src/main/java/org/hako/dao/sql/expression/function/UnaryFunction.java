@@ -41,11 +41,17 @@ public abstract class UnaryFunction extends AbstractFunction {
     this.expression = expression;
   }
 
+  /**
+   * Return <code>${name}(${expresion.toPrepared})</code>
+   */
   public String toPrepared() {
     return new StringBuilder(name).append('(').append(expression.toPrepared())
         .append(')').toString();
   }
 
+  /**
+   * Delegate to {@link #expression}.
+   */
   public List<Object> getParams() {
     return expression.getParams();
   }
