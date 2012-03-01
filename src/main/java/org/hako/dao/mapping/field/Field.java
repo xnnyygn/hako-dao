@@ -13,22 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.implict;
+package org.hako.dao.mapping.field;
+
 
 /**
- * Customized implicit entity.
+ * Field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface CustomizedImplicitEntity {
+public interface Field {
+  
+  public static final String OPTION_COLUMN_NAME = "columnName";
+  public static final String OPTION_PROPERY_NAME = "propertyName";
+  public static final String OPTION_IS_PK = "isPk";
+  public static final String OPTION_OWNER = "owner";
 
   /**
-   * After setup.
+   * Check if field is primary key.
    * 
-   * @param builder
+   * @return true if is, otherwise false
    */
-  public void postSetup(ImplicitEntityBuilder builder);
-  
+  public boolean isPk();
+
 }

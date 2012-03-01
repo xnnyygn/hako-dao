@@ -15,7 +15,7 @@
  */
 package org.hako.dao.user;
 
-import org.hako.dao.field.SimpleField;
+import org.hako.dao.mapping.field.SimpleField;
 
 /**
  * User.

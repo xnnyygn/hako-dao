@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hako.dao.field.SimpleField;
+import org.hako.dao.mapping.field.SimpleField;
 
 /**
  * Entity properties utilities.

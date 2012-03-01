@@ -13,15 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hako.dao.field;
+package org.hako.dao.mapping.field;
+
+import java.util.HashMap;
 
 /**
- * Runtime field.
+ * Normal field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface RuntimeField extends Field {
+public class NormalField extends AbstractField {
 
+  /**
+   * Create.
+   */
+  public NormalField(){
+    super(new HashMap<String, Object>());
+  }
+  
 }

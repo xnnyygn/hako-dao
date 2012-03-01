@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hako.dao.field;
-
-import java.util.HashMap;
+package org.hako.dao.mapping.field;
 
 /**
- * Foreign field.
+ * Runtime field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class ForeignField extends AbstractField {
+public interface RuntimeField extends Field {
 
-  /**
-   * Create.
-   */
-  public ForeignField(Class<?> targetCls){
-    super(new HashMap<String, Object>());
-  }
 }

@@ -13,16 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.implict;
+package org.hako.dao.mapping.entity;
 
 import java.util.List;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.hako.dao.field.FieldName;
+import org.hako.dao.mapping.field.MappedField;
 
 /**
- * Implicit entity.
+ * Entity meta.
  * 
  * @author xnnyygn
  * @version %I%, %G%
@@ -30,43 +28,44 @@ import org.hako.dao.field.FieldName;
  */
 public class EntityMeta {
 
-  private final String tableName;
-  private final List<FieldName> fieldNames;
+  private final TableName tableName;
+  private final List<MappedField> fields;
 
   /**
    * Create.
    * 
-   * @param tableName table name
-   * @param fieldNames field names
+   * @param tableName table name, contains low level table name and alias
+   * @param fields field
    */
-  public EntityMeta(String tableName, List<FieldName> fieldNames) {
+  public EntityMeta(TableName tableName, List<MappedField> fields) {
     super();
     this.tableName = tableName;
-    this.fieldNames = fieldNames;
+    this.fields = fields;
   }
 
   /**
-   * Get table name.
-   * 
    * @return the tableName
    */
-  public String getTableName() {
+  public TableName getTableName() {
     return tableName;
   }
 
   /**
-   * Get field names.
-   * 
-   * @return the fieldNames
+   * @return the fields
    */
-  public List<FieldName> getFieldNames() {
-    return fieldNames;
+  public List<MappedField> getFields() {
+    return fields;
   }
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this,
-        ToStringStyle.MULTI_LINE_STYLE);
+    StringBuilder builder = new StringBuilder();
+    builder.append("EntityMeta [tableName=");
+    builder.append(tableName);
+    builder.append(", fields=");
+    builder.append(fields);
+    builder.append("]");
+    return builder.toString();
   }
-
+  
 }

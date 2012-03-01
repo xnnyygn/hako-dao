@@ -13,21 +13,47 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapping.field;
 
-import java.io.Serializable;
+import java.util.Map;
+
+import org.hako.dao.Entity;
 
 /**
- * Annotation mapper.
+ * Abstract field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class AnnotationMapper {
+public abstract class AbstractField implements Field {
 
-  public org.hako.dao.Entity setup(Class<? extends Serializable> entityCls) {
+  private final Map<String, Object> options;
+
+  /**
+   * Create with options.
+   * 
+   * @param options
+   */
+  public AbstractField(Map<String, Object> options) {
+    super();
+    this.options = options;
+  }
+
+  public String getColumnName() {
+    return (String) options.get(OPTION_COLUMN_NAME);
+  }
+
+  public String getPropertyName() {
+    return (String) options.get(OPTION_PROPERY_NAME);
+  }
+
+  public boolean isPk() {
+    return (Boolean) options.get(OPTION_IS_PK);
+  }
+
+  public Entity getOwner() {
     throw new UnsupportedOperationException();
   }
-  
+
 }

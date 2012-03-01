@@ -13,25 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping;
+package org.hako.dao.mapping.field;
 
-import org.hako.dao.field.Field;
-import org.hako.dao.field.IdPk;
-import org.hako.dao.field.NormalField;
+import java.util.HashMap;
 
 /**
- * Blog.
+ * Id primary key.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class Blog {
+public class IdPk extends AbstractField {
 
-  public static final Field id = new IdPk();
-  public static final Field title = new NormalField();
-  public static final Field content = new NormalField();
-  public static final Field dateCreated = new NormalField();
-  // public static final Field userId = new ForeignField(targetCls);
-  
+  public IdPk() {
+    // TODO add options
+    super(new HashMap<String, Object>());
+  }
+
 }

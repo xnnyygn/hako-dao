@@ -23,7 +23,7 @@ import java.util.Map;
 import org.hako.dao.Entity;
 import org.hako.dao.GenericDao;
 import org.hako.dao.db.client.DbClient;
-import org.hako.dao.field.SimpleField;
+import org.hako.dao.mapping.field.SimpleField;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.select.table.JoinWithConditionTable;
 import org.hako.dao.sql.clause.select.table.TableFactory;

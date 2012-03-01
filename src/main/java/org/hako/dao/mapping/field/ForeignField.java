@@ -13,15 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapping.field;
+
+import java.util.HashMap;
 
 /**
- * Primary key.
+ * Foreign field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public @interface Pk {
+public class ForeignField extends AbstractField {
 
+  /**
+   * Create.
+   */
+  public ForeignField(Class<?> targetCls){
+    super(new HashMap<String, Object>());
+  }
 }

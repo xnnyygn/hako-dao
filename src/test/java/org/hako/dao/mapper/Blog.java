@@ -13,24 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapper;
+
+import org.hako.dao.mapping.field.Field;
+import org.hako.dao.mapping.field.IdPk;
+import org.hako.dao.mapping.field.NormalField;
 
 /**
- * Field.
+ * Blog.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public @interface Field {
+public class Blog {
 
-  /**
-   * Column name in table. Default value is empty string, {@code ""}, which
-   * means use bean field name as column name. Other blank string will also be
-   * treated to use bean field name.
-   * 
-   * @return column name
-   */
-  String columnName() default "";
-
+  public static final Field id = new IdPk();
+  public static final Field title = new NormalField();
+  public static final Field content = new NormalField();
+  public static final Field dateCreated = new NormalField();
+  // public static final Field userId = new ForeignField(targetCls);
+  
 }

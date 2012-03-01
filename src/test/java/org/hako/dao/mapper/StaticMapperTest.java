@@ -15,42 +15,21 @@
  */
 package org.hako.dao.mapper;
 
-import org.hako.dao.mapper.implict.ImplicitEntityBuilder;
-import org.hako.dao.mapper.implict.ImplicitEntityMapper;
+import org.hako.dao.mapper.StaticMapper;
 import org.junit.Test;
 
 /**
- * Test of {@link ImplicitEntityMapper}.
+ * Test of {@link StaticMapper}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class ImplicitEntityMapperTest {
+public class StaticMapperTest {
 
-  class Blog {
-    public User user;
-  }
-
-  public static class User {
-    
-    public String name;
-
-    public static void postSetup(ImplicitEntityBuilder builder) {
-      builder.setTableName("user");
-    }
-
-  }
-
-  /**
-   * Test method for
-   * {@link org.hako.dao.mapper.implict.ImplicitEntityMapper#setup(java.lang.Class)}
-   * .
-   */
   @Test
   public void testSetup() {
-    ImplicitEntityMapper mapper = new ImplicitEntityMapper();
-    System.out.println(mapper.setup(Blog.class));
+    System.out.println(new StaticMapper().setup(Blog.class));
   }
 
 }

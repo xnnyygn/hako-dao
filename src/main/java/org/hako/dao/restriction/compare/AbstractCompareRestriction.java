@@ -15,7 +15,7 @@
  */
 package org.hako.dao.restriction.compare;
 
-import org.hako.dao.field.SimpleField;
+import org.hako.dao.mapping.field.SimpleField;
 import org.hako.dao.restriction.Restriction;
 
 /**
