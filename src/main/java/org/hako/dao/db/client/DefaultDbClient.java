@@ -28,7 +28,6 @@ import java.util.Map;
 
 import org.hako.None;
 import org.hako.Option;
-import org.hako.OptionUtils;
 import org.hako.Some;
 import org.hako.dao.HakoDaoException;
 import org.hako.dao.db.DatabaseException;
@@ -39,6 +38,7 @@ import org.hako.dao.sql.clause.insert.InsertClause;
 import org.hako.dao.sql.clause.select.Limit;
 import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.clause.update.UpdateClause;
+import org.hako.dao.util.OptionUtils;
 
 /**
  * Default implement.

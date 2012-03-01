@@ -30,8 +30,8 @@ import org.hako.dao.mapping.field.MappedField;
  */
 public class ListParamsBuilder {
 
-  private final int max;
   private final int offset;
+  private final int max;
   private final List<OrderBy> orderBys = new ArrayList<OrderBy>();
 
   /**
@@ -43,7 +43,6 @@ public class ListParamsBuilder {
     this(10, 0);
   }
 
-
   /**
    * Create with offset {@code 0}.
    * 
@@ -53,17 +52,16 @@ public class ListParamsBuilder {
     this(max, 0);
   }
 
-
   /**
    * Create.
    * 
-   * @param max
    * @param offset
+   * @param max
    */
-  public ListParamsBuilder(int max, int offset) {
+  public ListParamsBuilder(int offset, int max) {
     super();
-    this.max = max;
     this.offset = offset;
+    this.max = max;
   }
 
   /**
@@ -78,7 +76,7 @@ public class ListParamsBuilder {
   }
 
   /**
-   * Add order by.
+   * Add orderBy.
    * 
    * @param field
    * @param asc
@@ -92,8 +90,8 @@ public class ListParamsBuilder {
   /**
    * Build.
    * 
-   * @return list params instance
-   * @see ListParams
+   * @return {@link ListParams} instance
+   * @see ListParams#ListParams(int, int, List)
    */
   public ListParams toListParams() {
     return new ListParams(max, offset, orderBys);

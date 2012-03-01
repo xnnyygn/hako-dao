@@ -15,6 +15,9 @@
  */
 package org.hako;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Tuple 2.
  * 
@@ -30,13 +33,28 @@ public class Tuple2<T1, T2> {
   /**
    * Create.
    * 
-   * @param _1
-   * @param _2
+   * @param _1 first element
+   * @param _2 second element
    */
   public Tuple2(T1 _1, T2 _2) {
     super();
     this._1 = _1;
     this._2 = _2;
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(_1).append(_2).toHashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (!(obj instanceof Tuple2)) return false;
+    Tuple2<?, ?> other = (Tuple2<?, ?>) obj;
+    return new EqualsBuilder().append(_1, other._1).append(_2, other._2)
+        .isEquals();
   }
 
 }

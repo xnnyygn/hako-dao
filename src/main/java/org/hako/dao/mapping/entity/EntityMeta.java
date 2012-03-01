@@ -25,6 +25,7 @@ import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.mapping.field.FieldMeta;
 import org.hako.dao.mapping.field.MappedField;
+import org.hako.dao.util.OptionUtils;
 
 /**
  * Entity meta.
@@ -40,8 +41,10 @@ public class EntityMeta {
   // variables below for fast invoke
   private final List<FieldMeta> pkFields = new ArrayList<FieldMeta>();
   private final List<FieldMeta> normalFields = new ArrayList<FieldMeta>();
-  private final Map<MappedField<?>, FieldMeta> fieldMap =
+  private final Map<MappedField<?>, FieldMeta> fieldMetaMap =
       new HashMap<MappedField<?>, FieldMeta>();
+  private final Map<String, FieldMeta> columnAliasNameMetaMap =
+      new HashMap<String, FieldMeta>();
 
   /**
    * Create.
@@ -61,7 +64,9 @@ public class EntityMeta {
       } else {
         normalFields.add(f);
       }
-      fieldMap.put(f.getField(), f);
+      fieldMetaMap.put(f.getField(), f);
+      columnAliasNameMetaMap.put(createColumnAliasName(f.getColumnName())
+          .toLowerCase(), f);
     }
   }
 
@@ -121,8 +126,8 @@ public class EntityMeta {
    * @return some field meta or none
    */
   public Option<FieldMeta> getFieldMeta(MappedField<?> field) {
-    return fieldMap.containsKey(field) ? new Some<FieldMeta>(
-        fieldMap.get(field)) : new None<FieldMeta>();
+    return fieldMetaMap.containsKey(field) ? new Some<FieldMeta>(
+        fieldMetaMap.get(field)) : new None<FieldMeta>();
   }
 
   /**
@@ -132,8 +137,8 @@ public class EntityMeta {
    * @return
    */
   public Option<String> getColumnName(MappedField<?> field) {
-    return fieldMap.containsKey(field) ? new Some<String>(fieldMap.get(field)
-        .getColumnName()) : new None<String>();
+    return fieldMetaMap.containsKey(field) ? new Some<String>(fieldMetaMap.get(
+        field).getColumnName()) : new None<String>();
   }
 
   /**
@@ -143,21 +148,30 @@ public class EntityMeta {
    * @return some alias or none
    */
   public Option<String> getColumnAliasName(MappedField<?> field) {
-    return fieldMap.containsKey(field) ? new Some<String>(
-        createColumnAliasName(fieldMap.get(field).getColumnName()))
-        : new None<String>();
-  }
-
-  public Map<String, FieldMeta> collectColumnAliasNames() {
-    Map<String, FieldMeta> nameMap = new HashMap<String, FieldMeta>();
-    for (FieldMeta meta : fields) {
-      nameMap.put(createColumnAliasName(meta.getColumnName()).toLowerCase(),
-          meta);
+    if (fieldMetaMap.containsKey(field)) {
+      return OptionUtils.some(createColumnAliasName(fieldMetaMap.get(field)
+          .getColumnName()));
     }
-    return nameMap;
+    return new None<String>();
   }
 
+  /**
+   * Get column alias name and field meta map.
+   * 
+   * @return the columnAliasNameMetaMap
+   */
+  public Map<String, FieldMeta> getColumnAliasNameMetaMap() {
+    return columnAliasNameMetaMap;
+  }
+
+  /**
+   * Create column alias name
+   * 
+   * @param columnName
+   * @return
+   */
   private String createColumnAliasName(String columnName) {
     return tableName.getAlias() + "_" + columnName;
   }
+  
 }

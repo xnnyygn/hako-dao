@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.hako.None;
 import org.hako.Option;
-import org.hako.OptionUtils;
 import org.hako.Some;
 import org.hako.dao.ListParams.OrderBy;
 import org.hako.dao.db.client.DbClient;
@@ -47,6 +46,7 @@ import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.function.FunctionFactory;
 import org.hako.dao.sql.expression.value.ValueFactory;
+import org.hako.dao.util.OptionUtils;
 
 /**
  * Base class of user model, providing useful methods to do SQL operations.
@@ -78,10 +78,29 @@ public class GenericDao {
    * @param props properties
    * @return entity instance
    */
-  protected Record convert(Map<String, Object> props) {
-    return new Record(props, entity);
+  private Record convert(Map<String, Object> props) {
+    Map<String, FieldMeta> columnAliasNames =
+        entity.getColumnAliasNameMetaMap();
+    Map<FieldMeta, Object> metaValueMap = new HashMap<FieldMeta, Object>();
+    for (Map.Entry<String, Object> p : props.entrySet()) {
+      String lowerCaseKey = p.getKey().toLowerCase();
+      if (columnAliasNames.containsKey(lowerCaseKey)) {
+        FieldMeta meta = columnAliasNames.get(lowerCaseKey);
+        metaValueMap.put(meta, p.getValue());
+      }
+    }
+    return new Record(metaValueMap);
   }
 
+  /**
+   * Convert properties option to record option. If {@code propsOpt} is
+   * {@code None}, just return {@code None}, otherwise call
+   * {@link #convert(Map)} to convert to record.
+   * 
+   * @param propsOpt properties option
+   * @return record option
+   * @see #convert(Map)
+   */
   private Option<Record> convert(Option<Map<String, Object>> propsOpt) {
     if (propsOpt.hasValue()) {
       return OptionUtils.some(convert(propsOpt.get()));
@@ -89,7 +108,15 @@ public class GenericDao {
     return new None<Record>();
   }
 
-  public List<Record> convert(List<Map<String, Object>> propsList) {
+  /**
+   * Convert properties list to records. {@link #convert(Map)} do the real
+   * convert work.
+   * 
+   * @param propsList properties list
+   * @return records
+   * @see #convert(Map)
+   */
+  private List<Record> convert(List<Map<String, Object>> propsList) {
     List<Record> list = new ArrayList<Record>();
     for (Map<String, Object> props : propsList) {
       list.add(convert(props));

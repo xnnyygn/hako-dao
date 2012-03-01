@@ -13,7 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako;
+package org.hako.dao.util;
+
+import org.hako.Some;
 
 /**
  * Option utilities.

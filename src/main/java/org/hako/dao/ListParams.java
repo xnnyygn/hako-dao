@@ -105,6 +105,8 @@ public class ListParams {
   }
 
   /**
+   * Get max.
+   * 
    * @return the max
    */
   public int getMax() {
@@ -112,6 +114,8 @@ public class ListParams {
   }
 
   /**
+   * Get offset.
+   * 
    * @return the offset
    */
   public int getOffset() {
@@ -119,6 +123,8 @@ public class ListParams {
   }
 
   /**
+   * Get orderBys.
+   * 
    * @return the orderBys
    */
   public List<OrderBy> getOrderBys() {

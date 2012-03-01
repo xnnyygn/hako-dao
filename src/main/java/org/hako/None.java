@@ -55,6 +55,11 @@ public final class None<T> implements Option<T> {
     return true;
   }
 
+  /**
+   * Since {@link None} has no field, just return {@code 0}.
+   * 
+   * @return {@code 0}
+   */
   public int hashCode() {
     return 0;
   }

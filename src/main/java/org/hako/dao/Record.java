@@ -21,12 +21,11 @@ import java.util.Map;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
-import org.hako.dao.mapping.entity.EntityMeta;
 import org.hako.dao.mapping.field.FieldMeta;
 import org.hako.dao.mapping.field.MappedField;
 
 /**
- * Record.
+ * A wrapper class of result line from database query.
  * 
  * @author xnnyygn
  * @version %I%, %G%
@@ -34,29 +33,38 @@ import org.hako.dao.mapping.field.MappedField;
  */
 public class Record {
 
+  /**
+   * A map use mapped field as key, field value as value.
+   */
   private final Map<MappedField<?>, Object> mappedFieldProps =
       new HashMap<MappedField<?>, Object>();
+  /**
+   * A map use property name (variable name of field definition) as key, field
+   * value as value.
+   */
   private final Map<String, Object> properyNameProps =
       new HashMap<String, Object>();
 
-  public Record(Map<String, Object> props, EntityMeta entity) {
+  /**
+   * Create with meta value map.
+   * 
+   * @param metaValueMap
+   */
+  public Record(Map<FieldMeta, Object> metaValueMap) {
     super();
-    Map<String, FieldMeta> columnAliasNames = entity.collectColumnAliasNames();
-    for (Map.Entry<String, Object> p : props.entrySet()) {
-      String lowerCaseKey = p.getKey().toLowerCase();
-      if (columnAliasNames.containsKey(lowerCaseKey)) {
-        FieldMeta meta = columnAliasNames.get(lowerCaseKey);
-        this.mappedFieldProps.put(meta.getField(), p.getValue());
-        this.properyNameProps.put(meta.getPropertyName(), p.getValue());
-      }
+    for (Map.Entry<FieldMeta, Object> entry : metaValueMap.entrySet()) {
+      FieldMeta meta = entry.getKey();
+      Object value = entry.getValue();
+      this.mappedFieldProps.put(meta.getField(), value);
+      this.properyNameProps.put(meta.getPropertyName(), value);
     }
   }
 
   /**
-   * Get value.
+   * Get value by mapped field.
    * 
-   * @param field
-   * @return
+   * @param field field
+   * @return some value or not
    */
   @SuppressWarnings("unchecked")
   public <T> Option<T> get(MappedField<T> field) {
@@ -67,7 +75,7 @@ public class Record {
   }
 
   /**
-   * Get by property name.
+   * Get value by property name.
    * 
    * @param propertyName property name
    * @return some value or none
