@@ -13,15 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.dao.mapper;
+
+import org.hako.dao.HakoDaoException;
 
 /**
- * Runtime field.
+ * If failed to mapping entity, this exception will be thrown.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface RuntimeField extends Field {
+public class MappingException extends HakoDaoException {
 
+  private static final long serialVersionUID = -7824420624499439806L;
+
+  /**
+   * Create.
+   * 
+   * @param message
+   */
+  public MappingException(String message) {
+    super(message);
+  }
+
+  /**
+   * Create.
+   * 
+   * @param cause
+   */
+  public MappingException(Throwable cause) {
+    super(cause);
+  }
+  
 }

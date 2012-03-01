@@ -16,11 +16,11 @@
 package org.hako.dao.db.connector;
 
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.hako.dao.util.MapUtils;
 
 /**
  * Database connector based on <a
@@ -43,29 +43,9 @@ public class DbcpConnector extends DataSourceAdapter {
    */
   public DbcpConnector(String driverClassName, String url, String username,
       String password) {
-    this(applyMap("driverClassName", driverClassName, "url", url, "username",
-        username, "password", password));
-  }
-
-  /**
-   * Create map from varargs.
-   * 
-   * @param keyOrValues key or values
-   * @return map
-   * @throws IllegalArgumentException if some key does not have value
-   */
-  private static Map<String, Object> applyMap(Object... keyOrValues)
-      throws IllegalArgumentException {
-    int length = keyOrValues.length;
-    if (length % 2 != 0) {
-      throw new IllegalArgumentException(keyOrValues[length - 1]
-          + " must has value");
-    }
-    Map<String, Object> map = new HashMap<String, Object>();
-    for (int i = 0; i < length; i += 2) {
-      map.put((String) keyOrValues[i], keyOrValues[i + 1]);
-    }
-    return map;
+    this(MapUtils
+        .apply(String.class, Object.class, "driverClassName", driverClassName,
+            "url", url, "username", username, "password", password));
   }
 
   /**

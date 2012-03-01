@@ -17,7 +17,7 @@ package org.hako.dao.mapping.entity;
 
 import java.util.List;
 
-import org.hako.dao.mapping.field.MappedField;
+import org.hako.dao.mapping.field.FieldMeta;
 
 /**
  * Entity meta.
@@ -29,7 +29,7 @@ import org.hako.dao.mapping.field.MappedField;
 public class EntityMeta {
 
   private final TableName tableName;
-  private final List<MappedField> fields;
+  private final List<FieldMeta> fields;
 
   /**
    * Create.
@@ -37,7 +37,7 @@ public class EntityMeta {
    * @param tableName table name, contains low level table name and alias
    * @param fields field
    */
-  public EntityMeta(TableName tableName, List<MappedField> fields) {
+  public EntityMeta(TableName tableName, List<FieldMeta> fields) {
     super();
     this.tableName = tableName;
     this.fields = fields;
@@ -53,7 +53,7 @@ public class EntityMeta {
   /**
    * @return the fields
    */
-  public List<MappedField> getFields() {
+  public List<FieldMeta> getFields() {
     return fields;
   }
 

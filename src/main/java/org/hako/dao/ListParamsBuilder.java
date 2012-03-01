@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hako.dao.ListParams.OrderBy;
-import org.hako.dao.mapping.field.SimpleField;
 
 /**
  * Builder of {@link ListParams}.

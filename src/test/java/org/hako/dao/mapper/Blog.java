@@ -15,8 +15,9 @@
  */
 package org.hako.dao.mapper;
 
-import org.hako.dao.mapping.field.Field;
-import org.hako.dao.mapping.field.IdPk;
+import org.hako.dao.mapping.entity.EntityMetaBuilder;
+import org.hako.dao.mapping.field.AutoIncreasedPrimaryKey;
+import org.hako.dao.mapping.field.MappedField;
 import org.hako.dao.mapping.field.NormalField;
 
 /**
@@ -28,10 +29,20 @@ import org.hako.dao.mapping.field.NormalField;
  */
 public class Blog {
 
-  public static final Field id = new IdPk();
-  public static final Field title = new NormalField();
-  public static final Field content = new NormalField();
-  public static final Field dateCreated = new NormalField();
-  // public static final Field userId = new ForeignField(targetCls);
-  
+  public static final MappedField<Long> id =
+      new AutoIncreasedPrimaryKey<Long>();
+  public static final MappedField<String> title = new NormalField<String>();
+  public static final MappedField<String> content = new NormalField<String>();
+  public static final MappedField<String> dateCreated =
+      new NormalField<String>();
+
+  /**
+   * Post setup.
+   * 
+   * @param builder entity meta builder
+   */
+  public static void postSetup(EntityMetaBuilder builder) {
+    builder.updateTableName("BLOG", "b");
+    builder.updateFieldColumnName(id, "blog_id");
+  }
 }

@@ -13,34 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper;
+package org.hako.dao.mapping.field;
 
-import static org.junit.Assert.assertEquals;
-
-import org.hako.dao.mapper.StaticMapper;
-import org.junit.Test;
+import org.hako.dao.util.MapUtils;
 
 /**
- * Test of {@link StaticMapper}.
+ * Auto increased primary key.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class StaticMapperTest {
+public class AutoIncreasedPrimaryKey<T> extends PrimaryKey<T> {
 
-  private StaticMapper mapper = new StaticMapper();
-
-  @Test
-  public void testSetup() {
-    System.out.println(mapper.setup(Blog.class));
+  /**
+   * Create.
+   */
+  public AutoIncreasedPrimaryKey() {
+    super(MapUtils.apply(FieldOptions.class, FieldOptions.AUTO_INCREMENT,
+        Boolean.TRUE));
   }
 
-  @Test
-  public void testToDashSeparatedColumnName() {
-    assertEquals("id", mapper.toDashSeparatedColumnName("id"));
-    assertEquals("date_created",
-        mapper.toDashSeparatedColumnName("dateCreated"));
-    assertEquals("a_b_c", mapper.toDashSeparatedColumnName("aBC"));
-  }
 }

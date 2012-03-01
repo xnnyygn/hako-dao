@@ -15,20 +15,39 @@
  */
 package org.hako.dao.mapping.field;
 
-import java.util.HashMap;
+import static org.hako.dao.mapping.field.FieldOptions.*;
+
+import java.util.Map;
+
+import org.hako.dao.util.MapUtils;
 
 /**
- * Id primary key.
+ * Abstract field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class IdPk extends AbstractField {
+public class BaseMappedField<T> implements MappedField<T> {
 
-  public IdPk() {
-    // TODO add options
-    super(new HashMap<String, Object>());
+  private final Map<FieldOptions, Object> options;
+
+  /**
+   * Create with options.
+   * 
+   * @param options
+   */
+  public BaseMappedField(Map<FieldOptions, Object> options) {
+    super();
+    this.options = MapUtils.merge(OPTIONS_DEFAULT, options);
+  }
+
+  public boolean isPk() {
+    return (Boolean) options.get(PK);
+  }
+
+  public boolean isFk() {
+    return (Boolean) options.get(FK);
   }
 
 }

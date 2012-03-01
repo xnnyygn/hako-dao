@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.hako.Tuple2;
 import org.hako.TupleUtils;
-import org.hako.dao.mapping.field.SimpleField;
 
 /**
  * Entity.

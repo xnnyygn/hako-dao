@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hako.dao.db.client.DefaultDbClient;
-import org.hako.dao.mapping.field.SimpleField;
 
 /**
  * List parameters. If max is less than or equals zero or offset is negative,

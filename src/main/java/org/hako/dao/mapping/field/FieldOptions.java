@@ -15,26 +15,17 @@
  */
 package org.hako.dao.mapping.field;
 
-
 /**
- * Field.
+ * Field options.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface Field {
-  
-  public static final String OPTION_COLUMN_NAME = "columnName";
-  public static final String OPTION_PROPERY_NAME = "propertyName";
-  public static final String OPTION_IS_PK = "isPk";
-  public static final String OPTION_OWNER = "owner";
+public enum FieldOptions {
 
-  /**
-   * Check if field is primary key.
-   * 
-   * @return true if is, otherwise false
-   */
-  public boolean isPk();
+  PK, // is primary key? Boolean, default false
+  AUTO_INCREMENT, // is auto increased? Boolean default false  
+  FK; // is foreign key? Boolean, default false
 
 }

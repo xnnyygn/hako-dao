@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hako.dao.mapping.field.SimpleField;
+import org.hako.dao.SimpleField;
 
 /**
  * Entity properties utilities.
@@ -28,6 +28,7 @@ import org.hako.dao.mapping.field.SimpleField;
  * @version %I%, %G%
  * @since 1.0.0
  */
+// TODO move into GenericEntity
 public class EntityPropsUtils {
 
   /**

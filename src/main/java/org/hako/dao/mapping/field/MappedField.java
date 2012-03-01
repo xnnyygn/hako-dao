@@ -15,71 +15,41 @@
  */
 package org.hako.dao.mapping.field;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.hako.dao.util.MapUtils;
+import static org.hako.dao.mapping.field.FieldOptions.*;
+import static java.lang.Boolean.*;
+
 /**
- * Mapped field.
+ * Field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class MappedField {
+public interface MappedField<T> {
 
-  private final String columnName;
-  private final String propertyName;
-  private final boolean pk;
-
-  /**
-   * Create.
-   * 
-   * @param columnName column name
-   * @param propertyName property name
-   * @param pk is primary key?
-   */
-  public MappedField(String columnName, String propertyName, boolean pk) {
-    super();
-    this.columnName = columnName;
-    this.propertyName = propertyName;
-    this.pk = pk;
-  }
+  public static final Map<FieldOptions, Object> OPTIONS_EMPTY =
+      new HashMap<FieldOptions, Object>(0);
+  public static final Map<FieldOptions, Object> OPTIONS_DEFAULT = MapUtils
+      .apply(FieldOptions.class, PK, FALSE, FK, FALSE, AUTO_INCREMENT, FALSE);
 
   /**
-   * Get column name.
+   * Check if field is primary key.
    * 
-   * @return the columnName
+   * @return true if is, otherwise false
+   * @see FieldOptions#PK
    */
-  public String getColumnName() {
-    return columnName;
-  }
+  public boolean isPk();
 
   /**
-   * Get property name.
+   * Check if field is foreign key.
    * 
-   * @return the propertyName
+   * @return true if is, otherwise false
+   * @see FieldOptions#FK
    */
-  public String getPropertyName() {
-    return propertyName;
-  }
+  public boolean isFk();
 
-  /**
-   * Is primary key?.
-   * 
-   * @return the pk
-   */
-  public boolean isPk() {
-    return pk;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("MappedField [columnName=");
-    builder.append(columnName);
-    builder.append(", propertyName=");
-    builder.append(propertyName);
-    builder.append(", pk=");
-    builder.append(pk);
-    builder.append("]");
-    return builder.toString();
-  }
-  
 }

@@ -27,7 +27,6 @@ import org.hako.OptionUtils;
 import org.hako.Some;
 import org.hako.dao.ListParams.OrderBy;
 import org.hako.dao.db.client.DbClient;
-import org.hako.dao.mapping.field.SimpleField;
 import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.clause.delete.DeleteClause;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;

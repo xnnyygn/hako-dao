@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 
 import org.hako.dao.mapping.entity.EntityMeta;
 import org.hako.dao.mapping.entity.EntityMetaBuilder;
+import org.hako.dao.mapping.field.FieldMeta;
 import org.hako.dao.mapping.field.MappedField;
 
 /**
@@ -42,28 +43,73 @@ public class StaticMapper {
     // use lower case class simple name as table name
     // use same name as table alias
     String tableName = entityClass.getSimpleName().toLowerCase();
-    builder.setTableName(tableName, tableName);
+    builder.updateTableName(tableName, tableName);
     // setup fields
     // find static fields and use variable name as property name
     // use property name as column name
     for (Field f : entityClass.getDeclaredFields()) {
-      if (f.getType().isAssignableFrom(org.hako.dao.mapping.field.Field.class)) {
+      if (f.getType().isAssignableFrom(MappedField.class)) {
+        MappedField<?> field = getMappedField(f);
         String fieldName = f.getName();
-        builder.addMappedField(new MappedField(fieldName, fieldName, isPk(f)));
+        builder.updateFieldMeta(field, new FieldMeta(fieldName,
+            toDashSeparatedColumnName(fieldName), field.isPk()));
       }
     }
+    postSetup(entityClass, builder);
     return builder.build();
   }
 
-  private boolean isPk(Field f) {
+  /**
+   * Get mapped field instance.
+   * 
+   * @param classField class field
+   * @return mapped field
+   * @throws MappingException if failed to get
+   * @see Field#get(Object)
+   */
+  private MappedField<?> getMappedField(Field classField)
+      throws MappingException {
     try {
       // since field must be static, the argument of
       // Field#get(Object) is null
-      return ((org.hako.dao.mapping.field.Field) f.get(null)).isPk();
+      return ((MappedField<?>) classField.get(null));
+    } catch (Exception e) {
+      throw new MappingException(e);
+    }
+  }
+
+  /**
+   * Invoke postSetup on entity.
+   * 
+   * @param entityClass entity class
+   * @param builder
+   */
+  private void postSetup(Class<?> entityClass, EntityMetaBuilder builder) {
+    try {
+      entityClass.getMethod("postSetup", EntityMetaBuilder.class).invoke(null,
+          builder);
     } catch (Exception e) {
       // ignore exception
     }
-    return false;
+  }
+
+  /**
+   * Convert property name to dash separated column name.
+   * {@code dateCreated => date_created}.
+   * 
+   * @param propertyName property name
+   * @return dash separated name
+   */
+  String toDashSeparatedColumnName(String propertyName) {
+    StringBuilder builder = new StringBuilder();
+    for (char c : propertyName.toCharArray()) {
+      if (Character.isUpperCase(c)) {
+        builder.append('_').append(Character.toLowerCase(c));
+      } else {
+        builder.append(c);
+      }
+    }
+    return builder.toString();
   }
 
 }

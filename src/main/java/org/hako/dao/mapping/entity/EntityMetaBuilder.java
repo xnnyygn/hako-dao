@@ -16,11 +16,13 @@
 package org.hako.dao.mapping.entity;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
+import org.hako.dao.mapping.field.FieldMeta;
 import org.hako.dao.mapping.field.MappedField;
 
 /**
@@ -32,29 +34,48 @@ import org.hako.dao.mapping.field.MappedField;
  */
 public class EntityMetaBuilder {
 
-  private final List<MappedField> fields = new ArrayList<MappedField>();
+  private final Map<MappedField<?>, FieldMeta> fields =
+      new HashMap<MappedField<?>, FieldMeta>();
   private Option<TableName> tableNameOpt = new None<TableName>();
 
   /**
-   * Set table name and alias.
+   * Update table name and alias.
    * 
    * @param name table name
    * @param alias table alias
    * @return this
    */
-  public EntityMetaBuilder setTableName(String name, String alias) {
+  public EntityMetaBuilder updateTableName(String name, String alias) {
     tableNameOpt = new Some<TableName>(new TableName(name, alias));
     return this;
   }
 
   /**
-   * Add mapped field.
+   * Update field meta.
    * 
-   * @param field field to add
+   * @param field
+   * @param meta
    * @return this
    */
-  public EntityMetaBuilder addMappedField(MappedField field) {
-    fields.add(field);
+  public EntityMetaBuilder updateFieldMeta(MappedField<?> field, FieldMeta meta) {
+    fields.put(field, meta);
+    return this;
+  }
+
+  /**
+   * Update field column name.
+   * 
+   * @param field
+   * @param columnName new column name
+   * @return this
+   */
+  public EntityMetaBuilder updateFieldColumnName(MappedField<?> field,
+      String columnName) {
+    if (fields.containsKey(field)) {
+      FieldMeta oldMeta = fields.get(field);
+      fields.put(field, new FieldMeta(columnName, oldMeta.getPropertyName(),
+          oldMeta.isPk()));
+    }
     return this;
   }
 
@@ -64,7 +85,8 @@ public class EntityMetaBuilder {
    * @return entity meta instance
    */
   public EntityMeta build() {
-    return new EntityMeta(tableNameOpt.get(), fields);
+    return new EntityMeta(tableNameOpt.get(), new ArrayList<FieldMeta>(
+        fields.values()));
   }
 
 }

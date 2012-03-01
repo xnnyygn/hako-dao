@@ -16,36 +16,30 @@
 package org.hako.dao.mapping.field;
 
 /**
- * Field name, consist of column name and property name.
+ * Mapped field.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class FieldName {
+public class FieldMeta {
 
   private final String columnName;
-  private final String prpertyName;
+  private final String propertyName;
+  private final boolean pk;
 
-  /**
-   * Create with same column and property name.
-   * 
-   * @param name
-   */
-  public FieldName(String name){
-    this(name, name);
-  }
-  
   /**
    * Create.
    * 
-   * @param columnName
-   * @param prpertyName
+   * @param columnName column name
+   * @param propertyName property name
+   * @param pk is primary key?
    */
-  public FieldName(String columnName, String prpertyName) {
+  public FieldMeta(String columnName, String propertyName, boolean pk) {
     super();
     this.columnName = columnName;
-    this.prpertyName = prpertyName;
+    this.propertyName = propertyName;
+    this.pk = pk;
   }
 
   /**
@@ -60,19 +54,30 @@ public class FieldName {
   /**
    * Get property name.
    * 
-   * @return the prpertyName
+   * @return the propertyName
    */
-  public String getPrpertyName() {
-    return prpertyName;
+  public String getPropertyName() {
+    return propertyName;
+  }
+
+  /**
+   * Is primary key?.
+   * 
+   * @return the pk
+   */
+  public boolean isPk() {
+    return pk;
   }
 
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("FieldName [columnName=");
+    builder.append("MappedField [columnName=");
     builder.append(columnName);
-    builder.append(", prpertyName=");
-    builder.append(prpertyName);
+    builder.append(", propertyName=");
+    builder.append(propertyName);
+    builder.append(", pk=");
+    builder.append(pk);
     builder.append("]");
     return builder.toString();
   }

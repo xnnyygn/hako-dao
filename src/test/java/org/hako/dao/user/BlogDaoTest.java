@@ -27,9 +27,9 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.hako.dao.ListParams;
+import org.hako.dao.SimpleField;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.connector.DbcpConnector;
-import org.hako.dao.mapping.field.SimpleField;
 import org.hako.dao.restriction.RestrictionBuilder;
 import org.hako.dao.restriction.Restrictions;
 import org.junit.Test;
