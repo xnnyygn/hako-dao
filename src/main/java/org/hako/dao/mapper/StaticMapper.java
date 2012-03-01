@@ -19,7 +19,6 @@ import java.lang.reflect.Field;
 
 import org.hako.dao.mapping.entity.EntityMeta;
 import org.hako.dao.mapping.entity.EntityMetaBuilder;
-import org.hako.dao.mapping.field.FieldMeta;
 import org.hako.dao.mapping.field.MappedField;
 
 /**

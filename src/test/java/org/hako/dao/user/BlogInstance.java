@@ -17,8 +17,6 @@ package org.hako.dao.user;
 
 import java.util.Map;
 
-import org.hako.dao.util.EntityPropsUtils;
-
 /**
  * Entity blog.
  * 
