@@ -15,7 +15,9 @@
  */
 package org.hako.dao.restriction.compare;
 
-import org.hako.dao.SimpleField;
+import org.hako.Option;
+import org.hako.dao.mapping.entity.EntityMeta;
+import org.hako.dao.mapping.field.MappedField;
 import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
@@ -37,12 +39,17 @@ public class EqualsRestriction extends AbstractCompareRestriction {
    * @param field
    * @param value
    */
-  public EqualsRestriction(SimpleField<?> field, Object value) {
+  public EqualsRestriction(MappedField<?> field, Object value) {
     super(field, value);
   }
 
-  public Condition toCondition() {
-    return new EqualsCondition(new ColumnName(field.getColumnName()),
+  public Condition toCondition(EntityMeta entity) {
+    Option<String> nameOpt = entity.getColumnName(field);
+    if (!nameOpt.hasValue()) {
+      throw new IllegalArgumentException("no column name of field [" + field
+          + "]");
+    }
+    return new EqualsCondition(new ColumnName(nameOpt.get()),
         ValueFactory.create(value));
   }
 

@@ -15,7 +15,7 @@
  */
 package org.hako.dao.restriction;
 
-import org.hako.dao.SimpleField;
+import org.hako.dao.mapping.field.MappedField;
 import org.hako.dao.restriction.compare.EqualsRestriction;
 
 /**
@@ -27,7 +27,7 @@ import org.hako.dao.restriction.compare.EqualsRestriction;
  */
 public class Restrictions {
 
-  public static EqualsRestriction eq(SimpleField<?> field, Object value) {
+  public static EqualsRestriction eq(MappedField<?> field, Object value) {
     return new EqualsRestriction(field, value);
   }
   

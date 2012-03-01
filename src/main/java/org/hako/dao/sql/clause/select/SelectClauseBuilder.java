@@ -24,7 +24,7 @@ public class SelectClauseBuilder {
     bean.setSelectionOpt(new Some<Selection>(selection));
     return this;
   }
-
+  
   public SelectClauseBuilder from(String tableName, String alias) {
     return from(new AkaTable(new SimpleTable(tableName), alias));
   }

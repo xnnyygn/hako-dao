@@ -13,28 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.db.vendor;
 
 import java.sql.Connection;
-
+import java.sql.SQLException;
 
 /**
- * Base class of single database connector.
+ * Abstract database connector.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class SingleDbConnector extends AbstractDbConnector {
+public abstract class AbstractDbVendor implements DbVendor {
 
-  /**
-   * Delegate to {@link #connect()}.
-   * 
-   * @see #connect()
-   */
-  public Connection connect(Object key) throws NoSuchConnectorException,
-      ConnectException {
-    return connect();
+  public void releaseQuietly(Connection connection) {
+    try {
+      connection.close();
+    } catch (SQLException e) {
+      // ignore exception
+    }
   }
 
 }

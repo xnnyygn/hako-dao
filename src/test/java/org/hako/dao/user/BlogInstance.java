@@ -13,26 +13,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.user;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.Map;
+
+import org.hako.dao.util.EntityPropsUtils;
 
 /**
- * Abstract database connector.
+ * Entity blog.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class AbstractDbConnector implements DbConnector {
+public class BlogInstance {
 
-  public void releaseQuietly(Connection connection) {
-    try {
-      connection.close();
-    } catch (SQLException e) {
-      // ignore exception
-    }
+  private final Map<String, Object> props;
+
+  /**
+   * Create with properties.
+   * 
+   * @param props properties
+   */
+  public BlogInstance(Map<String, Object> props) {
+    super();
+    this.props = props;
+  }
+
+  @Override
+  public String toString() {
+    return "Blog [" + props + "]";
   }
 
 }

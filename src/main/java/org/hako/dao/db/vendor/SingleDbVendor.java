@@ -13,31 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.db.vendor;
 
-import javax.sql.DataSource;
+import java.sql.Connection;
 
-import org.hako.dao.db.DatabaseException;
 
 /**
- * If failed to connect to database, this exception will be thrown.
+ * Base class of single database connector.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
- * @see DataSource#getConnection()
  */
-public class ConnectException extends DatabaseException {
-
-  private static final long serialVersionUID = 4504123052939465907L;
+public abstract class SingleDbVendor extends AbstractDbVendor {
 
   /**
-   * Create.
+   * Delegate to {@link #connect()}.
    * 
-   * @param cause
+   * @see #connect()
    */
-  public ConnectException(Throwable cause) {
-    super(cause);
+  public Connection connect(Object key) throws NoSuchVendorException,
+      ConnectException {
+    return connect();
   }
 
 }

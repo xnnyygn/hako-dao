@@ -15,9 +15,16 @@
  */
 package org.hako.dao.mapping.entity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.hako.None;
+import org.hako.Option;
+import org.hako.Some;
 import org.hako.dao.mapping.field.FieldMeta;
+import org.hako.dao.mapping.field.MappedField;
 
 /**
  * Entity meta.
@@ -29,7 +36,12 @@ import org.hako.dao.mapping.field.FieldMeta;
 public class EntityMeta {
 
   private final TableName tableName;
-  private final List<FieldMeta> fields;
+  private final List<FieldMeta> fields; // all fields
+  // variables below for fast invoke
+  private final List<FieldMeta> pkFields = new ArrayList<FieldMeta>();
+  private final List<FieldMeta> normalFields = new ArrayList<FieldMeta>();
+  private final Map<MappedField<?>, FieldMeta> fieldMap =
+      new HashMap<MappedField<?>, FieldMeta>();
 
   /**
    * Create.
@@ -41,9 +53,21 @@ public class EntityMeta {
     super();
     this.tableName = tableName;
     this.fields = fields;
+    // initialize primary key fields and normal fields
+    // initialize fieldMap
+    for (FieldMeta f : fields) {
+      if (f.getField().isPk()) {
+        pkFields.add(f);
+      } else {
+        normalFields.add(f);
+      }
+      fieldMap.put(f.getField(), f);
+    }
   }
 
   /**
+   * Get table name.
+   * 
    * @return the tableName
    */
   public TableName getTableName() {
@@ -51,21 +75,75 @@ public class EntityMeta {
   }
 
   /**
+   * Get all field meta.
+   * 
    * @return the fields
    */
   public List<FieldMeta> getFields() {
     return fields;
   }
 
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("EntityMeta [tableName=");
-    builder.append(tableName);
-    builder.append(", fields=");
-    builder.append(fields);
-    builder.append("]");
-    return builder.toString();
+  /**
+   * Get field column names.
+   * 
+   * @return field column names
+   */
+  public List<String> getFieldColumnNames() {
+    List<String> names = new ArrayList<String>();
+    for (FieldMeta f : fields) {
+      names.add(f.getColumnName());
+    }
+    return names;
   }
-  
+
+  /**
+   * Get primary key fields.
+   * 
+   * @return primary key fields
+   */
+  public List<FieldMeta> getPkFields() {
+    return pkFields;
+  }
+
+  /**
+   * Get normal fields.
+   * 
+   * @return normal fields
+   */
+  public List<FieldMeta> getNormalFields() {
+    return normalFields;
+  }
+
+  /**
+   * Get field meta.
+   * 
+   * @param field field
+   * @return some field meta or none
+   */
+  public Option<FieldMeta> getFieldMeta(MappedField<?> field) {
+    return fieldMap.containsKey(field) ? new Some<FieldMeta>(
+        fieldMap.get(field)) : new None<FieldMeta>();
+  }
+
+  /**
+   * Get column name.
+   * 
+   * @param field
+   * @return
+   */
+  public Option<String> getColumnName(MappedField<?> field) {
+    return fieldMap.containsKey(field) ? new Some<String>(fieldMap.get(field)
+        .getColumnName()) : new None<String>();
+  }
+
+  /**
+   * Get column alias.
+   * 
+   * @param field field
+   * @return some alias or none
+   */
+  public Option<String> getColumnAliasName(MappedField<?> field) {
+    return fieldMap.containsKey(field) ? new Some<String>(tableName.getAlias()
+        + "_" + fieldMap.get(field).getColumnName()) : new None<String>();
+  }
 }

@@ -13,7 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper;
+package org.hako.dao.user.domain;
+
+import java.sql.Timestamp;
 
 import org.hako.dao.mapping.entity.EntityMetaBuilder;
 import org.hako.dao.mapping.field.AutoIncreasedPrimaryKey;
@@ -21,28 +23,23 @@ import org.hako.dao.mapping.field.MappedField;
 import org.hako.dao.mapping.field.NormalField;
 
 /**
- * Blog.
+ * Domain comment.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class Blog {
+public class Comment {
 
   public static final MappedField<Long> id =
       new AutoIncreasedPrimaryKey<Long>();
-  public static final MappedField<String> title = new NormalField<String>();
   public static final MappedField<String> content = new NormalField<String>();
-  public static final MappedField<String> dateCreated =
-      new NormalField<String>();
-
-  /**
-   * Post setup.
-   * 
-   * @param builder entity meta builder
-   */
+  public static final MappedField<Long> userId = new NormalField<Long>();
+  public static final MappedField<Timestamp> dateCreated =
+      new NormalField<Timestamp>();
+  
   public static void postSetup(EntityMetaBuilder builder) {
-    builder.updateTableName("BLOG", "b");
-    builder.updateFieldColumnName(id, "blog_id");
+    builder.updateTableName("COMMENT", "c");
   }
+  
 }

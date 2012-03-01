@@ -17,7 +17,13 @@ package org.hako.dao.mapper;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+
 import org.hako.dao.mapper.StaticMapper;
+import org.hako.dao.mapping.entity.EntityMeta;
+import org.hako.dao.user.domain.Blog;
+import org.hako.dao.user.domain.Comment;
+import org.hako.dao.user.domain.User;
 import org.junit.Test;
 
 /**
@@ -33,7 +39,19 @@ public class StaticMapperTest {
 
   @Test
   public void testSetup() {
-    System.out.println(mapper.setup(Blog.class));
+    setup(Blog.class);
+    setup(User.class);
+    setup(Comment.class);
+  }
+  
+  private void setup(Class<?> entityClass){
+    EntityMeta entity = mapper.setup(entityClass);
+    System.out.println("table name: " + entity.getTableName().getName());
+    System.out.println("table alias: " + entity.getTableName().getAlias());
+    System.out.println("fields: "
+        + Arrays.toString(entity.getFieldColumnNames().toArray()));
+    System.out.println("pk count: " + entity.getPkFields().size());
+    System.out.println("normal count: " + entity.getNormalFields().size());
   }
 
   @Test
@@ -43,4 +61,5 @@ public class StaticMapperTest {
         mapper.toDashSeparatedColumnName("dateCreated"));
     assertEquals("a_b_c", mapper.toDashSeparatedColumnName("aBC"));
   }
+  
 }

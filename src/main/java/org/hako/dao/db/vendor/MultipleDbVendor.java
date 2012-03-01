@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.db.vendor;
 
 import java.sql.Connection;
 import java.util.Map;
@@ -22,22 +22,22 @@ import java.util.Map;
 /**
  * A simple multiple database connector of multiple database solution. Use map
  * with object as key, connector as value to store connectors. If cannot find
- * connector, {@link NoSuchConnectorException} was thrown.
+ * connector, {@link NoSuchVendorException} was thrown.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class MultipleDbConnector extends AbstractDbConnector {
+public class MultipleDbVendor extends AbstractDbVendor {
 
-  private final Map<Object, DbConnector> connectorMap;
+  private final Map<Object, DbVendor> connectorMap;
 
   /**
    * Create with connector map.
    * 
    * @param connectorMap connector map
    */
-  public MultipleDbConnector(Map<Object, DbConnector> connectorMap) {
+  public MultipleDbVendor(Map<Object, DbVendor> connectorMap) {
     super();
     this.connectorMap = connectorMap;
   }
@@ -52,10 +52,10 @@ public class MultipleDbConnector extends AbstractDbConnector {
   /**
    * Find connector by key to connector and get the connection.
    */
-  public Connection connect(Object key) throws NoSuchConnectorException,
+  public Connection connect(Object key) throws NoSuchVendorException,
       ConnectException {
     if (!connectorMap.containsKey(key)) {
-      throw new NoSuchConnectorException("no such connector with key [" + key
+      throw new NoSuchVendorException("no such connector with key [" + key
           + "]");
     }
     return connectorMap.get(key).connect();

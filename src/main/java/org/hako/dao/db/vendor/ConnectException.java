@@ -13,29 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.db.vendor;
 
-import org.hako.dao.HakoDaoException;
+import javax.sql.DataSource;
+
+import org.hako.dao.db.DatabaseException;
 
 /**
- * If connector cannot find, this exception will be thrown.
+ * If failed to connect to database, this exception will be thrown.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
- * @see {@link MultipleDbConnector#connect(Object)}
+ * @see DataSource#getConnection()
  */
-public class NoSuchConnectorException extends HakoDaoException {
+public class ConnectException extends DatabaseException {
 
-  private static final long serialVersionUID = 3341712976526193988L;
+  private static final long serialVersionUID = 4504123052939465907L;
 
   /**
    * Create.
    * 
-   * @param message
+   * @param cause
    */
-  public NoSuchConnectorException(String message) {
-    super(message);
+  public ConnectException(Throwable cause) {
+    super(cause);
   }
-  
+
 }

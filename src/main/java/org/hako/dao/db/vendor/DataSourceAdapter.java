@@ -13,49 +13,41 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.dao.db.vendor;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 /**
- * Mapped field.
+ * An adapter of {@link DataSource} to {@link DbVendor}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
+ * @see DataSource#getConnection()
  */
-public class FieldMeta {
+public class DataSourceAdapter extends SingleDbVendor {
 
-  private final String columnName;
-  private final MappedField<?> field;
+  private final DataSource source;
 
   /**
-   * Create.
+   * Create
    * 
-   * @param columnName
-   * @param field
+   * @param source
    */
-  public FieldMeta(String columnName, MappedField<?> field) {
+  public DataSourceAdapter(DataSource source) {
     super();
-    this.columnName = columnName;
-    this.field = field;
+    this.source = source;
   }
 
-  /**
-   * Get column name.
-   * 
-   * @return the columnName
-   */
-  public String getColumnName() {
-    return columnName;
-  }
-
-  /**
-   * Get mapped field.
-   * 
-   * @return field
-   */
-  public MappedField<?> getField() {
-    return field;
+  public Connection connect() throws ConnectException {
+    try {
+      return source.getConnection();
+    } catch (SQLException e) {
+      throw new ConnectException(e);
+    }
   }
 
 }

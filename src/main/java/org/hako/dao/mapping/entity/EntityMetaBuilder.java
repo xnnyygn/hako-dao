@@ -57,25 +57,8 @@ public class EntityMetaBuilder {
    * @param meta
    * @return this
    */
-  public EntityMetaBuilder updateFieldMeta(MappedField<?> field, FieldMeta meta) {
-    fields.put(field, meta);
-    return this;
-  }
-
-  /**
-   * Update field column name.
-   * 
-   * @param field
-   * @param columnName new column name
-   * @return this
-   */
-  public EntityMetaBuilder updateFieldColumnName(MappedField<?> field,
-      String columnName) {
-    if (fields.containsKey(field)) {
-      FieldMeta oldMeta = fields.get(field);
-      fields.put(field, new FieldMeta(columnName, oldMeta.getPropertyName(),
-          oldMeta.isPk()));
-    }
+  public EntityMetaBuilder updateFieldMeta(MappedField<?> field, String columnName) {
+    fields.put(field, new FieldMeta(columnName, field));
     return this;
   }
 

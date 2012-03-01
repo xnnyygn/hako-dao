@@ -16,7 +16,6 @@
 package org.hako.dao;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +26,11 @@ import org.hako.OptionUtils;
 import org.hako.Some;
 import org.hako.dao.ListParams.OrderBy;
 import org.hako.dao.db.client.DbClient;
+import org.hako.dao.mapper.StaticMapper;
+import org.hako.dao.mapping.entity.EntityMeta;
+import org.hako.dao.mapping.entity.TableName;
+import org.hako.dao.mapping.field.FieldMeta;
+import org.hako.dao.mapping.field.MappedField;
 import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.clause.delete.DeleteClause;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
@@ -54,7 +58,7 @@ import org.hako.dao.sql.expression.value.ValueFactory;
 public abstract class GenericDao<T, PK> {
 
   protected final DbClient client;
-  protected final Entity entity;
+  protected final EntityMeta entity;
 
   /**
    * Create.
@@ -62,10 +66,10 @@ public abstract class GenericDao<T, PK> {
    * @param client
    * @param entity
    */
-  public GenericDao(DbClient client, Entity entity) {
+  public GenericDao(DbClient client, Class<?> entityClass) {
     super();
     this.client = client;
-    this.entity = entity;
+    this.entity = new StaticMapper().setup(entityClass);
   }
 
   /**
@@ -97,19 +101,11 @@ public abstract class GenericDao<T, PK> {
    * @return some entity instance of none
    */
   public Option<T> get(PK id) {
-    return get(id, entity.getAllFields());
-  }
-
-
-  public Option<T> get(PK id, SimpleField<?>... fields) {
-    return get(id, Arrays.asList(fields));
-  }
-
-  public Option<T> get(PK id, List<SimpleField<?>> fields) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(createSelection(fields));
-    builder.from(entity.getTableName(), entity.getTableAlias());
-    builder.where(createPkCondition(id));
+    builder.select(createSelection(entity.getFields()));
+    TableName tableName = entity.getTableName();
+    builder.from(tableName.getName(), tableName.getAlias());
+    builder.where(createPkCondition(id, true));
     return convert(client.selectSingleRow(builder.toSelectClause()));
   }
 
@@ -119,20 +115,24 @@ public abstract class GenericDao<T, PK> {
    * @param fields fields
    * @return multiple selection
    */
-  protected MultipleSelection createSelection(List<SimpleField<?>> fields) {
+  protected MultipleSelection createSelection(List<FieldMeta> fields) {
     MultipleSelectionBuilder builder = new MultipleSelectionBuilder();
-    for (SimpleField<?> f : fields) {
-      builder.addExpressionAka(
-          new TableColumnName(f.getTableAlias(), f.getColumnName()),
-          f.getPropertyName());
+    for (FieldMeta f : fields) {
+      builder.addExpressionAka(new TableColumnName(entity.getTableName()
+          .getAlias(), f.getColumnName()), entity.getTableName().getAlias()
+          + "_" + f.getColumnName());
     }
     return builder.toMultipleSelection();
   }
 
-  private Condition createPkCondition(PK id) {
+  private Condition createPkCondition(PK id, boolean withTableAlias) {
     if (entity.getPkFields().size() == 1) {
-      return Conditions.eq(new ColumnName(entity.getPkFields().get(0)
-          .getPropertyName()), ValueFactory.create(id));
+      String columnName = entity.getPkFields().get(0).getColumnName();
+      Expression pk =
+          withTableAlias ? new TableColumnName(
+              entity.getTableName().getAlias(), columnName) : new ColumnName(
+              columnName);
+      return Conditions.eq(pk, ValueFactory.create(id));
     }
     return createComplexPkCondition(id);
   }
@@ -148,12 +148,12 @@ public abstract class GenericDao<T, PK> {
    * @return id
    */
   @SuppressWarnings("unchecked")
-  public PK save(Map<String, Object> props) {
+  public PK save(Map<MappedField<?>, Object> props) {
     InsertClauseBuilder builder =
-        new InsertClauseBuilder(entity.getTableName());
-    for (SimpleField<?> f : entity.getOtherFields()) {
+        new InsertClauseBuilder(entity.getTableName().getName());
+    for (FieldMeta f : entity.getNormalFields()) {
       builder.addColumn(f.getColumnName());
-      builder.addValue(ValueFactory.create(props.get(f.getPropertyName())));
+      builder.addValue(ValueFactory.create(props.get(f.getField())));
     }
     return (PK) client.insertAndGet(builder.toInsertClause());
   }
@@ -181,20 +181,22 @@ public abstract class GenericDao<T, PK> {
 
   private List<T> listBy(Option<Restriction> rOpt, Option<ListParams> lpOpt) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(createSelection(entity.getAllFields()));
-    builder.from(entity.getTableName(), entity.getTableAlias());
+    builder.select(createSelection(entity.getFields()));
+    TableName tableName = entity.getTableName();
+    builder.from(tableName.getName(), tableName.getAlias());
     // handle where
     if (rOpt.hasValue()) {
-      builder.where(rOpt.get().toCondition());
+      builder.where(rOpt.get().toCondition(entity));
     }
     // handle limit and order by
     if (lpOpt.hasValue()) {
       ListParams params = lpOpt.get();
       builder.limit(params.getMax(), params.getOffset());
       for (OrderBy orderBy : params.getOrderBys()) {
-        builder.addOrderBy(
-            new ColumnName(orderBy.getField().getPropertyName()),
-            orderBy.isAsc());
+        Option<String> nameOpt = entity.getColumnAliasName(orderBy.getField());
+        if (nameOpt.hasValue()) {
+          builder.addOrderBy(new ColumnName(nameOpt.get()), orderBy.isAsc());
+        }
       }
     }
     return convert(client.selectMultipleRows(builder.toSelectClause()));
@@ -208,20 +210,20 @@ public abstract class GenericDao<T, PK> {
    * @see DbClient#delete(DeleteClause)
    */
   public int deleteById(PK id) {
-    return client.delete(new DeleteClause(entity.getTableName(),
-        createPkCondition(id)));
+    return client.delete(new DeleteClause(entity.getTableName().getName(),
+        createPkCondition(id, false)));
   }
 
   public int update(Map<SimpleField<?>, Object> props, PK id) {
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
-    builder.update(entity.getTableName());
+    builder.update(entity.getTableName().getName());
     Map<String, Expression> valueSetMap = new HashMap<String, Expression>();
     for (Map.Entry<SimpleField<?>, Object> entry : props.entrySet()) {
       valueSetMap.put(entry.getKey().getColumnName(),
           ValueFactory.create(entry.getValue()));
     }
     builder.set(valueSetMap);
-    builder.where(createPkCondition(id));
+    builder.where(createPkCondition(id, true));
     return client.update(builder.toUpdateClause());
   }
 
@@ -242,9 +244,10 @@ public abstract class GenericDao<T, PK> {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(new ExpressionSelection(FunctionFactory
         .count(new AsteriskExpression())));
-    builder.from(entity.getTableName(), entity.getTableAlias());
+    TableName tableName = entity.getTableName();
+    builder.from(tableName.getName(), tableName.getAlias());
     if (rOption.hasValue()) {
-      builder.where(rOption.get().toCondition());
+      builder.where(rOption.get().toCondition(entity));
     }
     return ((Number) client.selectObject(builder.toSelectClause()).get())
         .intValue();
@@ -252,10 +255,10 @@ public abstract class GenericDao<T, PK> {
 
   public Option<T> findBy(Restriction restriction) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(createSelection(entity.getAllFields()));
-    builder.from(entity.getTableName(), entity.getTableAlias());
-    builder.where(restriction.toCondition());
+    builder.select(createSelection(entity.getFields()));
+    TableName tableName = entity.getTableName();
+    builder.from(tableName.getName(), tableName.getAlias());
+    builder.where(restriction.toCondition(entity));
     return convert(client.selectSingleRow(builder.toSelectClause()));
   }
-
 }

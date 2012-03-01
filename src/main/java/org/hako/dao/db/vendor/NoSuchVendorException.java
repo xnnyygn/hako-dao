@@ -13,49 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.dao.db.vendor;
 
+import org.hako.dao.HakoDaoException;
 
 /**
- * Mapped field.
+ * If connector cannot find, this exception will be thrown.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
+ * @see {@link MultipleDbVendor#connect(Object)}
  */
-public class FieldMeta {
+public class NoSuchVendorException extends HakoDaoException {
 
-  private final String columnName;
-  private final MappedField<?> field;
+  private static final long serialVersionUID = 3341712976526193988L;
 
   /**
    * Create.
    * 
-   * @param columnName
-   * @param field
+   * @param message
    */
-  public FieldMeta(String columnName, MappedField<?> field) {
-    super();
-    this.columnName = columnName;
-    this.field = field;
+  public NoSuchVendorException(String message) {
+    super(message);
   }
-
-  /**
-   * Get column name.
-   * 
-   * @return the columnName
-   */
-  public String getColumnName() {
-    return columnName;
-  }
-
-  /**
-   * Get mapped field.
-   * 
-   * @return field
-   */
-  public MappedField<?> getField() {
-    return field;
-  }
-
+  
 }

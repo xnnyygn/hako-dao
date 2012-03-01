@@ -15,46 +15,20 @@
  */
 package org.hako.dao.user;
 
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
-import org.hako.dao.Entity;
 import org.hako.dao.GenericDao;
-import org.hako.dao.SimpleField;
 import org.hako.dao.db.client.DbClient;
-import org.hako.dao.sql.clause.select.SelectClauseBuilder;
-import org.hako.dao.sql.clause.select.table.JoinWithConditionTable;
-import org.hako.dao.sql.clause.select.table.TableFactory;
-import org.hako.dao.sql.expression.TableColumnName;
-import org.hako.dao.sql.expression.condition.Conditions;
+import org.hako.dao.user.domain.Blog;
 
 /**
- * DAO of {@link Blog}.
+ * DAO of {@link BlogInstance}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class BlogDao extends GenericDao<Blog, Long> {
-
-  public final static String TABLE_NAME = "blog";
-  public final static String TABLE_ALIAS = "b";
-  public final static SimpleField<Long> FIELD_ID = new SimpleField<Long>(TABLE_ALIAS, "id",
-      true);
-  public final static SimpleField<String> FIELD_TITLE = new SimpleField<String>(
-      TABLE_ALIAS, "title", false);
-  public final static SimpleField<String> FIELD_CONTENT = new SimpleField<String>(
-      TABLE_ALIAS, "content", false);
-  public final static SimpleField<Timestamp> FIELD_DATE_CREATED =
-      new SimpleField<Timestamp>(TABLE_ALIAS, "date_created", "dateCreated", false);
-  public final static SimpleField<Long> FIELD_USER_ID = new SimpleField<Long>(TABLE_ALIAS,
-      "user_id", "userId", false);
-  @SuppressWarnings("unchecked")
-  public final static List<SimpleField<?>> FIELD_ALL = Arrays.asList(
-      (SimpleField<?>) FIELD_ID, FIELD_TITLE, FIELD_CONTENT, FIELD_DATE_CREATED,
-      FIELD_USER_ID);
+public class BlogDao extends GenericDao<BlogInstance, Long> {
 
   /**
    * Create.
@@ -62,26 +36,12 @@ public class BlogDao extends GenericDao<Blog, Long> {
    * @param client
    */
   public BlogDao(DbClient client) {
-    super(client, new Entity(TABLE_NAME, TABLE_ALIAS, FIELD_ALL));
+    super(client, Blog.class);
   }
 
   @Override
-  protected Blog convert(Map<String, Object> props) {
-    return new Blog(props);
+  protected BlogInstance convert(Map<String, Object> props) {
+    return new BlogInstance(props);
   }
-
-  @SuppressWarnings("unchecked")
-  public List<Map<String, Object>> listWithUserName() {
-    SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(createSelection(Arrays.asList(FIELD_ID,
-        (SimpleField<?>) FIELD_TITLE, FIELD_CONTENT, FIELD_DATE_CREATED,
-        UserDao.FIELD_NAME)));
-    builder.from(new JoinWithConditionTable(TableFactory.createSimpleAkaTable(
-        TABLE_NAME, TABLE_ALIAS), TableFactory.createSimpleAkaTable(
-        UserDao.TABLE_NAME, UserDao.TABLE_ALIAS), Conditions.eq(
-        new TableColumnName(TABLE_ALIAS, FIELD_ID.getColumnName()),
-        new TableColumnName(UserDao.TABLE_ALIAS, UserDao.FIELD_ID
-            .getColumnName()))));
-    return client.selectMultipleRows(builder.toSelectClause());
-  }
+ 
 }

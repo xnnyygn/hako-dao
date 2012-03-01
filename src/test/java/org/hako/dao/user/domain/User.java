@@ -13,40 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.user;
+package org.hako.dao.user.domain;
 
-import java.util.Map;
-
-import org.hako.dao.util.EntityPropsUtils;
+import org.hako.dao.mapping.entity.EntityMetaBuilder;
+import org.hako.dao.mapping.field.AutoIncreasedPrimaryKey;
+import org.hako.dao.mapping.field.MappedField;
+import org.hako.dao.mapping.field.NormalField;
 
 /**
- * Entity blog.
+ * Domain USER.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class Blog {
+public class User {
 
-  private final Map<String, Object> props;
+  public static final MappedField<Long> id =
+      new AutoIncreasedPrimaryKey<Long>();
+  public static final MappedField<String> name = new NormalField<String>();
 
   /**
-   * Create with properties.
+   * Post setup.
    * 
-   * @param props properties
+   * @param builder entity meta builder
    */
-  public Blog(Map<String, Object> props) {
-    super();
-    this.props = EntityPropsUtils.fixCase(props, BlogDao.FIELD_ALL);
+  public static void postSetup(EntityMetaBuilder builder) {
+    builder.updateTableName("USER", "u");
   }
-
-  public String getTitle() {
-    return (String) props.get(BlogDao.FIELD_TITLE.getPropertyName());
-  }
-
-  @Override
-  public String toString() {
-    return "Blog [" + props + "]";
-  }
-
+  
 }

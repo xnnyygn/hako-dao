@@ -13,38 +13,47 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.db.vendor;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 /**
- * An adapter of {@link DataSource} to {@link DbConnector}.
+ * Use {@link DriverManager} to get connection.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
- * @see DataSource#getConnection()
  */
-public class DataSourceAdapter extends SingleDbConnector {
+public class DriverManagerDbVendor extends SingleDbVendor {
 
-  private final DataSource source;
+  private final String url;
+  private final String username;
+  private final String password;
 
   /**
-   * Create
+   * Create.
    * 
-   * @param source
+   * @param driverClassName driver class name
+   * @param url
+   * @param username
+   * @param password
+   * @throws ClassNotFoundException if class not found
+   * @see Class#forName(String)
    */
-  public DataSourceAdapter(DataSource source) {
+  public DriverManagerDbVendor(String driverClassName, String url,
+      String username, String password) throws ClassNotFoundException {
     super();
-    this.source = source;
+    Class.forName(driverClassName);
+    this.url = url;
+    this.username = username;
+    this.password = password;
   }
 
   public Connection connect() throws ConnectException {
     try {
-      return source.getConnection();
+      return DriverManager.getConnection(url, username, password);
     } catch (SQLException e) {
       throw new ConnectException(e);
     }

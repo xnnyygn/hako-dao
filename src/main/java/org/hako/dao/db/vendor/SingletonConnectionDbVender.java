@@ -13,49 +13,41 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.dao.db.vendor;
 
+import java.sql.Connection;
 
 /**
- * Mapped field.
+ * A database vendor always return the same connection, may be useful for
+ * in-memory database.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class FieldMeta {
+public class SingletonConnectionDbVender extends SingleDbVendor {
 
-  private final String columnName;
-  private final MappedField<?> field;
-
+  private final Connection connection;
+  
   /**
    * Create.
    * 
-   * @param columnName
-   * @param field
+   * @param delegate
    */
-  public FieldMeta(String columnName, MappedField<?> field) {
+  public SingletonConnectionDbVender(DbVendor delegate) {
     super();
-    this.columnName = columnName;
-    this.field = field;
+    connection = delegate.connect();
   }
 
-  /**
-   * Get column name.
-   * 
-   * @return the columnName
-   */
-  public String getColumnName() {
-    return columnName;
+
+  public Connection connect() throws ConnectException {
+    return connection;
   }
 
-  /**
-   * Get mapped field.
-   * 
-   * @return field
-   */
-  public MappedField<?> getField() {
-    return field;
-  }
 
+  @Override
+  public void releaseQuietly(Connection connection) {
+    // do nothing
+  }
+  
 }

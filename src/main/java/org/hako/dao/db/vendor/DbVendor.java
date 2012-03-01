@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.db.vendor;
 
 import java.sql.Connection;
 
@@ -25,7 +25,7 @@ import java.sql.Connection;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface DbConnector {
+public interface DbVendor {
 
   /**
    * Connect to database and get a connection.
@@ -40,11 +40,11 @@ public interface DbConnector {
    * 
    * @param key key
    * @return connection
-   * @throws NoSuchConnectorException if cannot find connector, for multiple
+   * @throws NoSuchVendorException if cannot find connector, for multiple
    *         database solution
    * @throws ConnectException if failed to connect
    */
-  public Connection connect(Object key) throws NoSuchConnectorException,
+  public Connection connect(Object key) throws NoSuchVendorException,
       ConnectException;
 
   /**

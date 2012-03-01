@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.db.connector;
+package org.hako.dao.db.vendor;
 
 import java.sql.Connection;
 import java.util.Map;
@@ -31,7 +31,7 @@ import org.hako.dao.util.MapUtils;
  * @since 1.0.0
  * @see BasicDataSource
  */
-public class DbcpConnector extends DataSourceAdapter {
+public class DbcpVendor extends DataSourceAdapter {
 
   /**
    * Create with four usually properties.
@@ -41,7 +41,7 @@ public class DbcpConnector extends DataSourceAdapter {
    * @param username
    * @param password
    */
-  public DbcpConnector(String driverClassName, String url, String username,
+  public DbcpVendor(String driverClassName, String url, String username,
       String password) {
     this(MapUtils
         .apply(String.class, Object.class, "driverClassName", driverClassName,
@@ -53,7 +53,7 @@ public class DbcpConnector extends DataSourceAdapter {
    * 
    * @param props properties
    */
-  public DbcpConnector(Map<String, Object> props) {
+  public DbcpVendor(Map<String, Object> props) {
     super(createBasicDataSource(props));
   }
 

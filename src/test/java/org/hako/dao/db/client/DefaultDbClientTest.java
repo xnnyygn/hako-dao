@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.hako.dao.db.connector.DbcpConnector;
+import org.hako.dao.db.vendor.DbcpVendor;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
 import org.hako.dao.sql.expression.ColumnName;
@@ -49,7 +49,7 @@ public class DefaultDbClientTest {
     props.put("username", "sa");
     props.put("password", "");
     props.put("connectionInitSqls", loadInitSqls());
-    return new DefaultDbClient(new DbcpConnector(props));
+    return new DefaultDbClient(new DbcpVendor(props));
   }
 
   private static List<String> loadInitSqls() {

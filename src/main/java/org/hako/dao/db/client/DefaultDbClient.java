@@ -32,7 +32,7 @@ import org.hako.OptionUtils;
 import org.hako.Some;
 import org.hako.dao.HakoDaoException;
 import org.hako.dao.db.DatabaseException;
-import org.hako.dao.db.connector.DbConnector;
+import org.hako.dao.db.vendor.DbVendor;
 import org.hako.dao.sql.Clause;
 import org.hako.dao.sql.clause.delete.DeleteClause;
 import org.hako.dao.sql.clause.insert.InsertClause;
@@ -49,7 +49,7 @@ import org.hako.dao.sql.clause.update.UpdateClause;
  */
 public class DefaultDbClient implements DbClient {
 
-  protected final DbConnector connector;
+  protected final DbVendor connector;
   protected final boolean printSql;
 
   /**
@@ -57,7 +57,7 @@ public class DefaultDbClient implements DbClient {
    * 
    * @param connector
    */
-  public DefaultDbClient(DbConnector connector) {
+  public DefaultDbClient(DbVendor connector) {
     this(connector, false);
   }
 
@@ -67,7 +67,7 @@ public class DefaultDbClient implements DbClient {
    * @param connector
    * @param printSql print SQL
    */
-  public DefaultDbClient(DbConnector connector, boolean printSql) {
+  public DefaultDbClient(DbVendor connector, boolean printSql) {
     super();
     this.connector = connector;
     this.printSql = printSql;
@@ -251,7 +251,7 @@ public class DefaultDbClient implements DbClient {
    * @param generateKey should generate key
    * @return prepared statement
    * @throws DatabaseException if database error occurred
-   * @see DbConnector#connect()
+   * @see DbVendor#connect()
    * @see #createPreparedStatement(Connection, String, boolean, List)
    */
   protected PreparedStatement createPreparedStatement(Clause clause,

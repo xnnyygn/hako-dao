@@ -15,11 +15,11 @@
  */
 package org.hako.dao.db.connector;
 
-import org.hako.dao.db.connector.DbcpConnector;
+import org.hako.dao.db.vendor.DbcpVendor;
 import org.junit.Test;
 
 /**
- * Test of {@link DbcpConnector}.
+ * Test of {@link DbcpVendor}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
@@ -29,8 +29,8 @@ public class DbcpConnectorTest {
 
   @Test
   public void testConnect() {
-    DbcpConnector connector =
-        new DbcpConnector("org.h2.Driver", "jdbc:h2:mem", "sa", "");
+    DbcpVendor connector =
+        new DbcpVendor("org.h2.Driver", "jdbc:h2:mem", "sa", "");
     connector.connect();
   }
 
