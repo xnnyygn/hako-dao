@@ -27,8 +27,7 @@ import org.hako.dao.sql.expression.Expression;
 public class Count extends UnaryFunction {
 
   /**
-   * Create.
-   * 
+   * @param name
    * @param expression
    */
   public Count(Expression expression) {

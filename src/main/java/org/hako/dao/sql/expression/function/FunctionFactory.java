@@ -30,8 +30,7 @@ public class FunctionFactory {
    * Create count function.
    * 
    * @param expression
-   * @return count
-   * @see Count
+   * @return
    */
   public static Count count(Expression expression) {
     return new Count(expression);

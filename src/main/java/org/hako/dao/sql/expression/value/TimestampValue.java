@@ -23,6 +23,7 @@ import java.sql.Timestamp;
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
+ *
  */
 public class TimestampValue extends SimpleValue {
 

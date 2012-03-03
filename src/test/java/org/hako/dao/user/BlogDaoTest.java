@@ -16,6 +16,7 @@
 package org.hako.dao.user;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -82,7 +83,7 @@ public class BlogDaoTest {
 
   @Test
   public void testGet() {
-    System.out.println(blogDao.get(1l));
+    assertTrue(blogDao.get(1l).hasValue());
   }
 
   @Test

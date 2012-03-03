@@ -156,7 +156,8 @@ public class GenericDao {
   }
 
   private Condition createPkCondition(Object id, boolean withTableAlias) {
-    if (entity.getPkFields().size() == 1) {
+    int count = entity.getPkFields().size();
+    if (count == 1) {
       String columnName = entity.getPkFields().get(0).getColumnName();
       Expression pk =
           withTableAlias ? new TableColumnName(

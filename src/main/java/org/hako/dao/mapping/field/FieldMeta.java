@@ -69,5 +69,11 @@ public class FieldMeta {
   public String getPropertyName() {
     return propertyName;
   }
-  
+
+  @Override
+  public String toString() {
+    return "FieldMeta [columnName=" + columnName + ", propertyName="
+        + propertyName + ", field=" + field + "]";
+  }
+
 }

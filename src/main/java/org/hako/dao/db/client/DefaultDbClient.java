@@ -289,8 +289,6 @@ public class DefaultDbClient implements DbClient {
     PreparedStatement ps =
         connection.prepareStatement(preparedSql, (generateKey
             ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS));
-    // set parameters
-    System.out.println(params);
     int count = params.size();
     int i = 0;
     while (i < count) {
