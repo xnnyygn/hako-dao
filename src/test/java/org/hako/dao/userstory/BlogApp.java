@@ -200,6 +200,40 @@ public class BlogApp {
     // WHERE b.id IN ( SELECT bt.blog_id FROM blog_tags bt WHERE bt.tag_id = (
     // SELECT t.id FROM tag as t WHERE t.name = ? ))
     // ORDER BY b.date_created DESC (with limit)
+    SelectClauseBuilder commentCountBuilder = new SelectClauseBuilder();
+    commentCountBuilder.select(Functions.countRow());
+    commentCountBuilder.from(TABLE_COMMENT.forAka());
+    commentCountBuilder.where(Conditions.eq(
+        TABLE_COMMENT.forAliasColumn("blog_id"),
+        TABLE_BLOG.forAliasColumn("id")));
+
+    SelectClauseBuilder tagBuilder = new SelectClauseBuilder();
+    tagBuilder.select(TABLE_TAG.forAliasColumn("id"));
+    tagBuilder.from(TABLE_TAG.forAka());
+    tagBuilder.where(Conditions.eq(TABLE_TAG.forAliasColumn("text"),
+        Values.create("foo")));
+
+    SelectClauseBuilder blogsWithTagBuilder = new SelectClauseBuilder();
+    blogsWithTagBuilder.select(TABLE_BLOG_TAGS.forAliasColumn("blog_id"));
+    blogsWithTagBuilder.from(TABLE_BLOG_TAGS.forAka());
+    blogsWithTagBuilder.where(Conditions.eq(
+        TABLE_BLOG_TAGS.forAliasColumn("tag_id"),
+        tagBuilder.toInnerSelectExpr()));
+
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(TABLE_BLOG.forAliasAsteriskSel(),
+        TABLE_USER.forAliasAsteriskSel(),
+        commentCountBuilder.toInnerSelectSelection());
+    builder.fromJoin(
+        TABLE_BLOG.forAka(),
+        TABLE_USER.forAka(),
+        Conditions.eq(TABLE_BLOG.forAliasColumn("user_id"),
+            TABLE_USER.forAliasColumn("id")));
+    builder.where(Conditions.in(TABLE_BLOG.forAliasColumn("id"),
+        blogsWithTagBuilder.toInnerSelectExpr()));
+    builder.addOrderBy(TABLE_BLOG.forAliasColumn("date_created"), false);
+    builder.limit(10, 0);
+    System.out.println(builder.toSelectClause());
   }
 
 }
