@@ -15,37 +15,43 @@
  */
 package org.hako.dao.sql.clause.select.selection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
 
 /**
- * Expression selection.
- *
+ * Multiple expression selection.
+ * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
+ * 
  */
-public class ExpressionSelection implements Selection {
+public class MultipleExpressionSelection extends MultipleSelection {
 
-  protected final Expression expression;
-  
   /**
    * Create.
    * 
-   * @param expression
+   * @param expressions
    */
-  public ExpressionSelection(Expression expression) {
-    super();
-    this.expression = expression;
+  public MultipleExpressionSelection(List<Expression> expressions) {
+    super(mapToSelections(expressions));
   }
 
-  public String toPrepared() {
-    return expression.toPrepared();
-  }
-
-  public List<Object> getParams() {
-    return expression.getParams();
+  /**
+   * Convert expressions to selections.
+   * 
+   * @param expressions
+   * @return selections
+   * @see ExpressionSelection
+   */
+  private static List<Selection> mapToSelections(List<Expression> expressions) {
+    List<Selection> selections = new ArrayList<Selection>();
+    for (Expression expr : expressions) {
+      selections.add(new ExpressionSelection(expr));
+    }
+    return selections;
   }
 
 }

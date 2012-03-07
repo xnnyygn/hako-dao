@@ -15,6 +15,12 @@
  */
 package org.hako.dao.userstory;
 
+import org.hako.dao.mapping.entity.TableName;
+import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.clause.select.table.JoinWithConditionTable;
+import org.hako.dao.sql.expression.InnerSelectExpression;
+import org.hako.dao.sql.expression.condition.Conditions;
+import org.hako.dao.sql.expression.value.ValueFactory;
 import org.junit.Test;
 
 /**
@@ -22,18 +28,65 @@ import org.junit.Test;
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
 public class BlogApp {
 
+  private static TableName TABLE_BLOG = new TableName("blog", "b");
+  private static TableName TABLE_USER = new TableName("user", "u");
+  private static TableName TABLE_TAG = new TableName("tag", "t");
+  private static TableName TABLE_BLOG_TAGS = new TableName("blog_tags", "bt");
+  private static TableName TABLE_COMMENT = new TableName("comment", "c");
+
   @Test
-  public void testShowBlog() {
+  public void testShowBlogBlogAndUser() {
     // SELECT b.*, u.* FROM blog as b JOIN user as u ON b.user_id = u.id \
     // WHERE b.id = ?
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder
+        .select(TABLE_BLOG.forAliasAsterisk(), TABLE_USER.forAliasAsterisk());
+    builder.fromJoin(
+        TABLE_BLOG.forAka(),
+        TABLE_USER.forAka(),
+        Conditions.eq(TABLE_BLOG.forAliasColumn("user_id"),
+            TABLE_USER.forAliasColumn("id")));
+    System.out.println(builder.toSelectClause());
+  }
+
+  @Test
+  public void testShowBlogBlogTags() {
     // SELECT t.* FROM tag as t WHERE t.id IN ( SELECT bt.tag_id \
     // FROM blog_tags as bt WHERE bt.blog_id = ? )
+    SelectClauseBuilder subBuilder = new SelectClauseBuilder();
+    subBuilder.select(TABLE_BLOG_TAGS.forAliasColumn("tag_id"));
+    subBuilder.from(TABLE_BLOG_TAGS.forAka());
+    subBuilder.where(Conditions.eq(TABLE_BLOG_TAGS.forAliasColumn("blog_id"),
+        ValueFactory.create(1l)));
+
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(TABLE_TAG.forAliasAsterisk());
+    builder.from(TABLE_TAG.forAka());
+    builder.where(Conditions.inSelect(TABLE_TAG.forAliasColumn("id"),
+        subBuilder.toSelectClause()));
+    System.out.println(builder.toSelectClause());
+  }
+
+  @Test
+  public void testShowBlogBlogComments() {
     // SELECT c.*, u.* FROM comment as c JOIN user as u ON c.user_id = u.id \
     // WHERE c.blog_id = ? ORDER BY c.date_created DESC
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(TABLE_COMMENT.forAliasAsterisk(),
+        TABLE_USER.forAliasAsterisk());
+    builder.fromJoin(
+        TABLE_COMMENT.forAka(),
+        TABLE_USER.forAka(),
+        Conditions.eq(TABLE_COMMENT.forAliasColumn("user_id"),
+            TABLE_USER.forAliasColumn("id")));
+    builder.where(Conditions.eq(TABLE_COMMENT.forAliasColumn("blog_id"),
+        ValueFactory.create(1l)));
+    builder.addOrderBy(TABLE_COMMENT.forAliasColumn("date_created"), false);
+    System.out.println(builder.toSelectClause());
   }
 
   @Test

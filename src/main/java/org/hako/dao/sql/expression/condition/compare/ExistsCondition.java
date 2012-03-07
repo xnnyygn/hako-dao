@@ -13,17 +13,40 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql.clause.select.selection;
+package org.hako.dao.sql.expression.condition.compare;
 
-import org.hako.dao.sql.clause.select.SelectOnlySql;
+import java.util.List;
+
+import org.hako.dao.sql.clause.select.SelectClause;
+import org.hako.dao.sql.expression.condition.Condition;
 
 /**
- * Selection.
+ * Exists condition.
  *
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public interface Selection extends SelectOnlySql {
+public class ExistsCondition implements Condition {
+
+  private final SelectClause select;
+
+  /**
+   * Create.
+   * 
+   * @param select
+   */
+  public ExistsCondition(SelectClause select) {
+    super();
+    this.select = select;
+  }
+
+  public String toPrepared() {
+    return "EXISTS ( " + select.toPrepared() + " )";
+  }
+
+  public List<Object> getParams() {
+    return select.getParams();
+  }
 
 }

@@ -15,6 +15,10 @@
  */
 package org.hako.dao.mapping.entity;
 
+import org.hako.dao.sql.clause.select.selection.TableAliasAsteriskSelection;
+import org.hako.dao.sql.clause.select.table.AkaTable;
+import org.hako.dao.sql.expression.TableColumnName;
+
 /**
  * Table name.
  * 
@@ -57,6 +61,36 @@ public class TableName {
     return alias;
   }
 
+  /**
+   * Create {@link TableAliasAsteriskSelection}.
+   * 
+   * @return table alias asterisk selection
+   */
+  public TableAliasAsteriskSelection forAliasAsterisk() {
+    return new TableAliasAsteriskSelection(alias);
+  }
+
+  /**
+   * Create {@link AkaTable}.
+   * 
+   * @return aka table
+   * @since 1.1.0
+   */
+  public AkaTable forAka() {
+    return new AkaTable(name, alias);
+  }
+
+  /**
+   * Create {@link TableColumnName} with name.
+   * 
+   * @param name
+   * @return table column name
+   * @since 1.1.0
+   */
+  public TableColumnName forAliasColumn(String name) {
+    return new TableColumnName(alias, name);
+  }
+
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
@@ -67,5 +101,5 @@ public class TableName {
     builder.append("]");
     return builder.toString();
   }
-  
+
 }
