@@ -17,7 +17,6 @@ package org.hako.dao.mapping.entity;
 
 import org.hako.dao.sql.clause.select.selection.TableAliasAsteriskSelection;
 import org.hako.dao.sql.clause.select.table.AkaTable;
-import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.TableAliasAsteriskExpression;
 import org.hako.dao.sql.expression.TableColumnName;
 

@@ -18,7 +18,6 @@ package org.hako.dao.sql.clause.select;
 import java.util.List;
 
 import org.hako.Option;
-import org.hako.dao.sql.Clause;
 import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.util.MultipleSqlUtils;

@@ -18,7 +18,6 @@ package org.hako.dao.sql.clause.insert;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.hako.dao.sql.Clause;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.clause.insert.values.ValueSource;
 
