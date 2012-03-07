@@ -21,7 +21,7 @@ import org.hako.dao.mapping.field.MappedField;
 import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
-import org.hako.dao.sql.expression.value.ValueFactory;
+import org.hako.dao.sql.expression.value.Values;
 
 /**
  * Equals restriction.
@@ -50,7 +50,7 @@ public class EqualsRestriction extends AbstractCompareRestriction {
           + "]");
     }
     return new EqualsCondition(new ColumnName(nameOpt.get()),
-        ValueFactory.create(value));
+        Values.create(value));
   }
 
 }

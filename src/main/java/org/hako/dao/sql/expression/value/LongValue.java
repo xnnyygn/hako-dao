@@ -22,7 +22,7 @@ package org.hako.dao.sql.expression.value;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class LongValue extends SimpleValue {
+public class LongValue extends DynamicValue {
 
   /**
    * Create.

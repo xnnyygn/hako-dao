@@ -28,7 +28,7 @@ import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
 import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.condition.Conditions;
-import org.hako.dao.sql.expression.value.ValueFactory;
+import org.hako.dao.sql.expression.value.Values;
 import org.junit.Test;
 
 /**
@@ -84,7 +84,7 @@ public class DefaultDbClientTest {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(selectionBuilder.toMultipleSelection());
     builder.from("BLOG");
-    builder.where(Conditions.eq(columnId, ValueFactory.create(1l)));
+    builder.where(Conditions.eq(columnId, Values.create(1l)));
     System.out.println(client.selectSingleRow(builder.toSelectClause()));
   }
 
@@ -98,7 +98,7 @@ public class DefaultDbClientTest {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(selectionBuilder.toMultipleSelection());
     builder.from("BLOG");
-    builder.where(Conditions.eq(columnId, ValueFactory.create(100l)));
+    builder.where(Conditions.eq(columnId, Values.create(100l)));
     System.out.println(client.selectSingleRow(builder.toSelectClause()));
 
   }

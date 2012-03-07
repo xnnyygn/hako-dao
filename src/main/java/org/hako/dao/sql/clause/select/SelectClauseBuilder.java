@@ -26,6 +26,7 @@ import org.hako.dao.sql.clause.select.orderby.ExpressionSingleOrderBy;
 import org.hako.dao.sql.clause.select.orderby.IndexSingleOrderBy;
 import org.hako.dao.sql.clause.select.orderby.MultipleOrderBy;
 import org.hako.dao.sql.clause.select.orderby.OrderBy;
+import org.hako.dao.sql.clause.select.selection.ExpressionSelection;
 import org.hako.dao.sql.clause.select.selection.MultipleExpressionSelection;
 import org.hako.dao.sql.clause.select.selection.MultipleSelection;
 import org.hako.dao.sql.clause.select.selection.Selection;
@@ -33,7 +34,9 @@ import org.hako.dao.sql.clause.select.table.AkaTable;
 import org.hako.dao.sql.clause.select.table.JoinWithConditionTable;
 import org.hako.dao.sql.clause.select.table.SimpleTable;
 import org.hako.dao.sql.clause.select.table.Table;
+import org.hako.dao.sql.expression.AkaExpression;
 import org.hako.dao.sql.expression.Expression;
+import org.hako.dao.sql.expression.InnerSelectExpression;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
 
@@ -57,6 +60,17 @@ public class SelectClauseBuilder {
    */
   public SelectClauseBuilder select(Expression... expressions) {
     return select(new MultipleExpressionSelection(Arrays.asList(expressions)));
+  }
+
+  /**
+   * Select single column as.
+   * 
+   * @param expression
+   * @param alias
+   * @return this
+   */
+  public SelectClauseBuilder selectAs(Expression expression, String alias) {
+    return select(new ExpressionSelection(new AkaExpression(expression, alias)));
   }
 
   /**
@@ -135,6 +149,21 @@ public class SelectClauseBuilder {
   }
 
   /**
+   * Add having clause.
+   * 
+   * @param conditions
+   * @return this
+   */
+  public SelectClauseBuilder having(Condition... conditions) {
+    if (conditions.length == 0) {
+      throw new IllegalArgumentException("conditions cannot be empty");
+    }
+    bean.setHavingOpt(new Some<Having>(new Having(new MultipleAndCondition(
+        Arrays.asList(conditions)))));
+    return this;
+  }
+
+  /**
    * Create conditions.
    * 
    * @param conditions
@@ -150,6 +179,20 @@ public class SelectClauseBuilder {
       default:
         return new Some<Condition>(new MultipleAndCondition(conditions));
     }
+  }
+
+  /**
+   * Add group by clause.
+   * 
+   * @param expressions
+   * @return this
+   */
+  public SelectClauseBuilder groupBy(Expression... expressions) {
+    if (expressions.length == 0) {
+      throw new IllegalArgumentException("expressions cannot be empty");
+    }
+    bean.setGroupByOpt(new Some<GroupBy>(new GroupBy(expressions)));
+    return this;
   }
 
   public SelectClauseBuilder addOrderBy(int index, boolean asc) {
@@ -171,11 +214,40 @@ public class SelectClauseBuilder {
     return limit(max, 0);
   }
 
+  /**
+   * Create select clause.
+   * 
+   * @return select clause
+   * @throws IllegalArgumentException
+   * @see SelectClause
+   */
   public SelectClause toSelectClause() throws IllegalArgumentException {
     if (!orderBys.isEmpty()) {
       bean.setOrderByOpt(new Some<OrderBy>(new MultipleOrderBy(orderBys)));
     }
     return new SelectClause(bean);
+  }
+
+  /**
+   * Create inner select expression.
+   * 
+   * @return inner select expression
+   * @throws IllegalArgumentException
+   * @see InnerSelectExpression
+   */
+  public InnerSelectExpression toInnerSelectExpr()
+      throws IllegalArgumentException {
+    return new InnerSelectExpression(toSelectClause());
+  }
+
+  /**
+   * Create inner select selection.
+   * 
+   * @return expression selection
+   * @see ExpressionSelection
+   */
+  public ExpressionSelection toInnerSelectSelection() {
+    return new ExpressionSelection(toInnerSelectExpr());
   }
 
 }

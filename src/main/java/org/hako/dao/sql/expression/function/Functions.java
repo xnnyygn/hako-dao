@@ -15,6 +15,7 @@
  */
 package org.hako.dao.sql.expression.function;
 
+import org.hako.dao.sql.expression.AsteriskExpression;
 import org.hako.dao.sql.expression.Expression;
 
 /**
@@ -24,7 +25,7 @@ import org.hako.dao.sql.expression.Expression;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class FunctionFactory {
+public class Functions {
 
   /**
    * Create count function.
@@ -34,6 +35,44 @@ public class FunctionFactory {
    */
   public static Count count(Expression expression) {
     return new Count(expression);
+  }
+
+  /**
+   * Count row.
+   * 
+   * @return count
+   * @see AsteriskExpression
+   * @since 1.1.0
+   */
+  public static Count countRow() {
+    return count(new AsteriskExpression());
+  }
+
+  /**
+   * Create unary function.
+   * 
+   * @param name
+   * @param expression
+   * @return unary function
+   * @since 1.1.0
+   */
+  public static UnaryFunction unaryFun(String name, Expression expression) {
+    return new UnaryFunction(name, expression);
+  }
+
+  /**
+   * Create binary function.
+   * 
+   * @param name
+   * @param first
+   * @param second
+   * @return binary function
+   * @see BinaryFunction
+   * @since 1.1.0
+   */
+  public static BinaryFunction binaryFun(String name, Expression first,
+      Expression second) {
+    return new BinaryFunction(name, first, second);
   }
 
 }

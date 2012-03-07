@@ -13,30 +13,39 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql.expression.value;
+package org.hako.dao.sql.clause.select;
+
+import java.util.List;
+
+import org.hako.dao.sql.expression.condition.Condition;
 
 /**
- * String value.
+ * Having clause.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class StringValue extends DynamicValue {
+public class Having implements SelectOnlySql {
+
+  private final Condition condition;
 
   /**
    * Create.
    * 
-   * @param s
+   * @param condition
    */
-  public StringValue(String s) {
-    super(s);
+  public Having(Condition condition) {
+    super();
+    this.condition = condition;
   }
 
-  @Override
-  public String toPlain() {
-    return "\'" + super.toPlain() + "\'";
+  public String toPrepared() {
+    return condition.toPrepared();
   }
 
+  public List<Object> getParams() {
+    return condition.getParams();
+  }
 
 }

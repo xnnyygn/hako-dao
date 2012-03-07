@@ -5,7 +5,7 @@ import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
-import org.hako.dao.sql.expression.value.ValueFactory;
+import org.hako.dao.sql.expression.value.Values;
 import org.junit.Test;
 
 public class UpdateClauseTest {
@@ -15,8 +15,8 @@ public class UpdateClauseTest {
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
     builder.update("BLOG", "b");
     builder.set(new String[] {"title", "content"}, new Expression[] {
-        ValueFactory.create("title0"), ValueFactory.create("content0")});
-    builder.where(new EqualsCondition(new ColumnName("id"), ValueFactory
+        Values.create("title0"), Values.create("content0")});
+    builder.where(new EqualsCondition(new ColumnName("id"), Values
         .create(1l)));
     UpdateClause clause = builder.toUpdateClause();
     System.out.println(clause.toPrepared());
@@ -28,8 +28,8 @@ public class UpdateClauseTest {
     // UPDATE customers SET salesperson = "Mike" WHERE state = "NH"
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
     builder.update("customers");
-    builder.set("saleperson", ValueFactory.create("Mike"));
-    builder.where(new EqualsCondition(new ColumnName("state"), ValueFactory
+    builder.set("saleperson", Values.create("Mike"));
+    builder.where(new EqualsCondition(new ColumnName("state"), Values
         .create("NH")));
     UpdateClause clause = builder.toUpdateClause();
     System.out.println(clause.toPrepared());

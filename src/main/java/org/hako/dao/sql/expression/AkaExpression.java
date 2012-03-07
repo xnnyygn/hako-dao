@@ -13,30 +13,40 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql.expression.value;
+package org.hako.dao.sql.expression;
+
+import java.util.List;
 
 /**
- * String value.
+ * Aka expression.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class StringValue extends DynamicValue {
+public class AkaExpression implements Expression {
+
+  private final Expression expression;
+  private final String alias;
 
   /**
    * Create.
    * 
-   * @param s
+   * @param expression
+   * @param alias
    */
-  public StringValue(String s) {
-    super(s);
+  public AkaExpression(Expression expression, String alias) {
+    super();
+    this.expression = expression;
+    this.alias = alias;
   }
 
-  @Override
-  public String toPlain() {
-    return "\'" + super.toPlain() + "\'";
+  public String toPrepared() {
+    return expression.toPrepared() + " AS " + alias;
   }
 
+  public List<Object> getParams() {
+    return expression.getParams();
+  }
 
 }

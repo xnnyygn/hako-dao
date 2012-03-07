@@ -44,8 +44,8 @@ import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.TableColumnName;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
-import org.hako.dao.sql.expression.function.FunctionFactory;
-import org.hako.dao.sql.expression.value.ValueFactory;
+import org.hako.dao.sql.expression.function.Functions;
+import org.hako.dao.sql.expression.value.Values;
 import org.hako.dao.util.OptionUtils;
 
 /**
@@ -163,7 +163,7 @@ public class GenericDao {
           withTableAlias ? new TableColumnName(
               entity.getTableName().getAlias(), columnName) : new ColumnName(
               columnName);
-      return Conditions.eq(pk, ValueFactory.create(id));
+      return Conditions.eq(pk, Values.create(id));
     }
     return createComplexPkCondition(id);
   }
@@ -183,7 +183,7 @@ public class GenericDao {
         new InsertClauseBuilder(entity.getTableName().getName());
     for (FieldMeta f : entity.getNormalFields()) {
       builder.addColumn(f.getColumnName());
-      builder.addValue(ValueFactory.create(props.get(f.getField())));
+      builder.addValue(Values.create(props.get(f.getField())));
     }
     return client.insertAndGet(builder.toInsertClause());
   }
@@ -258,7 +258,7 @@ public class GenericDao {
     Map<String, Expression> valueSetMap = new HashMap<String, Expression>();
     for (Map.Entry<MappedField<?>, Object> entry : props.entrySet()) {
       valueSetMap.put(entity.getColumnName(entry.getKey()).get(),
-          ValueFactory.create(entry.getValue()));
+          Values.create(entry.getValue()));
     }
     builder.set(valueSetMap);
     builder.where(createPkCondition(id, false));
@@ -280,7 +280,7 @@ public class GenericDao {
 
   private int countBy(Option<Restriction> rOption) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(new ExpressionSelection(FunctionFactory
+    builder.select(new ExpressionSelection(Functions
         .count(new AsteriskExpression())));
     TableName tableName = entity.getTableName();
     builder.from(tableName.getName(), tableName.getAlias());

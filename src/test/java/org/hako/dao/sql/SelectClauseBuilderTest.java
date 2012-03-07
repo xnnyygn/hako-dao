@@ -18,7 +18,7 @@ import org.hako.dao.sql.expression.condition.ConditionBuilder;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
 import org.hako.dao.sql.expression.condition.compare.IsNullCondition;
-import org.hako.dao.sql.expression.value.ValueFactory;
+import org.hako.dao.sql.expression.value.Values;
 import org.junit.Test;
 
 public class SelectClauseBuilderTest {
@@ -50,8 +50,8 @@ public class SelectClauseBuilderTest {
     tableBuilder.add(TableFactory.createSimpleAkaTable("USER", "u"));
     // create where condition
     ConditionBuilder conditionBuilder = new ConditionBuilder();
-    conditionBuilder.add(Conditions.eq(columnId, ValueFactory.create(1l)));
-    conditionBuilder.add(Conditions.ne(columnUserId, ValueFactory.create(2l)));
+    conditionBuilder.add(Conditions.eq(columnId, Values.create(1l)));
+    conditionBuilder.add(Conditions.ne(columnUserId, Values.create(2l)));
     // use select builder
     SelectClauseBuilder selectBuilder = new SelectClauseBuilder();
     selectBuilder.select(selectionBuilder.toMultipleSelection());
@@ -79,7 +79,7 @@ public class SelectClauseBuilderTest {
     conditionBuilder.add(Conditions.eq(new TableColumnName("e1", "dept_no"),
         new TableColumnName("e2", "dept_no")));
     conditionBuilder.add(Conditions.eq(new TableColumnName("e2", "name"),
-        ValueFactory.create("JONES")));
+        Values.create("JONES")));
     builder.where(conditionBuilder.build());
     SelectClause clause = builder.toSelectClause();
     System.out.println(clause.toPrepared());
@@ -96,7 +96,7 @@ public class SelectClauseBuilderTest {
     SelectClauseBuilder innerBuilder = new SelectClauseBuilder();
     innerBuilder.select(new ExpressionSelection(new ColumnName("dept_no")));
     innerBuilder.from(new SimpleTable("emp"));
-    innerBuilder.where(new EqualsCondition(new ColumnName("name"), ValueFactory
+    innerBuilder.where(new EqualsCondition(new ColumnName("name"), Values
         .create("JONES")));
     builder.where(new EqualsCondition(new ColumnName("dept_no"),
         new InnerSelectExpression(innerBuilder.toSelectClause())));

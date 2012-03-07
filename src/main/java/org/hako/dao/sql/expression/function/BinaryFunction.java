@@ -18,36 +18,40 @@ package org.hako.dao.sql.expression.function;
 import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
+import org.hako.dao.sql.util.MultipleSqlUtils;
 
 /**
- * Unary function.
+ * Binary function.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class UnaryFunction extends AbstractFunction {
+public class BinaryFunction extends AbstractFunction {
 
-  protected final Expression expression;
+  protected final Expression first;
+  protected final Expression second;
 
   /**
    * Create.
    * 
    * @param name
-   * @param expression
+   * @param first
+   * @param second
    */
-  public UnaryFunction(String name, Expression expression) {
+  public BinaryFunction(String name, Expression first, Expression second) {
     super(name);
-    this.expression = expression;
+    this.first = first;
+    this.second = second;
   }
 
   public String toPrepared() {
-    return new StringBuilder(name).append('(').append(expression.toPrepared())
-        .append(')').toString();
+    return new StringBuilder(name).append('(').append(first.toPrepared())
+        .append(", ").append(second.toPrepared()).append(')').toString();
   }
 
   public List<Object> getParams() {
-    return expression.getParams();
+    return MultipleSqlUtils.getParams(first, second);
   }
 
 }

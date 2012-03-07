@@ -15,28 +15,47 @@
  */
 package org.hako.dao.sql.expression.value;
 
+import java.util.List;
+
+import org.hako.dao.sql.expression.Expression;
+
 /**
- * String value.
+ * Static value.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class StringValue extends DynamicValue {
+public class StaticValue implements Expression {
+
+  private final String expression;
+
+  /**
+   * Create with dynamic value.
+   * 
+   * @param value
+   */
+  public StaticValue(DynamicValue value) {
+    this(value.toPlain());
+  }
 
   /**
    * Create.
    * 
-   * @param s
+   * @param expression
    */
-  public StringValue(String s) {
-    super(s);
+  public StaticValue(String expression) {
+    super();
+    this.expression = expression;
   }
 
-  @Override
-  public String toPlain() {
-    return "\'" + super.toPlain() + "\'";
+
+  public String toPrepared() {
+    return expression;
   }
 
+  public List<Object> getParams() {
+    return NO_PARAM;
+  }
 
 }

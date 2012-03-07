@@ -13,41 +13,51 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql.expression.function;
+package org.hako.dao.sql.clause.select;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.expression.Expression;
+import org.hako.dao.sql.util.MultipleSqlUtils;
 
 /**
- * Unary function.
+ * Group by sub clause.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class UnaryFunction extends AbstractFunction {
+public class GroupBy implements SelectOnlySql {
 
-  protected final Expression expression;
+  private final List<Expression> expressions;
 
   /**
    * Create.
    * 
-   * @param name
-   * @param expression
+   * @param expressions
    */
-  public UnaryFunction(String name, Expression expression) {
-    super(name);
-    this.expression = expression;
+  public GroupBy(Expression... expressions) {
+    this(Arrays.asList(expressions));
+  }
+
+  /**
+   * Create.
+   * 
+   * @param expressions
+   */
+  public GroupBy(List<Expression> expressions) {
+    super();
+    this.expressions = expressions;
   }
 
   public String toPrepared() {
-    return new StringBuilder(name).append('(').append(expression.toPrepared())
-        .append(')').toString();
+    return MultipleSqlUtils.toPrepared(expressions.toArray(new Sql[0]));
   }
 
   public List<Object> getParams() {
-    return expression.getParams();
+    return MultipleSqlUtils.getParams(expressions);
   }
 
 }

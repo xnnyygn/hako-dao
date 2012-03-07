@@ -25,7 +25,7 @@ import java.sql.Timestamp;
  * @since 1.0.0
  *
  */
-public class TimestampValue extends SimpleValue {
+public class TimestampValue extends DynamicValue {
 
   /**
    * Create.

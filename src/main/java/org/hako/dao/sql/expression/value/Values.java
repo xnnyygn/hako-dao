@@ -16,27 +16,37 @@
 package org.hako.dao.sql.expression.value;
 
 /**
- * String value.
+ * Value factory.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class StringValue extends DynamicValue {
+public class Values {
+
+  public static LongValue create(long l) {
+    return new LongValue(l);
+  }
+
+  public static StringValue create(String s) {
+    return new StringValue(s);
+  }
+
+  public static DynamicValue create(Object obj) {
+    if (obj instanceof String) {
+      return create((String) obj);
+    }
+    return new ObjectValue(obj);
+  }
 
   /**
-   * Create.
+   * Create static value.
    * 
-   * @param s
+   * @param obj object
+   * @return static value
    */
-  public StringValue(String s) {
-    super(s);
+  public static StaticValue createStatic(Object obj) {
+    return new StaticValue(create(obj));
   }
-
-  @Override
-  public String toPlain() {
-    return "\'" + super.toPlain() + "\'";
-  }
-
 
 }

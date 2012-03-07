@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.hako.Option;
 import org.hako.dao.sql.Clause;
+import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.util.MultipleSqlUtils;
 
 /**
@@ -50,18 +51,27 @@ public class SelectClause implements Clause {
     StringBuilder builder = new StringBuilder();
     builder.append("SELECT ").append(bean.getSelection().toPrepared());
     builder.append(" FROM ").append(bean.getTable().toPrepared()).toString();
-    if (bean.hasWhereCond()) {
-      builder.append(" WHERE ").append(bean.getWhereCond().toPrepared());
-    }
-    if (bean.hasOrderBy()) {
-      builder.append(" ORDER BY ").append(bean.getOrderBy().toPrepared());
-    }
+    appendOptionSql(" WHERE ", bean.getWhereCondOpt(), builder);
+    appendOptionSql(" GROUP BY ", bean.getGroupByOpt(), builder);
+    appendOptionSql(" HAVING ", bean.getHavingOpt(), builder);
+    appendOptionSql(" ORDER BY ", bean.getOrderByOpt(), builder);
     return builder.toString();
+  }
+
+  private void appendOptionSql(String prefix, Option<?> option,
+      StringBuilder builder) {
+    if (option.hasValue()) {
+      Object obj = option.get();
+      if (obj instanceof Sql) {
+        builder.append(prefix).append(((Sql) obj).toPrepared());
+      }
+    }
   }
 
   public List<Object> getParams() {
     return MultipleSqlUtils.getParams(bean.getSelection(), bean.getTable(),
-        bean.getWhereCondOpt(), bean.getOrderByOpt(), bean.getLimitOpt());
+        bean.getWhereCondOpt(), bean.getGroupByOpt(), bean.getOrderByOpt(),
+        bean.getLimitOpt());
   }
 
   /**

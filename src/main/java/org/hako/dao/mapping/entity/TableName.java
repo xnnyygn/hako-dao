@@ -17,6 +17,7 @@ package org.hako.dao.mapping.entity;
 
 import org.hako.dao.sql.clause.select.selection.TableAliasAsteriskSelection;
 import org.hako.dao.sql.clause.select.table.AkaTable;
+import org.hako.dao.sql.expression.TableAliasAsteriskExpression;
 import org.hako.dao.sql.expression.TableColumnName;
 
 /**
@@ -66,8 +67,17 @@ public class TableName {
    * 
    * @return table alias asterisk selection
    */
-  public TableAliasAsteriskSelection forAliasAsterisk() {
+  public TableAliasAsteriskSelection forAliasAsteriskSel() {
     return new TableAliasAsteriskSelection(alias);
+  }
+
+  /**
+   * Create {@link TableAliasAsteriskExpression}.
+   * 
+   * @return table alias asterisk expression
+   */
+  public TableAliasAsteriskExpression forAliasAsteriskExpr() {
+    return new TableAliasAsteriskExpression(alias);
   }
 
   /**
