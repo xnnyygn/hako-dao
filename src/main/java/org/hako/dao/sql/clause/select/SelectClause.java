@@ -20,6 +20,7 @@ import java.util.List;
 import org.hako.Option;
 import org.hako.dao.sql.Clause;
 import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.util.MultipleSqlUtils;
 
 /**
@@ -29,7 +30,7 @@ import org.hako.dao.sql.util.MultipleSqlUtils;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class SelectClause implements Clause {
+public class SelectClause extends AbstractClause {
 
   private final SelectClauseBean bean;
 
@@ -89,10 +90,7 @@ public class SelectClause implements Clause {
    * .
    */
   public String toString() {
-    StringBuilder builder = new StringBuilder("[SELECT Prepared SQL=");
-    builder.append(toPrepared()).append(", Parameters=");
-    builder.append(getParams().toString()).append(']');
-    return builder.toString();
+    return "SELECT " + super.toString();
   }
 
 }

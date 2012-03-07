@@ -12,7 +12,7 @@ import org.hako.dao.sql.expression.Expression;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class ExpressionValues implements Values {
+public class ExpressionValues implements ValueSource {
 
   private final List<Expression> expressions;
 

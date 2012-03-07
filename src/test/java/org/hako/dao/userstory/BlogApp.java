@@ -15,7 +15,10 @@
  */
 package org.hako.dao.userstory;
 
+import java.sql.Timestamp;
+
 import org.hako.dao.mapping.entity.TableName;
+import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.condition.Conditions;
@@ -121,7 +124,7 @@ public class BlogApp {
 
     SelectClauseBuilder tagsBuilder = new SelectClauseBuilder();
     tagsBuilder.select(Functions.binaryFun("CONCAT_WS",
-        Values.createStatic(" "), TABLE_TAG.forAliasColumn("name")));
+        Values.createStatic(" "), TABLE_TAG.forAliasColumn("text")));
     tagsBuilder.from(TABLE_TAG.forAka());
     tagsBuilder.where(Conditions.in(TABLE_TAG.forAliasColumn("id"),
         blogTagsBuilder.toInnerSelectExpr()));
@@ -159,11 +162,33 @@ public class BlogApp {
   }
 
   @Test
-  public void testCreatedBlog() {
-    // tags
+  public void testCreatedBlogCountTagByName() {
     // SELECT COUNT(t.id) FROM tag as t WHERE t.name = ?
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(Functions.countRow());
+    builder.from(TABLE_TAG.forAka());
+    builder.where(Conditions.eq(TABLE_TAG.forAliasColumn("text"),
+        Values.create("foo")));
+    System.out.println(builder.toSelectClause());
+  }
+
+  @Test
+  public void testCreateBlogInsertTag() {
     // INSERT INTO tag(...) VALUES(?...)
+    InsertClauseBuilder builder = new InsertClauseBuilder(TABLE_TAG.getName());
+    builder.add("text", "bar");
+    System.out.println(builder.toInsertClause());
+  }
+
+  @Test
+  public void testCreateBlogInsertBlog() {
     // INSERT INTO blog(...) VALUES(?...)
+    InsertClauseBuilder builder = new InsertClauseBuilder(TABLE_BLOG.getName());
+    builder.add("title", "foo");
+    builder.add("content", "bar");
+    builder.add("date_created", new Timestamp(System.currentTimeMillis()));
+    builder.add("user_id", 1l);
+    System.out.println(builder.toInsertClause());
   }
 
   @Test

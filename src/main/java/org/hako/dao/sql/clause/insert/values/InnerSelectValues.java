@@ -26,7 +26,7 @@ import org.hako.dao.sql.clause.select.SelectClause;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class InnerSelectValues implements Values {
+public class InnerSelectValues implements ValueSource {
 
   private final boolean direct;
   private final boolean sorted;

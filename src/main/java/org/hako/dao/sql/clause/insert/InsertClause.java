@@ -19,20 +19,21 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hako.dao.sql.Clause;
-import org.hako.dao.sql.clause.insert.values.Values;
+import org.hako.dao.sql.clause.AbstractClause;
+import org.hako.dao.sql.clause.insert.values.ValueSource;
 
 /**
  * Insert clause.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class InsertClause implements Clause {
+public class InsertClause extends AbstractClause {
 
   private final String tableName;
   private final List<String> columnNames;
-  private final Values values;
+  private final ValueSource values;
 
   /**
    * Create.
@@ -41,7 +42,7 @@ public class InsertClause implements Clause {
    * @param columnNames
    * @param values
    */
-  public InsertClause(String tableName, List<String> columnNames, Values values) {
+  public InsertClause(String tableName, List<String> columnNames, ValueSource values) {
     super();
     this.tableName = tableName;
     this.columnNames = columnNames;
@@ -58,6 +59,10 @@ public class InsertClause implements Clause {
 
   public List<Object> getParams() {
     return values.getParams();
+  }
+
+  public String toString() {
+    return "INSERT " + super.toString();
   }
 
 }
