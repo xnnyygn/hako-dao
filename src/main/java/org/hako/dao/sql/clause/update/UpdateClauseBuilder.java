@@ -16,6 +16,7 @@
 package org.hako.dao.sql.clause.update;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -64,12 +65,25 @@ public class UpdateClauseBuilder {
     return set(columnName, Values.create(obj));
   }
 
+  /**
+   * Set value.
+   * 
+   * @param columnName column name
+   * @param expression expression
+   * @return this
+   */
   public UpdateClauseBuilder set(String columnName, Expression expression) {
     pairs.add(new ColumnExpressionPair(columnName, expression));
     return this;
   }
 
-  @Deprecated
+  /**
+   * Set with column names and expressions.
+   * 
+   * @param columnNames column names
+   * @param expressions expressions
+   * @return this
+   */
   public UpdateClauseBuilder set(String[] columnNames, Expression[] expressions) {
     int count = columnNames.length;
     if (count != expressions.length) {
@@ -83,18 +97,38 @@ public class UpdateClauseBuilder {
     return set(pairs);
   }
 
-  @Deprecated
-  public UpdateClauseBuilder set(Map<String, Expression> columnValueMap) {
+  /**
+   * Set with map.
+   * 
+   * @param columnExprMap
+   * @return this
+   */
+  public UpdateClauseBuilder set(Map<String, Expression> columnExprMap) {
     List<ColumnExpressionPair> pairs = new ArrayList<ColumnExpressionPair>();
-    for (Map.Entry<String, Expression> entry : columnValueMap.entrySet()) {
+    for (Map.Entry<String, Expression> entry : columnExprMap.entrySet()) {
       pairs.add(new ColumnExpressionPair(entry.getKey(), entry.getValue()));
     }
     return set(pairs);
   }
 
-  @Deprecated
+  /**
+   * Set with pairs.
+   * 
+   * @param pairs
+   * @return this
+   */
+  public UpdateClauseBuilder set(ColumnExpressionPair... pairs) {
+    return set(Arrays.asList(pairs));
+  }
+
+  /**
+   * Set with pairs.
+   * 
+   * @param pairs
+   * @return this
+   */
   public UpdateClauseBuilder set(List<ColumnExpressionPair> pairs) {
-    bean.setPairs(pairs);
+    this.pairs.addAll(pairs);
     return this;
   }
 
@@ -112,5 +146,5 @@ public class UpdateClauseBuilder {
     bean.setPairs(pairs);
     return new UpdateClause(bean);
   }
-  
+
 }

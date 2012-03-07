@@ -243,6 +243,7 @@ public class BlogApp {
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
     builder.update(TABLE_BLOG.getName(), TABLE_BLOG.getAlias());
     builder.set("title", "foo");
+    builder.set("content", "bar");
     builder.where(Conditions.eq(TABLE_BLOG.forAliasColumn("id"),
         Values.create(1l)));
     System.out.println(builder.toUpdateClause());
