@@ -35,19 +35,38 @@ import org.hako.dao.sql.expression.value.Values;
  */
 public class InsertClauseBuilder {
 
-  private final String tableName;
+  private Option<String> tableNameOpt = new None<String>();
   private final List<String> columnNames = new ArrayList<String>();
   private Option<ValueSource> valuesOpt = new None<ValueSource>();
   private final List<Expression> expressions = new ArrayList<Expression>();
 
   /**
-   * Create.
-   * 
-   * @param tableName
+   * Default constructor.
    */
-  public InsertClauseBuilder(String tableName) {
+  public InsertClauseBuilder(){
     super();
-    this.tableName = tableName;
+  }
+  
+  /**
+   * Create with table name.
+   *  
+   * @param tableName table name
+   * @see #insertInto(String)
+   */
+  public InsertClauseBuilder(String tableName){
+    super();
+    insertInto(tableName);
+  }
+  
+  /**
+   * Set insert into table name.
+   * 
+   * @param tableName table name
+   * @return this
+   */
+  public InsertClauseBuilder insertInto(String tableName) {
+    tableNameOpt = new Some<String>(tableName);
+    return this;
   }
 
   public InsertClauseBuilder addColumn(String columnName) {
@@ -80,16 +99,28 @@ public class InsertClauseBuilder {
    * Add column name, expression pair.
    * 
    * @param columnName column name
-   * @param expression 
+   * @param expression
    * @return this
    */
   public InsertClauseBuilder add(String columnName, Expression expression) {
     return addColumn(columnName).addValue(expression);
   }
 
-  public InsertClause toInsertClause() {
-    return new InsertClause(tableName, columnNames, valuesOpt.hasValue()
-        ? valuesOpt.get() : new ExpressionValues(expressions));
+  /**
+   * Create insert clause.
+   * 
+   * @return insert clause
+   * @throws IllegalArgumentException if table name not specified
+   * @see #insertInto(String)
+   * @see InsertClause#InsertClause(String, List, ValueSource)
+   */
+  public InsertClause toInsertClause() throws IllegalArgumentException {
+    if (!tableNameOpt.hasValue()) {
+      throw new IllegalArgumentException("table name must not be blank");
+    }
+    return new InsertClause(tableNameOpt.get(), columnNames,
+        valuesOpt.hasValue() ? valuesOpt.get() : new ExpressionValues(
+            expressions));
   }
 
 }

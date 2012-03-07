@@ -176,7 +176,8 @@ public class BlogApp {
   @Test
   public void testCreateBlogInsertTag() {
     // INSERT INTO tag(...) VALUES(?...)
-    InsertClauseBuilder builder = new InsertClauseBuilder(TABLE_TAG.getName());
+    InsertClauseBuilder builder = new InsertClauseBuilder();
+    builder.insertInto(TABLE_TAG.getName());
     builder.add("text", "bar");
     System.out.println(builder.toInsertClause());
   }
@@ -184,7 +185,8 @@ public class BlogApp {
   @Test
   public void testCreateBlogInsertBlog() {
     // INSERT INTO blog(...) VALUES(?...)
-    InsertClauseBuilder builder = new InsertClauseBuilder(TABLE_BLOG.getName());
+    InsertClauseBuilder builder = new InsertClauseBuilder();
+    builder.insertInto(TABLE_BLOG.getName());
     builder.add("title", "foo");
     builder.add("content", "bar");
     builder.add("date_created", new Timestamp(System.currentTimeMillis()));
