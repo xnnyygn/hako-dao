@@ -45,9 +45,14 @@ public class MultipleSelection implements Selection {
    * Create.
    * 
    * @param selections
+   * @throws IllegalArgumentException if selections is empty
    */
-  public MultipleSelection(List<Selection> selections) {
+  public MultipleSelection(List<Selection> selections)
+      throws IllegalArgumentException {
     super();
+    if (selections.isEmpty()) {
+      throw new IllegalArgumentException("selections cannot be empty");
+    }
     this.selections = selections;
   }
 

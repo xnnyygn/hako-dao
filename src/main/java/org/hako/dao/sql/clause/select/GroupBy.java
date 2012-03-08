@@ -46,9 +46,13 @@ public class GroupBy implements SelectOnlySql {
    * Create.
    * 
    * @param expressions
+   * @throws IllegalArgumentException if expressions is empty
    */
-  public GroupBy(List<Expression> expressions) {
+  public GroupBy(List<Expression> expressions) throws IllegalArgumentException {
     super();
+    if (expressions.isEmpty()) {
+      throw new IllegalArgumentException("expressions cannot be emtpy");
+    }
     this.expressions = expressions;
   }
 

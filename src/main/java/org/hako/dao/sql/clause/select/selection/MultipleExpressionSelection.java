@@ -36,7 +36,7 @@ public class MultipleExpressionSelection extends MultipleSelection {
    * @param expressions
    */
   public MultipleExpressionSelection(List<Expression> expressions) {
-    super(mapToSelections(expressions));
+    super(convertToSelections(expressions));
   }
 
   /**
@@ -46,7 +46,7 @@ public class MultipleExpressionSelection extends MultipleSelection {
    * @return selections
    * @see ExpressionSelection
    */
-  private static List<Selection> mapToSelections(List<Expression> expressions) {
+  private static List<Selection> convertToSelections(List<Expression> expressions) {
     List<Selection> selections = new ArrayList<Selection>();
     for (Expression expr : expressions) {
       selections.add(new ExpressionSelection(expr));

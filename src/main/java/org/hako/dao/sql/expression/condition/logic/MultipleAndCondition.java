@@ -23,7 +23,7 @@ import org.hako.dao.sql.util.MultipleSqlUtils;
 
 /**
  * Multiple and condition.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
@@ -36,9 +36,14 @@ public class MultipleAndCondition implements Condition {
    * Create.
    * 
    * @param conditions
+   * @throws IllegalArgumentException if condtions is empty
    */
-  public MultipleAndCondition(List<Condition> conditions) {
+  public MultipleAndCondition(List<Condition> conditions)
+      throws IllegalArgumentException {
     super();
+    if (conditions.isEmpty()) {
+      throw new IllegalArgumentException("conditions cannot be empty");
+    }
     this.conditions = conditions;
   }
 
@@ -47,7 +52,7 @@ public class MultipleAndCondition implements Condition {
   }
 
   public List<Object> getParams() {
-    return MultipleSqlUtils.getParams(conditions.toArray(new Sql[0]));
+    return MultipleSqlUtils.getParams(conditions);
   }
 
 }

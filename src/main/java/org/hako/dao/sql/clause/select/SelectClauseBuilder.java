@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hako.None;
-import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.sql.clause.select.orderby.ExpressionSingleOrderBy;
 import org.hako.dao.sql.clause.select.orderby.IndexSingleOrderBy;
@@ -90,35 +88,37 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder select(List<Selection> selections) {
-    bean.setSelectionOpt(createSelection(selections));
+    bean.setSelectionOpt(new Some<Selection>(new MultipleSelection(selections)));
     return this;
   }
 
   /**
-   * Create selections.
+   * Set from table with alias.
    * 
-   * @param selections
-   * @return some selection or none
+   * @param tableName table name
+   * @param alias
+   * @return this
    */
-  private Option<Selection> createSelection(List<Selection> selections) {
-    switch (selections.size()) {
-      case 0:
-        return new None<Selection>();
-      case 1:
-        return new Some<Selection>(selections.get(0));
-      default:
-        return new Some<Selection>(new MultipleSelection(selections));
-    }
-  }
-
   public SelectClauseBuilder from(String tableName, String alias) {
     return from(new AkaTable(new SimpleTable(tableName), alias));
   }
 
+  /**
+   * Set from table.
+   * 
+   * @param tableName
+   * @return this
+   */
   public SelectClauseBuilder from(String tableName) {
     return from(new SimpleTable(tableName));
   }
 
+  /**
+   * Set from table.
+   * 
+   * @param table
+   * @return this
+   */
   public SelectClauseBuilder from(Table table) {
     bean.setTableOpt(new Some<Table>(table));
     return this;
@@ -144,7 +144,8 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder where(Condition... conditions) {
-    bean.setWhereCondOpt(createCondition(Arrays.asList(conditions)));
+    bean.setWhereCondOpt(new Some<Condition>(new MultipleAndCondition(Arrays
+        .asList(conditions))));
     return this;
   }
 
@@ -155,30 +156,9 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder having(Condition... conditions) {
-    if (conditions.length == 0) {
-      throw new IllegalArgumentException("conditions cannot be empty");
-    }
     bean.setHavingOpt(new Some<Having>(new Having(new MultipleAndCondition(
         Arrays.asList(conditions)))));
     return this;
-  }
-
-  /**
-   * Create conditions.
-   * 
-   * @param conditions
-   * @return some condition or not
-   * @see MultipleAndCondition
-   */
-  private Option<Condition> createCondition(List<Condition> conditions) {
-    switch (conditions.size()) {
-      case 0:
-        return new None<Condition>();
-      case 1:
-        return new Some<Condition>(conditions.get(0));
-      default:
-        return new Some<Condition>(new MultipleAndCondition(conditions));
-    }
   }
 
   /**
@@ -188,28 +168,52 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder groupBy(Expression... expressions) {
-    if (expressions.length == 0) {
-      throw new IllegalArgumentException("expressions cannot be empty");
-    }
     bean.setGroupByOpt(new Some<GroupBy>(new GroupBy(expressions)));
     return this;
   }
 
+  /**
+   * Add order by.
+   * 
+   * @param index
+   * @param asc
+   * @return this
+   */
   public SelectClauseBuilder addOrderBy(int index, boolean asc) {
     orderBys.add(new IndexSingleOrderBy(index, asc));
     return this;
   }
 
+  /**
+   * Add order by.
+   * 
+   * @param expression
+   * @param asc
+   * @return this
+   */
   public SelectClauseBuilder addOrderBy(Expression expression, boolean asc) {
     orderBys.add(new ExpressionSingleOrderBy(expression, asc));
     return this;
   }
 
+  /**
+   * Limit.
+   * 
+   * @param max
+   * @param offset
+   * @return this
+   */
   public SelectClauseBuilder limit(int max, int offset) {
     bean.setLimitOpt(new Some<Limit>(new Limit(max, offset)));
     return this;
   }
 
+  /**
+   * Limit.
+   * 
+   * @param max
+   * @return this
+   */
   public SelectClauseBuilder limit(int max) {
     return limit(max, 0);
   }

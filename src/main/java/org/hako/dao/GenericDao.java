@@ -179,8 +179,8 @@ public class GenericDao {
    * @return id
    */
   public Object save(Map<MappedField<?>, Object> props) {
-    InsertClauseBuilder builder =
-        new InsertClauseBuilder(entity.getTableName().getName());
+    InsertClauseBuilder builder = new InsertClauseBuilder();
+    builder.insertInto(entity.getTableName().getName());
     for (FieldMeta f : entity.getNormalFields()) {
       builder.addColumn(f.getColumnName());
       builder.addValue(Values.create(props.get(f.getField())));

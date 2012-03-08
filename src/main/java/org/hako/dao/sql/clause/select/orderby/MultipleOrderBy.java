@@ -51,7 +51,7 @@ public class MultipleOrderBy implements OrderBy {
   }
 
   public List<Object> getParams() {
-    return MultipleSqlUtils.getParams(orderBys.toArray(new Sql[0]));
+    return MultipleSqlUtils.getParams(orderBys);
   }
 
 }

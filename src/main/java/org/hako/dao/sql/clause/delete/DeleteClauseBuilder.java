@@ -15,10 +15,13 @@
  */
 package org.hako.dao.sql.clause.delete;
 
+import java.util.Arrays;
+
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.sql.expression.condition.Condition;
+import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
 
 /**
  * Builder of {@link DeleteClause}.
@@ -49,8 +52,9 @@ public class DeleteClauseBuilder {
    * @param condition
    * @return this
    */
-  public DeleteClauseBuilder where(Condition condition) {
-    whereCondOpt = new Some<Condition>(condition);
+  public DeleteClauseBuilder where(Condition... conditions) {
+    whereCondOpt =
+        new Some<Condition>(new MultipleAndCondition(Arrays.asList(conditions)));
     return this;
   }
 
@@ -68,5 +72,5 @@ public class DeleteClauseBuilder {
     }
     return new DeleteClause(tableNameOpt.get(), whereCondOpt);
   }
-  
+
 }

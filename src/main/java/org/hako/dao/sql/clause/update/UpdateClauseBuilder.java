@@ -25,6 +25,7 @@ import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.condition.Condition;
+import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
 import org.hako.dao.sql.expression.value.Values;
 
 /**
@@ -40,14 +41,34 @@ public class UpdateClauseBuilder {
       new ArrayList<ColumnExpressionPair>();
   private final UpdateClauseBean bean = new UpdateClauseBean();
 
+  /**
+   * Set table name.
+   * 
+   * @param tableName
+   * @return this
+   */
   public UpdateClauseBuilder update(String tableName) {
     return update(tableName, new None<String>());
   }
 
+  /**
+   * Set table name with alias.
+   * 
+   * @param tableName
+   * @param alias
+   * @return this
+   */
   public UpdateClauseBuilder update(String tableName, String alias) {
     return update(tableName, new Some<String>(alias));
   }
 
+  /**
+   * Set table name with alias option.
+   * 
+   * @param tableName
+   * @param aliasOpt alias option
+   * @return this
+   */
   private UpdateClauseBuilder update(String tableName, Option<String> aliasOpt) {
     bean.setTableNameOpt(new Some<String>(tableName));
     bean.setTableAliasOpt(aliasOpt);
@@ -132,8 +153,15 @@ public class UpdateClauseBuilder {
     return this;
   }
 
-  public UpdateClauseBuilder where(Condition whereCond) {
-    bean.setWhereCondOpt(new Some<Condition>(whereCond));
+  /**
+   * Set where condition.
+   * 
+   * @param conditions
+   * @return this
+   */
+  public UpdateClauseBuilder where(Condition... conditions) {
+    bean.setWhereCondOpt(new Some<Condition>(new MultipleAndCondition(Arrays
+        .asList(conditions))));
     return this;
   }
 

@@ -41,24 +41,6 @@ public class InsertClauseBuilder {
   private final List<Expression> expressions = new ArrayList<Expression>();
 
   /**
-   * Default constructor.
-   */
-  public InsertClauseBuilder(){
-    super();
-  }
-  
-  /**
-   * Create with table name.
-   *  
-   * @param tableName table name
-   * @see #insertInto(String)
-   */
-  public InsertClauseBuilder(String tableName){
-    super();
-    insertInto(tableName);
-  }
-  
-  /**
    * Set insert into table name.
    * 
    * @param tableName table name
@@ -69,16 +51,34 @@ public class InsertClauseBuilder {
     return this;
   }
 
+  /**
+   * Add column.
+   * 
+   * @param columnName column name
+   * @return this
+   */
   public InsertClauseBuilder addColumn(String columnName) {
     columnNames.add(columnName);
     return this;
   }
 
+  /**
+   * Set values.
+   * 
+   * @param values
+   * @return this
+   */
   public InsertClauseBuilder values(ValueSource values) {
     valuesOpt = new Some<ValueSource>(values);
     return this;
   }
 
+  /**
+   * Add value.
+   * 
+   * @param expression
+   * @return this
+   */
   public InsertClauseBuilder addValue(Expression expression) {
     expressions.add(expression);
     return this;
@@ -118,9 +118,10 @@ public class InsertClauseBuilder {
     if (!tableNameOpt.hasValue()) {
       throw new IllegalArgumentException("table name must not be blank");
     }
-    return new InsertClause(tableNameOpt.get(), columnNames,
+    ValueSource values =
         valuesOpt.hasValue() ? valuesOpt.get() : new ExpressionValues(
-            expressions));
+            expressions);
+    return new InsertClause(tableNameOpt.get(), columnNames, values);
   }
 
 }
