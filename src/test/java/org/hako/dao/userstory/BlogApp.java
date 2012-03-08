@@ -18,6 +18,7 @@ package org.hako.dao.userstory;
 import java.sql.Timestamp;
 
 import org.hako.dao.mapping.entity.TableName;
+import org.hako.dao.sql.clause.delete.DeleteClauseBuilder;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
@@ -249,6 +250,35 @@ public class BlogApp {
     builder.where(Conditions.eq(TABLE_BLOG.forAliasColumn("id"),
         Values.create(1l)));
     System.out.println(builder.toUpdateClause());
+  }
+
+  @Test
+  public void testDeleteBlogDeleteBlog() {
+    // DELETE FROM blog WHERE id = ?
+    DeleteClauseBuilder builder = new DeleteClauseBuilder();
+    builder.deleteFrom(TABLE_BLOG.getName());
+    builder.where(Conditions.eq(TABLE_BLOG.forColumn("id"), Values.create(1l)));
+    System.out.println(builder.toDeleteClause());
+  }
+
+  @Test
+  public void testDeleteBlogTags() {
+    // DELETE FROM blog_tags WHERE blog_id = ?
+    DeleteClauseBuilder builder = new DeleteClauseBuilder();
+    builder.deleteFrom(TABLE_BLOG_TAGS.getName());
+    builder.where(Conditions.eq(TABLE_BLOG_TAGS.forColumn("blog_id"),
+        Values.create(1l)));
+    System.out.println(builder.toDeleteClause());
+  }
+
+  @Test
+  public void testDeleteBlogComments() {
+    // DELETE FROM comment WHERE blog_id = ?
+    DeleteClauseBuilder builder = new DeleteClauseBuilder();
+    builder.deleteFrom(TABLE_COMMENT.getName());
+    builder.where(Conditions.eq(TABLE_COMMENT.forColumn("blog_id"),
+        Values.create(1l)));
+    System.out.println(builder.toDeleteClause());
   }
 
 }

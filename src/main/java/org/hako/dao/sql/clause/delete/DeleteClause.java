@@ -15,23 +15,22 @@
  */
 package org.hako.dao.sql.clause.delete;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
-import org.hako.dao.sql.Clause;
+import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.expression.condition.Condition;
 
 /**
  * Delete clause.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class DeleteClause implements Clause {
+public class DeleteClause extends AbstractClause {
 
   private final String tableName;
   private final Option<Condition> whereCondOpt;
@@ -51,10 +50,10 @@ public class DeleteClause implements Clause {
    * @param tableName table name
    * @param whereCond where condition
    */
-  public DeleteClause(String tableName, Condition whereCond){
+  public DeleteClause(String tableName, Condition whereCond) {
     this(tableName, new Some<Condition>(whereCond));
   }
-  
+
   /**
    * Create.
    * 
@@ -70,6 +69,7 @@ public class DeleteClause implements Clause {
   public String toPrepared() {
     StringBuilder builder = new StringBuilder("DELETE FROM ");
     builder.append(tableName);
+    // TODO refactor with AbstractClause
     if (whereCondOpt.hasValue()) {
       builder.append(" WHERE ").append(whereCondOpt.get().toPrepared());
     }
@@ -77,8 +77,11 @@ public class DeleteClause implements Clause {
   }
 
   public List<Object> getParams() {
-    return whereCondOpt.hasValue() ? whereCondOpt.get().getParams()
-        : new ArrayList<Object>(0);
+    return whereCondOpt.hasValue() ? whereCondOpt.get().getParams() : NO_PARAM;
   }
 
+  public String toString(){
+    return "DELETE " + super.toString();
+  }
+  
 }
