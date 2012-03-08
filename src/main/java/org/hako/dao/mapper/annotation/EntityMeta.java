@@ -15,8 +15,8 @@
  */
 package org.hako.dao.mapper.annotation;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +29,8 @@ import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
 import org.hako.dao.sql.clause.select.selection.Selection;
+import org.hako.dao.sql.clause.select.table.Table;
+import org.hako.dao.sql.clause.select.table.TableFactory;
 import org.hako.dao.sql.expression.TableColumnName;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.ConditionBuilder;
@@ -78,6 +80,16 @@ public class EntityMeta {
    */
   public String getTableAlias() {
     return tableAlias;
+  }
+
+  /**
+   * Create table.
+   * 
+   * @return table
+   * @see TableFactory#createSimpleAkaTable(String, String)
+   */
+  public Table createTable() {
+    return TableFactory.createSimpleAkaTable(tableName, tableAlias);
   }
 
   /**

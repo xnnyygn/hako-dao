@@ -17,13 +17,11 @@ package org.hako.dao.mapper.annotation;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.IOUtils;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.vendor.DbcpVendor;
@@ -74,9 +72,12 @@ public class EntityManagerTest {
   }
 
   @Test
-  public void testGet() throws UnsupportedOperationException,
-      IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+  public void testGet() {
     System.out.println(manager.get(1l));
   }
 
+  @Test
+  public void testCount() {
+    System.out.println(manager.count());
+  }
 }
