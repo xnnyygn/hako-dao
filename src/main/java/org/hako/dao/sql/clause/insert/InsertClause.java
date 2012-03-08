@@ -41,7 +41,8 @@ public class InsertClause extends AbstractClause {
    * @param columnNames
    * @param values
    */
-  public InsertClause(String tableName, List<String> columnNames, ValueSource values) {
+  public InsertClause(String tableName, List<String> columnNames,
+      ValueSource values) {
     super();
     this.tableName = tableName;
     this.columnNames = columnNames;
@@ -50,9 +51,11 @@ public class InsertClause extends AbstractClause {
 
   public String toPrepared() {
     StringBuilder builder = new StringBuilder("INSERT INTO ");
-    builder.append(tableName).append(" (")
-        .append(StringUtils.join(columnNames, ", ")).append(") ")
-        .append(values.toPrepared());
+    builder.append(tableName);
+    builder.append(" (");
+    builder.append(StringUtils.join(columnNames, ", "));
+    builder.append(") ");
+    builder.append(values.toPrepared());
     return builder.toString();
   }
 

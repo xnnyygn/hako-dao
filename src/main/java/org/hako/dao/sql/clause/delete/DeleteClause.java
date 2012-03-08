@@ -69,10 +69,7 @@ public class DeleteClause extends AbstractClause {
   public String toPrepared() {
     StringBuilder builder = new StringBuilder("DELETE FROM ");
     builder.append(tableName);
-    // TODO refactor with AbstractClause
-    if (whereCondOpt.hasValue()) {
-      builder.append(" WHERE ").append(whereCondOpt.get().toPrepared());
-    }
+    appendOptionToPrepared(" WHERE ", whereCondOpt, builder);
     return builder.toString();
   }
 
@@ -80,8 +77,8 @@ public class DeleteClause extends AbstractClause {
     return whereCondOpt.hasValue() ? whereCondOpt.get().getParams() : NO_PARAM;
   }
 
-  public String toString(){
+  public String toString() {
     return "DELETE " + super.toString();
   }
-  
+
 }

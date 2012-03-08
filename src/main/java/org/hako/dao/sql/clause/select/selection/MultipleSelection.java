@@ -15,13 +15,15 @@
  */
 package org.hako.dao.sql.clause.select.selection;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.util.MultipleSqlUtils;
+
 /**
  * Multiple selection.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
@@ -50,22 +52,11 @@ public class MultipleSelection implements Selection {
   }
 
   public String toPrepared() {
-    // TODO refactor me
-    StringBuilder builder = new StringBuilder();
-    for (Selection selection : selections) {
-      builder.append(selection.toPrepared()).append(", ");
-    }
-    builder.setLength(builder.length() - 2);
-    return builder.toString();
+    return MultipleSqlUtils.toPrepared(selections.toArray(new Sql[0]));
   }
 
   public List<Object> getParams() {
-    // TODO refactor me
-    List<Object> all = new ArrayList<Object>();
-    for (Selection selection : selections) {
-      all.addAll(selection.getParams());
-    }
-    return all;
+    return MultipleSqlUtils.getParams(selections);
   }
 
 }

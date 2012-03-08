@@ -42,7 +42,8 @@ public interface DbClient {
    * @return list of properties
    * @throws HakoDaoException if dao error occurred
    */
-  public List<Map<String, Object>> selectMultipleRows(SelectClause clause) throws HakoDaoException;
+  public List<Map<String, Object>> selectMultipleRows(SelectClause clause)
+      throws HakoDaoException;
 
   /**
    * Select single row and get properties.
@@ -73,10 +74,11 @@ public interface DbClient {
    * 
    * @param clause
    * @return auto generated value
-   * @throws DatabaseException TODO
-   * @throws GetGeneratedKeyFailureException TODO
+   * @throws DatabaseException
+   * @throws GetGeneratedKeyFailureException
    */
-  public Object insertAndGet(InsertClause clause) throws DatabaseException, GetGeneratedKeyFailureException;
+  public Object insertAndGet(InsertClause clause) throws DatabaseException,
+      GetGeneratedKeyFailureException;
 
   /**
    * Perform SQL update operation.
@@ -91,8 +93,8 @@ public interface DbClient {
    * 
    * @param clause
    * @return count of deleted records
-   * @throws DatabaseException TODO
+   * @throws DatabaseException 
    */
   public int delete(DeleteClause clause) throws DatabaseException;
-  
+
 }
