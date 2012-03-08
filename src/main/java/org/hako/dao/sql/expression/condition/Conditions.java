@@ -18,6 +18,7 @@ package org.hako.dao.sql.expression.condition;
 import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.InnerSelectExpression;
+import org.hako.dao.sql.expression.condition.compare.BetweenCondition;
 import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
 import org.hako.dao.sql.expression.condition.compare.GreaterThanCondition;
 import org.hako.dao.sql.expression.condition.compare.InCondition;
@@ -81,4 +82,18 @@ public class Conditions {
     return in(left, new InnerSelectExpression(select));
   }
 
+  /**
+   * Create between condition.
+   * 
+   * @param operand
+   * @param min
+   * @param max
+   * @return between condition instance
+   * @see BetweenCondition#BetweenCondition(Expression, Expression, Expression)
+   */
+  public static BetweenCondition between(Expression operand, Expression min,
+      Expression max) {
+    return new BetweenCondition(operand, min, max);
+  }
+  
 }

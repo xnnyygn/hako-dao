@@ -23,6 +23,7 @@ import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.ColumnName;
+import org.hako.dao.sql.expression.TableColumnName;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.function.Functions;
 import org.hako.dao.sql.expression.value.Values;
@@ -154,9 +155,13 @@ public class BlogApp {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     String dayAlias = "dom";
     ColumnName dayAliasColumn = new ColumnName(dayAlias);
-    builder.selectAs(
-        Functions.unaryFun("DAY", TABLE_BLOG.forAliasColumn("date_created")),
-        dayAlias);
+    TableColumnName fieldDateCreated =
+        TABLE_BLOG.forAliasColumn("date_created");
+    builder.selectAs(Functions.unaryFun("DAY", fieldDateCreated), dayAlias);
+    Timestamp minTimestamp = new Timestamp(System.currentTimeMillis());
+    Timestamp maxTimestamp = new Timestamp(System.currentTimeMillis());
+    builder.where(Conditions.between(fieldDateCreated,
+        Values.create(minTimestamp), Values.create(maxTimestamp)));
     builder.groupBy(dayAliasColumn);
     builder.from(TABLE_BLOG.forAka());
     builder.having(Conditions.gt(dayAliasColumn, Values.createStatic(0)));
