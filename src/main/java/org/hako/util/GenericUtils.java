@@ -13,27 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.util;
+package org.hako.util;
 
-import org.hako.Some;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 /**
- * Option utilities.
+ * Generic utilities.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class OptionUtils {
+public class GenericUtils {
 
   /**
-   * Create wrapper of value.
+   * Get type argument.
    * 
-   * @param value value
-   * @return some value
+   * @param clazz
+   * @param index
+   * @return type
    */
-  public static <T> Some<T> some(T value) {
-    return new Some<T>(value);
+  public static Type getTypeArg(Class<?> clazz, int index) {
+    return ((ParameterizedType) clazz.getGenericSuperclass())
+        .getActualTypeArguments()[index];
   }
 
 }

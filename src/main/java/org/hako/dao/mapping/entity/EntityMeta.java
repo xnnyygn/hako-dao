@@ -25,7 +25,7 @@ import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.mapping.field.FieldMeta;
 import org.hako.dao.mapping.field.MappedField;
-import org.hako.dao.util.OptionUtils;
+import org.hako.util.OptionUtils;
 
 /**
  * Entity meta.

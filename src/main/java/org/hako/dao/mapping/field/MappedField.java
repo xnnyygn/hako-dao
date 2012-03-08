@@ -18,7 +18,8 @@ package org.hako.dao.mapping.field;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hako.dao.util.MapUtils;
+import org.hako.util.MapUtils;
+
 import static org.hako.dao.mapping.field.FieldOptions.*;
 import static java.lang.Boolean.*;
 

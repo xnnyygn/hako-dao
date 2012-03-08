@@ -13,35 +13,42 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.dao.mapper.annotation;
 
-import java.util.Map;
-
-import org.hako.util.MapUtils;
+import java.lang.reflect.Field;
 
 /**
- * Id primary key.
+ * Use field to set value.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class PrimaryKey<T> extends BaseMappedField<T> {
+public class FieldSetter implements Setter {
+
+  private final Field field;
 
   /**
    * Create.
+   * 
+   * @param field
    */
-  public PrimaryKey() {
-    this(OPTIONS_EMPTY);
+  public FieldSetter(Field field) {
+    super();
+    this.field = field;
   }
 
-  /**
-   * Create with options.
-   * 
-   * @param options
-   */
-  public PrimaryKey(Map<FieldOptions, Object> options) {
-    super(MapUtils.merge(options, FieldOptions.PK, Boolean.TRUE));
+  public <T> T set(T instance, Object value) {
+    try {
+      field.set(instance, value);
+    } catch (Exception e) {
+      // TODO log error
+    }
+    return instance;
+  }
+
+  public String getPropertyName() {
+    return field.getName();
   }
 
 }

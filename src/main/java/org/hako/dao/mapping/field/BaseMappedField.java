@@ -19,7 +19,7 @@ import static org.hako.dao.mapping.field.FieldOptions.*;
 
 import java.util.Map;
 
-import org.hako.dao.util.MapUtils;
+import org.hako.util.MapUtils;
 
 /**
  * Abstract field.
