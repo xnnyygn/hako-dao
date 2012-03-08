@@ -17,6 +17,9 @@ package org.hako.dao.mapper.annotation;
 
 import java.sql.Timestamp;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 /**
  * Entity blog.
  * 
@@ -43,4 +46,9 @@ public class Blog {
   @Field
   public Long userId;
 
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this,
+        ToStringStyle.MULTI_LINE_STYLE);
+  }
+  
 }
