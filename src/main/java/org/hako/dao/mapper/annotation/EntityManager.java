@@ -18,6 +18,7 @@ package org.hako.dao.mapper.annotation;
 import org.hako.Option;
 import org.hako.dao.db.client.DbClient;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.expression.function.Functions;
 
 /**
  * Entity manager.
@@ -55,10 +56,23 @@ public class EntityManager<T> {
   public Option<T> get(Object id) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(entityMeta.createAllFieldsSelection());
-    builder.from(entityMeta.getTableName(), entityMeta.getTableAlias());
+    builder.from(entityMeta.createTable());
     builder.where(entityMeta.createPkCondition(id));
     return entityFactory
         .create(client.selectSingleRow(builder.toSelectClause()));
+  }
+
+  /**
+   * Count entity.
+   * 
+   * @return entity count
+   */
+  public int count() {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(Functions.countRow());
+    builder.from(entityMeta.createTable());
+    return ((Number) client.selectObject(builder.toSelectClause()).get())
+        .intValue();
   }
 
 }
