@@ -13,35 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.util;
 
-import java.util.Map;
-
-import org.hako.util.MapUtils;
+import org.hako.Tuple2;
 
 /**
- * Id primary key.
+ * Tuple utilities.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class PrimaryKey<T> extends BaseMappedField<T> {
+public class TupleUtils {
 
   /**
-   * Create.
-   */
-  public PrimaryKey() {
-    this(OPTIONS_EMPTY);
-  }
-
-  /**
-   * Create with options.
+   * Create tuple 2.
    * 
-   * @param options
+   * @param _1 first element
+   * @param _2 second element
+   * @return tuple 2
    */
-  public PrimaryKey(Map<FieldOptions, Object> options) {
-    super(MapUtils.merge(options, FieldOptions.PK, Boolean.TRUE));
+  public static <T1, T2> Tuple2<T1, T2> create(T1 _1, T2 _2) {
+    return new Tuple2<T1, T2>(_1, _2);
   }
-
+  
 }

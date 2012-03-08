@@ -13,35 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.util;
 
-import java.util.Map;
-
-import org.hako.util.MapUtils;
+import org.hako.Some;
 
 /**
- * Id primary key.
+ * Option utilities.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class PrimaryKey<T> extends BaseMappedField<T> {
+public class OptionUtils {
 
   /**
-   * Create.
-   */
-  public PrimaryKey() {
-    this(OPTIONS_EMPTY);
-  }
-
-  /**
-   * Create with options.
+   * Create wrapper of value.
    * 
-   * @param options
+   * @param value value
+   * @return some value
    */
-  public PrimaryKey(Map<FieldOptions, Object> options) {
-    super(MapUtils.merge(options, FieldOptions.PK, Boolean.TRUE));
+  public static <T> Some<T> some(T value) {
+    return new Some<T>(value);
   }
 
 }

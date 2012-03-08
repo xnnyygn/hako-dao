@@ -13,28 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.util;
-
-import org.hako.Tuple2;
+package org.hako.dao.mapper.annotation;
 
 /**
- * Tuple utilities.
+ * Setter.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class TupleUtils {
+public interface Setter {
 
   /**
-   * Create tuple 2.
+   * Set value.
    * 
-   * @param _1 first element
-   * @param _2 second element
-   * @return tuple 2
+   * @param instance
+   * @param value
+   * @return instance
    */
-  public static <T1, T2> Tuple2<T1, T2> create(T1 _1, T2 _2) {
-    return new Tuple2<T1, T2>(_1, _2);
-  }
-  
+  public abstract <T> T set(T instance, Object value);
+
+  /**
+   * Get property name.
+   * 
+   * @return property name
+   */
+  public String getPropertyName();
+
 }

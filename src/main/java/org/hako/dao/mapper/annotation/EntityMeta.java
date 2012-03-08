@@ -15,10 +15,25 @@
  */
 package org.hako.dao.mapper.annotation;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.hako.None;
+import org.hako.Option;
+import org.hako.Some;
+import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
+import org.hako.dao.sql.clause.select.selection.Selection;
+import org.hako.dao.sql.expression.TableColumnName;
+import org.hako.dao.sql.expression.condition.Condition;
+import org.hako.dao.sql.expression.condition.ConditionBuilder;
+import org.hako.dao.sql.expression.condition.Conditions;
+import org.hako.dao.sql.expression.value.Values;
 
 /**
  * Entity meta.
@@ -31,7 +46,7 @@ public class EntityMeta {
 
   private final String tableName;
   private final String tableAlias;
-  private final List<FieldMeta> fields;
+  private final Fields fields;
 
   /**
    * Create.
@@ -44,7 +59,7 @@ public class EntityMeta {
     super();
     this.tableName = tableName;
     this.tableAlias = tableAlias;
-    this.fields = fields;
+    this.fields = new Fields(fields);
   }
 
   /**
@@ -66,12 +81,77 @@ public class EntityMeta {
   }
 
   /**
-   * Get fields.
+   * Create selection for all fields.
    * 
-   * @return the fields
+   * @return selection
    */
-  public List<FieldMeta> getFields() {
-    return fields;
+  public Selection createAllFieldsSelection() {
+    MultipleSelectionBuilder builder = new MultipleSelectionBuilder();
+    for (FieldMeta f : fields.getAllFields()) {
+      builder.addExpressionAka(
+          new TableColumnName(tableAlias, f.getColumnName()),
+          f.getPropertyName());
+    }
+    return builder.toMultipleSelection();
+  }
+
+  public Condition createPkCondition(Object id) {
+    List<FieldMeta> pkFields = fields.getPkFields();
+    int pkFieldCount = pkFields.size();
+    if (pkFieldCount == 0) {
+      // no primary key
+      throw new IllegalStateException("no primary key");
+    } else if (pkFieldCount == 1) {
+      return Conditions.eq(new TableColumnName(tableAlias, pkFields.get(0)
+          .getColumnName()), Values.create(id));
+    } else {
+      ConditionBuilder builder = new ConditionBuilder();
+      Map<String, Object> props = toProperties(id);
+      for (FieldMeta f : pkFields) {
+        String propertyName = f.getPropertyName();
+        if (!props.containsKey(propertyName)) {
+          throw new IllegalArgumentException("property [" + propertyName
+              + "] is required");
+        }
+        builder.add(Conditions.eq(
+            new TableColumnName(tableAlias, f.getColumnName()),
+            Values.create(props.get(propertyName))));
+      }
+      return builder.build();
+    }
+  }
+
+  private Map<String, Object> toProperties(Object bean) {
+    Map<String, Object> props = new HashMap<String, Object>();
+    Class<?> beanClass = bean.getClass();
+    for (Method m : beanClass.getMethods()) {
+      String name = m.getName();
+      if (name.startsWith("get") && name.length() > 3
+          && m.getParameterTypes().length == 0) {
+        Option<Object> valueOpt = getValueByGetterMethod(m, bean);
+        if (valueOpt.hasValue()) {
+          props
+              .put(StringUtils.uncapitalize(name.substring(3)), valueOpt.get());
+        }
+      }
+    }
+    for (Field f : beanClass.getFields()) {
+      try {
+        props.put(f.getName(), f.get(bean));
+      } catch (Exception e) {
+        // TODO log error
+      }
+    }
+    return props;
+  }
+
+  private Option<Object> getValueByGetterMethod(Method getter, Object bean) {
+    try {
+      return new Some<Object>(getter.invoke(bean));
+    } catch (Exception e) {
+      // TODO log error
+    }
+    return new None<Object>();
   }
 
   @Override

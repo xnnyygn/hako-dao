@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.hako.dao.util.MapUtils;
+import org.hako.util.MapUtils;
 
 /**
  * Database connector based on <a

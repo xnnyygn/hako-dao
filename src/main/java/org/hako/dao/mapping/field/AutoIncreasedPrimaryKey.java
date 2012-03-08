@@ -15,7 +15,7 @@
  */
 package org.hako.dao.mapping.field;
 
-import org.hako.dao.util.MapUtils;
+import org.hako.util.MapUtils;
 
 /**
  * Auto increased primary key.

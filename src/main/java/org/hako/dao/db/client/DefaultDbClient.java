@@ -38,7 +38,7 @@ import org.hako.dao.sql.clause.insert.InsertClause;
 import org.hako.dao.sql.clause.select.Limit;
 import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.clause.update.UpdateClause;
-import org.hako.dao.util.OptionUtils;
+import org.hako.util.OptionUtils;
 
 /**
  * Default implement.
