@@ -121,7 +121,7 @@ public class EntityMeta {
       return Conditions.eq(new TableColumnName(tableAlias, pkFields.get(0)
           .getColumnName()), Values.create(id));
     }
-    return createComplexPkConditions(id, pkFields);
+    return createComplexPkConditions(BeanUtils.getProperties(id), pkFields);
   }
 
   /**
@@ -131,10 +131,21 @@ public class EntityMeta {
    * @param pkFields primary key fields
    * @return condition
    */
-  private MultipleAndCondition createComplexPkConditions(Object id,
-      List<FieldMeta> pkFields) {
+  public MultipleAndCondition createComplexPkConditions(
+      Map<String, Object> props) {
+    return createComplexPkConditions(props, fields.getPkFields());
+  }
+
+  /**
+   * Create complex primary key conditions.
+   * 
+   * @param id id object
+   * @param pkFields primary key fields
+   * @return condition
+   */
+  public MultipleAndCondition createComplexPkConditions(
+      Map<String, Object> props, List<FieldMeta> pkFields) {
     ConditionBuilder builder = new ConditionBuilder();
-    Map<String, Object> props = BeanUtils.getProperties(id);
     for (FieldMeta f : pkFields) {
       String propertyName = f.getPropertyName();
       if (!props.containsKey(propertyName)) {
@@ -196,6 +207,10 @@ public class EntityMeta {
     return fields.getOtherFields();
   }
 
+  // TODO javadoc
+  public List<FieldMeta> getPkFields() {
+    return fields.getPkFields();
+  }
 
   @Override
   public String toString() {

@@ -87,6 +87,7 @@ public class BeanUtils {
   private static Option<Object> getValueByGetterMethod(Method getter,
       Object bean) {
     try {
+      // TODO allow null value to return
       Object value = getter.invoke(bean);
       if (value != null) {
         return new Some<Object>(value);
