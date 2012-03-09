@@ -17,15 +17,19 @@ package org.hako.dao.mapper.annotation;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.vendor.DbcpVendor;
 import org.hako.dao.db.vendor.SingletonConnectionDbVender;
+import org.hako.dao.restriction.Restrictions;
 import org.junit.Test;
 
 /**
@@ -80,4 +84,20 @@ public class EntityManagerTest {
   public void testCount() {
     System.out.println(manager.count());
   }
+
+  @Test
+  public void testFindBy() {
+    Timestamp lastYear =
+        new Timestamp(new GregorianCalendar(2011, 0, 1).getTimeInMillis());
+    System.out.println(manager.findBy(Restrictions.eq("id", 1l),
+        Restrictions.like("title", "F%"),
+        Restrictions.gt("dateCreated", lastYear)));
+  }
+
+  @Test
+  public void testList() {
+    System.out.println(manager
+        .list(new ListParams(10, 1, "dateCreated", false)));
+  }
+
 }

@@ -15,7 +15,6 @@
  */
 package org.hako.dao.restriction;
 
-import org.hako.dao.mapping.field.MappedField;
 import org.hako.dao.restriction.compare.EqualsRestriction;
 
 /**
@@ -27,8 +26,41 @@ import org.hako.dao.restriction.compare.EqualsRestriction;
  */
 public class Restrictions {
 
-  public static EqualsRestriction eq(MappedField<?> field, Object value) {
-    return new EqualsRestriction(field, value);
+  /**
+   * Create equals restriction.
+   * 
+   * @param propertyName column name
+   * @param value
+   * @return equals restriction
+   * @see EqualsRestriction
+   */
+  public static EqualsRestriction eq(String propertyName, Object value) {
+    // TODO refactor restriction
+    return new EqualsRestriction(propertyName, value);
   }
-  
+
+  /**
+   * Create like restriction.
+   * 
+   * @param propertyName property name
+   * @param pattern
+   * @return like restriction
+   */
+  public static Restriction like(String propertyName, String pattern) {
+    // TODO refactor with starts with, ends with, contains
+    return new LikeRestriction(propertyName, pattern);
+  }
+
+  /**
+   * Create greater than restriction.
+   * 
+   * @param propertyName property name
+   * @param value
+   * @return restriction
+   * @see GreaterThanRestriction
+   */
+  public static Restriction gt(String propertyName, Object value) {
+    return new GreaterThanRestriction(propertyName, value);
+  }
+
 }

@@ -118,6 +118,7 @@ public class EntityMeta {
           .getColumnName()), Values.create(id));
     } else {
       ConditionBuilder builder = new ConditionBuilder();
+      // TODO move to utilties
       Map<String, Object> props = toProperties(id);
       for (FieldMeta f : pkFields) {
         String propertyName = f.getPropertyName();
@@ -165,6 +166,44 @@ public class EntityMeta {
     }
     return new None<Object>();
   }
+
+  /**
+   * Create table column name by property name.
+   * <p>
+   * Table column name consists of table alias and column name. Column name was
+   * retrieved from {@link Fields#getAllFields()} by property name.
+   * </p>
+   * 
+   * @param propertyName
+   * @return table column name
+   * @throws IllegalArgumentException if no column name found by property name
+   * @see #getColumnNameOfProperty(String)
+   */
+  public TableColumnName createTableColumnName(String propertyName)
+      throws IllegalArgumentException {
+    Option<String> columnNameOpt = getColumnNameOfProperty(propertyName);
+    if (!columnNameOpt.hasValue()) {
+      throw new IllegalArgumentException("no such property [" + propertyName
+          + "] of entity");
+    }
+    return new TableColumnName(tableAlias, columnNameOpt.get());
+  }
+
+  /**
+   * Get column name of property by property name.
+   * 
+   * @param propertyName property name
+   * @return some column name or none
+   */
+  private Option<String> getColumnNameOfProperty(String propertyName) {
+    for (FieldMeta f : fields.getAllFields()) {
+      if (f.getPropertyName().equals(propertyName)) {
+        return new Some<String>(f.getColumnName());
+      }
+    }
+    return new None<String>();
+  }
+
 
   @Override
   public String toString() {

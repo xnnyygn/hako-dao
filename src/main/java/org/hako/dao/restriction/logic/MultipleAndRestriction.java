@@ -18,7 +18,7 @@ package org.hako.dao.restriction.logic;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hako.dao.mapping.entity.EntityMeta;
+import org.hako.dao.mapper.annotation.EntityMeta;
 import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
@@ -44,10 +44,10 @@ public class MultipleAndRestriction implements Restriction {
     this.restrictions = restrictions;
   }
 
-  public Condition toCondition(EntityMeta entity) {
+  public Condition toCondition(EntityMeta entityMeta) {
     List<Condition> conditions = new ArrayList<Condition>();
     for (Restriction r : restrictions) {
-      conditions.add(r.toCondition(entity));
+      conditions.add(r.toCondition(entityMeta));
     }
     return new MultipleAndCondition(conditions);
   }

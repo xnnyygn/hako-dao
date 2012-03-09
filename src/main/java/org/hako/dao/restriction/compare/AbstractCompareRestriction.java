@@ -15,7 +15,6 @@
  */
 package org.hako.dao.restriction.compare;
 
-import org.hako.dao.mapping.field.MappedField;
 import org.hako.dao.restriction.Restriction;
 
 /**
@@ -27,19 +26,19 @@ import org.hako.dao.restriction.Restriction;
  */
 public abstract class AbstractCompareRestriction implements Restriction {
 
-  protected final MappedField<?> field;
+  protected final String propertyName;
   protected final Object value;
 
   /**
    * Create.
    * 
-   * @param field
+   * @param propertyName
    * @param value
    */
-  public AbstractCompareRestriction(MappedField<?> field, Object value) {
+  public AbstractCompareRestriction(String propertyName, Object value) {
     super();
-    this.field = field;
+    this.propertyName = propertyName;
     this.value = value;
   }
-  
+
 }

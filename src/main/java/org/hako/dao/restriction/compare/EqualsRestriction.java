@@ -15,12 +15,9 @@
  */
 package org.hako.dao.restriction.compare;
 
-import org.hako.Option;
-import org.hako.dao.mapping.entity.EntityMeta;
-import org.hako.dao.mapping.field.MappedField;
-import org.hako.dao.sql.expression.ColumnName;
+import org.hako.dao.mapper.annotation.EntityMeta;
 import org.hako.dao.sql.expression.condition.Condition;
-import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
+import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.value.Values;
 
 /**
@@ -29,27 +26,21 @@ import org.hako.dao.sql.expression.value.Values;
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
- * 
  */
 public class EqualsRestriction extends AbstractCompareRestriction {
 
   /**
    * Create.
    * 
-   * @param field
+   * @param propertyName
    * @param value
    */
-  public EqualsRestriction(MappedField<?> field, Object value) {
-    super(field, value);
+  public EqualsRestriction(String propertyName, Object value) {
+    super(propertyName, value);
   }
 
-  public Condition toCondition(EntityMeta entity) {
-    Option<String> nameOpt = entity.getColumnName(field);
-    if (!nameOpt.hasValue()) {
-      throw new IllegalArgumentException("no column name of field [" + field
-          + "]");
-    }
-    return new EqualsCondition(new ColumnName(nameOpt.get()),
+  public Condition toCondition(EntityMeta entityMeta) {
+    return Conditions.eq(entityMeta.createTableColumnName(propertyName),
         Values.create(value));
   }
 

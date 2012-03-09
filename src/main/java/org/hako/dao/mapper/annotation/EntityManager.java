@@ -15,9 +15,15 @@
  */
 package org.hako.dao.mapper.annotation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hako.Option;
+import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DbClient;
+import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.function.Functions;
 
 /**
@@ -73,6 +79,45 @@ public class EntityManager<T> {
     builder.from(entityMeta.createTable());
     return ((Number) client.selectObject(builder.toSelectClause()).get())
         .intValue();
+  }
+
+  /**
+   * Find by restrictions.
+   * 
+   * @param restrictions
+   * @return some entity or none
+   */
+  public Option<T> findBy(Restriction... restrictions) {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(entityMeta.createAllFieldsSelection());
+    builder.from(entityMeta.createTable());
+    builder.where(createConditions(restrictions));
+    return entityFactory
+        .create(client.selectSingleRow(builder.toSelectClause()));
+  }
+
+  private List<Condition> createConditions(Restriction... restrictions) {
+    List<Condition> conditions = new ArrayList<Condition>();
+    for (Restriction r : restrictions) {
+      conditions.add(r.toCondition(entityMeta));
+    }
+    return conditions;
+  }
+
+  /**
+   * List entities.
+   * 
+   * @param params
+   * @return this
+   */
+  public List<T> list(ListParams params) {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(entityMeta.createAllFieldsSelection());
+    builder.from(entityMeta.createTable());
+    builder.addOrderBy(params.toMultipleOrderBy());
+    builder.limit(params.getMax(), params.getOffset());
+    return entityFactory.create(client.selectMultipleRows(builder
+        .toSelectClause()));
   }
 
 }

@@ -15,7 +15,7 @@
  */
 package org.hako.dao.restriction;
 
-import org.hako.dao.mapping.entity.EntityMeta;
+import org.hako.dao.mapper.annotation.EntityMeta;
 import org.hako.dao.sql.expression.condition.Condition;
 
 /**
@@ -30,9 +30,9 @@ public interface Restriction {
   /**
    * Convert to condition.
    * 
-   * @param entity entity
+   * @param entityMeta entity meta
    * @return condition
    */
-  public Condition toCondition(EntityMeta entity);
+  public Condition toCondition(EntityMeta entityMeta);
 
 }

@@ -18,8 +18,7 @@ package org.hako.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hako.dao.ListParams.OrderBy;
-import org.hako.dao.mapping.field.MappedField;
+import org.hako.dao.ListParams.SortBy;
 
 /**
  * Builder of {@link ListParams}.
@@ -32,7 +31,7 @@ public class ListParamsBuilder {
 
   private final int offset;
   private final int max;
-  private final List<OrderBy> orderBys = new ArrayList<OrderBy>();
+  private final List<SortBy> sortBys = new ArrayList<SortBy>();
 
   /**
    * Create with max {@code 10}, offset {0}.
@@ -67,23 +66,23 @@ public class ListParamsBuilder {
   /**
    * Add order by with asc {@code true}.
    * 
-   * @param columnName column name
+   * @param name
    * @return this
-   * @see #addOrderBy(String, boolean)
+   * @see #addSortBy(String, boolean)
    */
-  public ListParamsBuilder addOrderBy(MappedField<?> field) {
-    return addOrderBy(field, true);
+  public ListParamsBuilder addSortBy(String name) {
+    return addSortBy(name, true);
   }
 
   /**
    * Add orderBy.
    * 
-   * @param field
+   * @param name
    * @param asc
    * @return this
    */
-  public ListParamsBuilder addOrderBy(MappedField<?> field, boolean asc) {
-    orderBys.add(new OrderBy(field, asc));
+  public ListParamsBuilder addSortBy(String name, boolean asc) {
+    sortBys.add(new SortBy(name, asc));
     return this;
   }
 
@@ -94,6 +93,6 @@ public class ListParamsBuilder {
    * @see ListParams#ListParams(int, int, List)
    */
   public ListParams toListParams() {
-    return new ListParams(max, offset, orderBys);
+    return new ListParams(max, offset, sortBys);
   }
 }

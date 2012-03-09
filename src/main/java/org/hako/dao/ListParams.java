@@ -15,11 +15,14 @@
  */
 package org.hako.dao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.hako.dao.db.client.DefaultDbClient;
-import org.hako.dao.mapping.field.MappedField;
+import org.hako.dao.sql.clause.select.orderby.MultipleOrderBy;
+import org.hako.dao.sql.clause.select.orderby.MultipleOrderByBuilder;
+import org.hako.dao.sql.expression.ColumnName;
 
 /**
  * List parameters. If max is less than or equals zero or offset is negative,
@@ -34,33 +37,35 @@ import org.hako.dao.mapping.field.MappedField;
 public class ListParams {
 
   /**
-   * Order by.
+   * Sort by.
    * 
    * @author xnnyygn
    * @version %I%, %G%
    * @since 1.0.0
    */
-  public static class OrderBy {
-    private final MappedField<?> field;
+  public static class SortBy {
+    private final String name;
     private final boolean asc;
 
     /**
      * Create.
      * 
-     * @param field
+     * @param name column name or alias
      * @param asc
      */
-    public OrderBy(MappedField<?> field, boolean asc) {
+    public SortBy(String name, boolean asc) {
       super();
-      this.field = field;
+      this.name = name;
       this.asc = asc;
     }
 
     /**
-     * @return the field
+     * Get name of order by column.
+     * 
+     * @return the name
      */
-    public MappedField<?> getField() {
-      return field;
+    public String getName() {
+      return name;
     }
 
     /**
@@ -76,18 +81,25 @@ public class ListParams {
 
   private final int max;
   private final int offset;
-  private final List<OrderBy> orderBys;
+  private final List<SortBy> sortBys;
 
   /**
-   * Create.
+   * Create with zero offset, no order by column.
+   * 
+   * @param max
+   */
+  public ListParams(int max) {
+    this(max, 0);
+  }
+
+  /**
+   * Create with no order by columns.
    * 
    * @param max
    * @param offset
-   * @param field
-   * @param asc
    */
-  public ListParams(int max, int offset, MappedField<?> field, boolean asc) {
-    this(max, offset, Arrays.asList(new OrderBy(field, asc)));
+  public ListParams(int max, int offset) {
+    this(max, offset, new ArrayList<SortBy>());
   }
 
   /**
@@ -95,13 +107,25 @@ public class ListParams {
    * 
    * @param max
    * @param offset
-   * @param orderBys
+   * @param name column name or alias
+   * @param asc
    */
-  public ListParams(int max, int offset, List<OrderBy> orderBys) {
+  public ListParams(int max, int offset, String name, boolean asc) {
+    this(max, offset, Arrays.asList(new SortBy(name, asc)));
+  }
+
+  /**
+   * Create.
+   * 
+   * @param max
+   * @param offset
+   * @param sortBys
+   */
+  public ListParams(int max, int offset, List<SortBy> sortBys) {
     super();
     this.max = max;
     this.offset = offset;
-    this.orderBys = orderBys;
+    this.sortBys = sortBys;
   }
 
   /**
@@ -123,12 +147,25 @@ public class ListParams {
   }
 
   /**
-   * Get orderBys.
+   * Get multiple sort by.
    * 
-   * @return the orderBys
+   * @return the sortBys
    */
-  public List<OrderBy> getOrderBys() {
-    return orderBys;
+  public List<SortBy> getSortBys() {
+    return sortBys;
+  }
+
+  /**
+   * Convert to multiple order by.
+   * 
+   * @return orderBys
+   */
+  public MultipleOrderBy toMultipleOrderBy() {
+    MultipleOrderByBuilder builder = new MultipleOrderByBuilder();
+    for (SortBy sb : sortBys) {
+      builder.add(new ColumnName(sb.getName()), sb.isAsc());
+    }
+    return builder.build();
   }
 
 }
