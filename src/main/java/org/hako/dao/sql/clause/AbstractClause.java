@@ -42,6 +42,8 @@ public abstract class AbstractClause implements Clause {
       if (obj instanceof Sql) {
         return prefix + ((Sql) obj).toPrepared();
       }
+      // TODO separated for not SQL
+      return prefix + obj;
     }
     return "";
   }

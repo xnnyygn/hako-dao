@@ -25,6 +25,7 @@ import org.hako.dao.db.client.DbClient;
 import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.function.Functions;
 import org.hako.util.BeanUtils;
@@ -152,5 +153,23 @@ public class EntityManager<T> {
     }
     return client.insert(builder.toInsertClause());
   }
-  
+
+  public int update(T instance) {
+    return update(BeanUtils.getProperties(instance));
+  }
+
+  public int update(Map<String, Object> props) {
+    UpdateClauseBuilder builder = new UpdateClauseBuilder();
+    builder.update(entityMeta.getTableName(), entityMeta.getTableAlias());
+    // TODO not primary key fields
+    for (FieldMeta f : entityMeta.getNotGeneratedFields()) {
+      String key = f.getPropertyName();
+      if (props.containsKey(key)) {
+        builder.set(f.getColumnName(), props.get(key));
+      }
+    }
+    builder.where(entityMeta.createComplexPkConditions(props));
+    return client.update(builder.toUpdateClause());
+  }
+
 }

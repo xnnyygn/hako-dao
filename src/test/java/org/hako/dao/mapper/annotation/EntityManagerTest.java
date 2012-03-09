@@ -111,4 +111,12 @@ public class EntityManagerTest {
     manager.save(b);
   }
 
+  @Test
+  public void testUpdate(){
+    Blog instance = new Blog();
+    instance.id = 1l;
+    instance.title = "FIRST2";
+    manager.update(instance);
+  }
+  
 }
