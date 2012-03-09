@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hako.dao.sql.walker.PreparedSqlFactory;
+import org.hako.dao.sql.walker.SqlFormatter;
 
 /**
  * Core object SQL. A structured object mapping of RDBMS SQL.
@@ -33,6 +34,10 @@ public interface Sql {
    * No parameter.
    */
   public static final List<Object> NO_PARAM = new ArrayList<Object>(0);
+  /**
+   * Margin used in format SQL.
+   */
+  public static final String MARGIN = "    ";
 
   /**
    * Generate prepared SQL.
@@ -42,12 +47,37 @@ public interface Sql {
   public String toPrepared();
 
   /**
-   * Delegate work to factory.
+   * Delegate work to {@link PreparedSqlFactory}.
    * 
    * @param factory
    * @return prepared SQL
+   * @see PreparedSqlFactory
    */
   public String toPrepared(PreparedSqlFactory factory);
+
+  /**
+   * Generate formated SQL.
+   * 
+   * @return formatted SQL
+   */
+  public String toFormatted();
+
+  /**
+   * Generate formated SQL.
+   * 
+   * @param depth
+   * @return formatted SQL
+   */
+  public String toFormatted(int depth);
+
+  /**
+   * Delegate work to {@link SqlFormatter}.
+   * 
+   * @param formatter
+   * @return formatted SQL
+   * @see SqlFormatter
+   */
+  public String toFormatted(SqlFormatter formatter);
 
   /**
    * Collect parameters.

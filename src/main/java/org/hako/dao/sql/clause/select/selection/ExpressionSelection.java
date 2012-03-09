@@ -43,6 +43,11 @@ public class ExpressionSelection extends AbstractSelection {
   public String toPrepared() {
     return expression.toPrepared();
   }
+  
+  @Override
+  public String toFormatted(int depth) {
+    return expression.toFormatted(depth);
+  }
 
   public List<Object> getParams() {
     return expression.getParams();

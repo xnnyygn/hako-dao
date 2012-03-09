@@ -20,7 +20,8 @@ import java.util.List;
 import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.expression.condition.AbstractCondition;
 import org.hako.dao.sql.expression.condition.Condition;
-import org.hako.dao.sql.util.MultipleSqlUtils;
+import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.ToFormattedUtils;
 
 /**
  * Multiple and condition.
@@ -49,11 +50,17 @@ public class MultipleAndCondition extends AbstractCondition {
   }
 
   public String toPrepared() {
-    return MultipleSqlUtils.toPrepared(" AND ", conditions.toArray(new Sql[0]));
+    return SqlUtils.toPrepared(" AND ", conditions.toArray(new Sql[0]));
+  }
+
+  @Override
+  public String toFormatted(int depth) {
+    return ToFormattedUtils.formatAndConcat(depth, " AND ",
+        conditions.toArray(new Sql[0]));
   }
 
   public List<Object> getParams() {
-    return MultipleSqlUtils.getParams(conditions);
+    return SqlUtils.getParams(conditions);
   }
 
 }

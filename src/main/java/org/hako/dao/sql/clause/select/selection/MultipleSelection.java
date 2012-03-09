@@ -19,7 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hako.dao.sql.Sql;
-import org.hako.dao.sql.util.MultipleSqlUtils;
+import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.ToFormattedUtils;
 
 /**
  * Multiple selection.
@@ -57,11 +58,17 @@ public class MultipleSelection extends AbstractSelection {
   }
 
   public String toPrepared() {
-    return MultipleSqlUtils.toPrepared(selections.toArray(new Sql[0]));
+    return SqlUtils.toPrepared(selections.toArray(new Sql[0]));
+  }
+
+  @Override
+  public String toFormatted(int depth) {
+    return ToFormattedUtils.formatAndConcat(depth, ",\n",
+        selections.toArray(new Sql[0]));
   }
 
   public List<Object> getParams() {
-    return MultipleSqlUtils.getParams(selections);
+    return SqlUtils.getParams(selections);
   }
 
 }

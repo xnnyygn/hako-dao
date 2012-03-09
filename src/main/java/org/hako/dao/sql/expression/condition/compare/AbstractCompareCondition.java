@@ -15,11 +15,11 @@
  */
 package org.hako.dao.sql.expression.condition.compare;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.condition.AbstractCondition;
+import org.hako.dao.sql.util.SqlUtils;
 
 /**
  * Abstract compare condition.
@@ -55,11 +55,16 @@ public abstract class AbstractCompareCondition extends AbstractCondition {
         .toString();
   }
 
-  public List<Object> getParams() {
-    List<Object> all = new ArrayList<Object>();
-    all.addAll(leftOperand.getParams());
-    all.addAll(rightOperand.getParams());
-    return all;
+  @Override
+  public String toFormatted(int depth) {
+    // TODO use string builder
+    return leftOperand.toFormatted(depth) + ' ' + operator + ' '
+        + rightOperand.toFormatted(depth);
   }
+
+  public List<Object> getParams() {
+    return SqlUtils.getParams(leftOperand, rightOperand);
+  }
+
 
 }

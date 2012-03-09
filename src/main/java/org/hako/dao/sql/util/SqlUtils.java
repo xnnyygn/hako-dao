@@ -31,25 +31,33 @@ import org.hako.dao.sql.Sql;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class MultipleSqlUtils {
+// TODO separated to ToPreparedUtils and GetParamsUtils 
+public class SqlUtils {
 
   /**
    * Join multiple SQL prepared string with {@code ",  "}.
    * 
    * @param sqls multiple SQL
-   * @return delimiter separated SQL
+   * @return comma separated SQL
    */
   public static String toPrepared(Sql... sqls) {
     return toPrepared(", ", sqls);
   }
 
-  public static String toPrepared(String delimeter, Sql... sqls) {
+  /**
+   * Join multiple SQL prepared string with delimiter.
+   * 
+   * @param delimiter
+   * @param sqls
+   * @return delimiter separated SQL
+   */
+  public static String toPrepared(String delimiter, Sql... sqls) {
     StringBuilder builder = new StringBuilder();
     if (sqls.length > 0) {
       for (Sql sql : sqls) {
-        builder.append(sql.toPrepared()).append(delimeter);
+        builder.append(sql.toPrepared()).append(delimiter);
       }
-      builder.setLength(builder.length() - delimeter.length());
+      builder.setLength(builder.length() - delimiter.length());
     }
     return builder.toString();
   }

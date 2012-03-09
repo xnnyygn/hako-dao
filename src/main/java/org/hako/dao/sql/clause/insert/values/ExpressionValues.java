@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.expression.Expression;
-import org.hako.dao.sql.util.MultipleSqlUtils;
+import org.hako.dao.sql.util.SqlUtils;
 
 /**
  * Expression values.
@@ -50,13 +50,13 @@ public class ExpressionValues extends AbstractValueSource {
   public String toPrepared() {
     StringBuilder builder = new StringBuilder("VALUES (");
     builder
-        .append(MultipleSqlUtils.toPrepared(expressions.toArray(new Sql[0])));
+        .append(SqlUtils.toPrepared(expressions.toArray(new Sql[0])));
     builder.append(")");
     return builder.toString();
   }
 
   public List<Object> getParams() {
-    return MultipleSqlUtils.getParams(expressions);
+    return SqlUtils.getParams(expressions);
   }
 
 }

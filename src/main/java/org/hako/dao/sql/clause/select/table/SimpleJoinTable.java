@@ -18,6 +18,8 @@ package org.hako.dao.sql.clause.select.table;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Simple join table.
  * 
@@ -56,8 +58,19 @@ public class SimpleJoinTable extends AbstractTable {
   }
 
   public String toPrepared() {
+    // TODO use string builder
     return table.toPrepared() + " " + joinType.toString() + " JOIN "
         + joinTable.toPrepared();
+  }
+
+  @Override
+  public String toFormatted(int depth) {
+    // TODO use string builder
+    int niceDisplayOfJoinTable = depth + 1;
+    return table.toFormatted(depth) + '\n'
+        + StringUtils.repeat(MARGIN, niceDisplayOfJoinTable)
+        + joinType.toString() + " JOIN "
+        + joinTable.toFormatted(niceDisplayOfJoinTable);
   }
 
   public List<Object> getParams() {

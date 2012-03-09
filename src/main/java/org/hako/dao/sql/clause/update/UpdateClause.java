@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.clause.AbstractClause;
-import org.hako.dao.sql.util.MultipleSqlUtils;
+import org.hako.dao.sql.util.SqlUtils;
 
 /**
  * Update clause.
@@ -53,14 +53,14 @@ public class UpdateClause extends AbstractClause {
     builder.append("UPDATE ").append(bean.getTableName());
     appendOptionToPrepared(" AS ", bean.getTableAliasOpt(), builder);
     builder.append(" SET ");
-    builder.append(MultipleSqlUtils.toPrepared(bean.getPairs().toArray(
+    builder.append(SqlUtils.toPrepared(bean.getPairs().toArray(
         new Sql[0])));
     appendOptionToPrepared(" WHERE ", bean.getWhereCondOpt(), builder);
     return builder.toString();
   }
 
   public List<Object> getParams() {
-    return MultipleSqlUtils.getParams(bean.getPairs(), bean.getWhereCondOpt());
+    return SqlUtils.getParams(bean.getPairs(), bean.getWhereCondOpt());
   }
 
   public String toString() {

@@ -13,35 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql;
+package org.hako.dao.sql.walker;
 
-import org.hako.dao.sql.walker.PreparedSqlFactory;
-import org.hako.dao.sql.walker.SqlFormatter;
-
+import org.hako.dao.sql.Sql;
 
 /**
- * Abstract implement of SQL.
+ * Default SQL formatter.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-public abstract class AbstractSql implements Sql {
+public class DefaultSqlFormatter implements SqlFormatter {
 
-  public String toPrepared(PreparedSqlFactory factory) {
-    return factory.from(this);
-  }
-
-  public String toFormatted() {
-    return toFormatted(0);
-  }
-
-  public String toFormatted(int depth) {
-    return toPrepared();
-  }
-
-  public String toFormatted(SqlFormatter formatter) {
-    return formatter.format(this);
+  public String format(Sql sql) {
+    return sql.toFormatted();
   }
 
 }

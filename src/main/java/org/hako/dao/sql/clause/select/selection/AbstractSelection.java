@@ -26,5 +26,4 @@ import org.hako.dao.sql.AbstractSql;
  */
 public abstract class AbstractSelection extends AbstractSql implements
     Selection {
-
 }

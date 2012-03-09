@@ -17,6 +17,7 @@ package org.hako.dao.sql;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hako.dao.sql.clause.select.SelectClause;
 
 /**
@@ -43,6 +44,12 @@ public class InnerSelect extends AbstractSql {
 
   public String toPrepared() {
     return "( " + select.toPrepared() + " )";
+  }
+
+  @Override
+  public String toFormatted(int depth) {
+    return "(\n" + select.toFormatted(depth)
+        + StringUtils.repeat(MARGIN, depth - 1) + ")";
   }
 
   public List<Object> getParams() {

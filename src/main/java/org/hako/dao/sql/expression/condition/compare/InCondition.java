@@ -36,5 +36,5 @@ public class InCondition extends AbstractCompareCondition {
       Expression rightOperand) {
     super(leftOperand, "IN", rightOperand);
   }
-
+  
 }

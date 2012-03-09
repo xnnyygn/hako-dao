@@ -15,11 +15,13 @@
  */
 package org.hako.dao.sql.clause.select;
 
+import static org.hako.dao.sql.util.ToFormattedUtils.appendFormattedSql;
+
 import java.util.List;
 
 import org.hako.Option;
 import org.hako.dao.sql.clause.AbstractClause;
-import org.hako.dao.sql.util.MultipleSqlUtils;
+import org.hako.dao.sql.util.SqlUtils;
 
 /**
  * Select clause.
@@ -49,7 +51,7 @@ public class SelectClause extends AbstractClause {
   public String toPrepared() {
     StringBuilder builder = new StringBuilder();
     builder.append("SELECT ").append(bean.getSelection().toPrepared());
-    builder.append(" FROM ").append(bean.getTable().toPrepared()).toString();
+    builder.append(" FROM ").append(bean.getTable().toPrepared());
     appendOptionToPrepared(" WHERE ", bean.getWhereCondOpt(), builder);
     appendOptionToPrepared(" GROUP BY ", bean.getGroupByOpt(), builder);
     appendOptionToPrepared(" HAVING ", bean.getHavingOpt(), builder);
@@ -57,8 +59,21 @@ public class SelectClause extends AbstractClause {
     return builder.toString();
   }
 
+  @Override
+  public String toFormatted(int depth) {
+    StringBuilder builder = new StringBuilder();
+    int newDepth = depth + 1;
+    appendFormattedSql("SELECT\n", newDepth, bean.getSelection(), builder);
+    appendFormattedSql("FROM\n", newDepth, bean.getTable(), builder);
+    appendFormattedSql("WHERE\n", newDepth, bean.getWhereCondOpt(), builder);
+    appendFormattedSql("GROUP BY\n", newDepth, bean.getGroupByOpt(), builder);
+    appendFormattedSql("HAVING\n", newDepth, bean.getHavingOpt(), builder);
+    appendFormattedSql("ORDER BY\n", newDepth, bean.getOrderByOpt(), builder);
+    return builder.toString();
+  }
+
   public List<Object> getParams() {
-    return MultipleSqlUtils.getParams(bean.getSelection(), bean.getTable(),
+    return SqlUtils.getParams(bean.getSelection(), bean.getTable(),
         bean.getWhereCondOpt(), bean.getGroupByOpt(), bean.getOrderByOpt(),
         bean.getLimitOpt());
   }

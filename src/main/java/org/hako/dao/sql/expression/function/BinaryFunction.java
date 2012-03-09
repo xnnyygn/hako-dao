@@ -18,7 +18,7 @@ package org.hako.dao.sql.expression.function;
 import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
-import org.hako.dao.sql.util.MultipleSqlUtils;
+import org.hako.dao.sql.util.SqlUtils;
 
 /**
  * Binary function.
@@ -51,7 +51,7 @@ public class BinaryFunction extends AbstractFunction {
   }
 
   public List<Object> getParams() {
-    return MultipleSqlUtils.getParams(first, second);
+    return SqlUtils.getParams(first, second);
   }
 
 }

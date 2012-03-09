@@ -18,11 +18,12 @@ package org.hako.dao.sql.clause.select.table;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hako.dao.sql.expression.condition.Condition;
 
 /**
  * Join with condition table.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
@@ -59,7 +60,17 @@ public class JoinWithConditionTable extends SimpleJoinTable {
 
   @Override
   public String toPrepared() {
+    // TODO use string builder
     return super.toPrepared() + " ON " + condition.toPrepared();
+  }
+
+  @Override
+  public String toFormatted(int depth) {
+    // TODO use string builder
+    int niceDisplayOfCondition = depth + 2;
+    return super.toFormatted(depth) + '\n'
+        + StringUtils.repeat(MARGIN, niceDisplayOfCondition) + "ON "
+        + condition.toFormatted(niceDisplayOfCondition);
   }
 
   @Override
