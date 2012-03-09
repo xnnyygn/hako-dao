@@ -13,35 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.restriction.logic;
+package org.hako.dao.sql.expression.condition.compare;
 
-import org.hako.dao.mapper.annotation.EntityMeta;
-import org.hako.dao.restriction.Restriction;
-import org.hako.dao.sql.expression.condition.Condition;
-import org.hako.dao.sql.expression.condition.logic.AndCondition;
+import org.hako.dao.sql.expression.Expression;
 
 /**
- * And restriction.
+ * Like condition.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class AndRestriction extends AbstractBinaryLogicRestriction {
+public class LikeCondition extends AbstractCompareCondition {
 
   /**
    * Create.
    * 
-   * @param left
-   * @param right
+   * @param leftOperand
+   * @param rightOperand
    */
-  public AndRestriction(Restriction left, Restriction right) {
-    super(left, right);
-  }
-
-  public Condition toCondition(EntityMeta entityMeta) {
-    return new AndCondition(left.toCondition(entityMeta),
-        right.toCondition(entityMeta));
+  public LikeCondition(Expression leftOperand, Expression rightOperand) {
+    super(leftOperand, "LIKE", rightOperand);
   }
 
 }

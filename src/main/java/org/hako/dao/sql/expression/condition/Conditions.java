@@ -22,6 +22,7 @@ import org.hako.dao.sql.expression.condition.compare.BetweenCondition;
 import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
 import org.hako.dao.sql.expression.condition.compare.GreaterThanCondition;
 import org.hako.dao.sql.expression.condition.compare.InCondition;
+import org.hako.dao.sql.expression.condition.compare.LikeCondition;
 import org.hako.dao.sql.expression.condition.compare.NotEqualCondition;
 import org.hako.dao.sql.expression.condition.logic.OrCondition;
 
@@ -95,5 +96,17 @@ public class Conditions {
       Expression max) {
     return new BetweenCondition(operand, min, max);
   }
-  
+
+  /**
+   * Create like condition.
+   * 
+   * @param left
+   * @param right
+   * @return like condition
+   * @see LikeCondition
+   */
+  public static LikeCondition like(Expression left, Expression right) {
+    return new LikeCondition(left, right);
+  }
+
 }

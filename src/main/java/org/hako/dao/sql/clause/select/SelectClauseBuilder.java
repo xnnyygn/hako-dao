@@ -138,14 +138,24 @@ public class SelectClauseBuilder {
   }
 
   /**
-   * Add where clause.
+   * Set where clause.
    * 
    * @param conditions conditions
    * @return this
    */
   public SelectClauseBuilder where(Condition... conditions) {
-    bean.setWhereCondOpt(new Some<Condition>(new MultipleAndCondition(Arrays
-        .asList(conditions))));
+    return where(Arrays.asList(conditions));
+  }
+
+  /**
+   * Set where clause.
+   * 
+   * @param conditions
+   * @return this
+   */
+  public SelectClauseBuilder where(List<Condition> conditions) {
+    bean.setWhereCondOpt(new Some<Condition>(new MultipleAndCondition(
+        conditions)));
     return this;
   }
 
@@ -180,8 +190,7 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder addOrderBy(int index, boolean asc) {
-    orderBys.add(new IndexSingleOrderBy(index, asc));
-    return this;
+    return addOrderBy(new IndexSingleOrderBy(index, asc));
   }
 
   /**
@@ -192,10 +201,31 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder addOrderBy(Expression expression, boolean asc) {
-    orderBys.add(new ExpressionSingleOrderBy(expression, asc));
+    return addOrderBy(new ExpressionSingleOrderBy(expression, asc));
+  }
+
+  /**
+   * Add order by.
+   * 
+   * @param orderBy
+   * @return this
+   */
+  public SelectClauseBuilder addOrderBy(OrderBy orderBy) {
+    orderBys.add(orderBy);
     return this;
   }
 
+  /**
+   * Add multiple order by.
+   * 
+   * @param orderBys
+   * @return
+   */
+  public SelectClauseBuilder addOrderBys(List<OrderBy> orderBys){
+    orderBys.addAll(orderBys);
+    return this;
+  }
+  
   /**
    * Limit.
    * 

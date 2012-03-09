@@ -23,7 +23,6 @@ import java.util.Map;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
-import org.hako.dao.ListParams.OrderBy;
 import org.hako.dao.db.client.DbClient;
 import org.hako.dao.mapper.StaticMapper;
 import org.hako.dao.mapping.entity.EntityMeta;
@@ -55,6 +54,7 @@ import org.hako.util.OptionUtils;
  * @version %I%, %G%
  * @since 1.0.0
  */
+@Deprecated
 public class GenericDao {
 
   protected final DbClient client;
@@ -215,20 +215,20 @@ public class GenericDao {
     TableName tableName = entity.getTableName();
     builder.from(tableName.getName(), tableName.getAlias());
     // handle where
-    if (rOpt.hasValue()) {
-      builder.where(rOpt.get().toCondition(entity));
-    }
+    // if (rOpt.hasValue()) {
+    // builder.where(rOpt.get().toCondition(entity));
+    // }
     // handle limit and order by
-    if (lpOpt.hasValue()) {
-      ListParams params = lpOpt.get();
-      builder.limit(params.getMax(), params.getOffset());
-      for (OrderBy orderBy : params.getOrderBys()) {
-        Option<String> nameOpt = entity.getColumnAliasName(orderBy.getField());
-        if (nameOpt.hasValue()) {
-          builder.addOrderBy(new ColumnName(nameOpt.get()), orderBy.isAsc());
-        }
-      }
-    }
+    // if (lpOpt.hasValue()) {
+    // ListParams params = lpOpt.get();
+    // builder.limit(params.getMax(), params.getOffset());
+    // for (SortBy orderBy : params.getOrderBys()) {
+    // Option<String> nameOpt = entity.getColumnAliasName(orderBy.getField());
+    // if (nameOpt.hasValue()) {
+    // builder.addOrderBy(new ColumnName(nameOpt.get()), orderBy.isAsc());
+    // }
+    // }
+    // }
     return convert(client.selectMultipleRows(builder.toSelectClause()));
   }
 
@@ -284,9 +284,9 @@ public class GenericDao {
         .count(new AsteriskExpression())));
     TableName tableName = entity.getTableName();
     builder.from(tableName.getName(), tableName.getAlias());
-    if (rOption.hasValue()) {
-      builder.where(rOption.get().toCondition(entity));
-    }
+    // if (rOption.hasValue()) {
+    // builder.where(rOption.get().toCondition(entity));
+    // }
     return ((Number) client.selectObject(builder.toSelectClause()).get())
         .intValue();
   }
@@ -296,7 +296,7 @@ public class GenericDao {
     builder.select(createSelection(entity.getFields()));
     TableName tableName = entity.getTableName();
     builder.from(tableName.getName(), tableName.getAlias());
-    builder.where(restriction.toCondition(entity));
+    // builder.where(restriction.toCondition(entity));
     return convert(client.selectSingleRow(builder.toSelectClause()));
   }
 }

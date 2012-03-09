@@ -28,13 +28,11 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.hako.dao.GenericDao;
-import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.vendor.DbcpVendor;
 import org.hako.dao.db.vendor.SingletonConnectionDbVender;
 import org.hako.dao.mapping.field.MappedField;
 import org.hako.dao.restriction.RestrictionBuilder;
-import org.hako.dao.restriction.Restrictions;
 import org.hako.dao.user.domain.Blog;
 import org.junit.Test;
 
@@ -100,8 +98,8 @@ public class BlogDaoTest {
 
   @Test
   public void testList() {
-    System.out.println(blogDao.list(new ListParams(2, 1, Blog.dateCreated,
-        false)));
+    // System.out.println(blogDao.list(new ListParams(2, 1, Blog.dateCreated,
+    // false)));
   }
 
   @Test
@@ -124,27 +122,27 @@ public class BlogDaoTest {
   @Test
   public void testFind() {
     RestrictionBuilder builder = new RestrictionBuilder();
-    builder.add(Restrictions.eq(Blog.id, 4l));
-    builder.add(Restrictions.eq(Blog.userId, 1l));
+    // builder.add(Restrictions.eq(Blog.id, 4l));
+    // builder.add(Restrictions.eq(Blog.userId, 1l));
     System.out.println(blogDao.findBy(builder.build()));
   }
 
   @Test
   public void testFindButNotExist() {
     RestrictionBuilder builder = new RestrictionBuilder();
-    builder.add(Restrictions.eq(Blog.id, 4l));
-    builder.add(Restrictions.eq(Blog.userId, 2l));
+    // builder.add(Restrictions.eq(Blog.id, 4l));
+    // builder.add(Restrictions.eq(Blog.userId, 2l));
     System.out.println(blogDao.findBy(builder.build()));
   }
 
   @Test
   public void testListBy() {
-    System.out.println(blogDao.listBy(Restrictions.eq(Blog.userId, 2l)));
+    // System.out.println(blogDao.listBy(Restrictions.eq(Blog.userId, 2l)));
   }
 
   @Test
   public void testCountBy() {
-    System.out.println(blogDao.countBy(Restrictions.eq(Blog.userId, 1l)));
+    // System.out.println(blogDao.countBy(Restrictions.eq(Blog.userId, 1l)));
   }
 
   // @Test
