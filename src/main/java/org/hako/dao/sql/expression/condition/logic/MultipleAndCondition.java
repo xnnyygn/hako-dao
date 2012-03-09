@@ -18,6 +18,7 @@ package org.hako.dao.sql.expression.condition.logic;
 import java.util.List;
 
 import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.expression.condition.AbstractCondition;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.util.MultipleSqlUtils;
 
@@ -28,7 +29,7 @@ import org.hako.dao.sql.util.MultipleSqlUtils;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class MultipleAndCondition implements Condition {
+public class MultipleAndCondition extends AbstractCondition {
 
   private final List<Condition> conditions;
 
@@ -36,7 +37,7 @@ public class MultipleAndCondition implements Condition {
    * Create.
    * 
    * @param conditions
-   * @throws IllegalArgumentException if condtions is empty
+   * @throws IllegalArgumentException if conditions is empty
    */
   public MultipleAndCondition(List<Condition> conditions)
       throws IllegalArgumentException {

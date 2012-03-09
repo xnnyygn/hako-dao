@@ -28,7 +28,7 @@ import org.hako.dao.sql.util.MultipleSqlUtils;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class ExpressionValues implements ValueSource {
+public class ExpressionValues extends AbstractValueSource {
 
   private final List<Expression> expressions;
 

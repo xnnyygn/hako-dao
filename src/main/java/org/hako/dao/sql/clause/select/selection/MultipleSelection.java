@@ -28,7 +28,7 @@ import org.hako.dao.sql.util.MultipleSqlUtils;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class MultipleSelection implements Selection {
+public class MultipleSelection extends AbstractSelection {
 
   private final List<Selection> selections;
 

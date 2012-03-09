@@ -18,16 +18,16 @@ package org.hako.dao.sql.expression.condition.compare;
 import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
-import org.hako.dao.sql.expression.condition.Condition;
+import org.hako.dao.sql.expression.condition.AbstractCondition;
 
 /**
  * Abstract null condition.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class AbstractNullCondition implements Condition {
+public abstract class AbstractNullCondition extends AbstractCondition {
 
   protected final Expression expression;
 

@@ -21,14 +21,14 @@ import org.hako.dao.sql.clause.select.SelectClause;
 
 /**
  * Inner select.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
- *
+ * 
  */
-public class InnerSelect {
-  
+public class InnerSelect extends AbstractSql {
+
   protected final SelectClause select;
 
   /**
@@ -48,5 +48,5 @@ public class InnerSelect {
   public List<Object> getParams() {
     return select.getParams();
   }
-  
+
 }

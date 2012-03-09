@@ -13,40 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql.expression;
+package org.hako.dao.sql.walker;
 
-import java.util.List;
+import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.expression.function.Functions;
+import org.junit.Test;
 
 /**
- * Aka expression.
+ * Test of {@link SimplePreparedSqlFactory}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
+ * 
  */
-public class AkaExpression extends AbstractExpression implements Expression {
+public class SimplePreparedSqlFactoryTest {
 
-  private final Expression expression;
-  private final String alias;
-
-  /**
-   * Create.
-   * 
-   * @param expression
-   * @param alias
-   */
-  public AkaExpression(Expression expression, String alias) {
-    super();
-    this.expression = expression;
-    this.alias = alias;
-  }
-
-  public String toPrepared() {
-    return expression.toPrepared() + " AS " + alias;
-  }
-
-  public List<Object> getParams() {
-    return expression.getParams();
+  @Test
+  public void testFrom() {
+    SimplePreparedSqlFactory factory = new SimplePreparedSqlFactory();
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(Functions.countRow());
+    builder.from("blog", "b");
+    System.out.println(factory.from(builder.toSelectClause()));
   }
 
 }

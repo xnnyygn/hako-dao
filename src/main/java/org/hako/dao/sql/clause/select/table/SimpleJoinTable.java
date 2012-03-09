@@ -20,12 +20,12 @@ import java.util.List;
 
 /**
  * Simple join table.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class SimpleJoinTable implements Table {
+public class SimpleJoinTable extends AbstractTable {
 
   protected final Table table;
   protected final JoinType joinType;

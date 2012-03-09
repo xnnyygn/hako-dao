@@ -19,12 +19,12 @@ import java.util.List;
 
 /**
  * Aka table.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class AkaTable implements Table {
+public class AkaTable extends AbstractTable {
 
   private final Table table;
   private final String alias;

@@ -25,10 +25,10 @@ import java.util.List;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class StaticSql implements Sql {
+public abstract class StaticSql extends AbstractSql {
 
   public List<Object> getParams() {
     return NO_PARAM;
   }
-  
+
 }

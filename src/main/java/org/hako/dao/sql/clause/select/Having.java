@@ -17,6 +17,7 @@ package org.hako.dao.sql.clause.select;
 
 import java.util.List;
 
+import org.hako.dao.sql.AbstractSql;
 import org.hako.dao.sql.expression.condition.Condition;
 
 /**
@@ -26,7 +27,7 @@ import org.hako.dao.sql.expression.condition.Condition;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class Having implements SelectOnlySql {
+public class Having extends AbstractSql implements SelectOnlySql {
 
   private final Condition condition;
 

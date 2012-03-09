@@ -15,6 +15,7 @@
  */
 package org.hako.dao.sql.clause.select.orderby;
 
+
 /**
  * Single order by.
  * 
@@ -22,7 +23,7 @@ package org.hako.dao.sql.clause.select.orderby;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class AbstractSingleOrderBy implements OrderBy {
+public abstract class AbstractSingleOrderBy extends AbstractOrderBy {
 
   private final boolean asc;
 

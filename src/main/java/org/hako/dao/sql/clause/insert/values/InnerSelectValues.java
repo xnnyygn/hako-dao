@@ -21,12 +21,12 @@ import org.hako.dao.sql.clause.select.SelectClause;
 
 /**
  * Inner select values.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class InnerSelectValues implements ValueSource {
+public class InnerSelectValues extends AbstractValueSource {
 
   private final boolean direct;
   private final boolean sorted;

@@ -17,6 +17,7 @@ package org.hako.dao.sql.clause.update;
 
 import java.util.List;
 
+import org.hako.dao.sql.AbstractSql;
 import org.hako.dao.sql.expression.Expression;
 
 /**
@@ -26,7 +27,7 @@ import org.hako.dao.sql.expression.Expression;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class ColumnExpressionPair implements UpdateOnlySql {
+public class ColumnExpressionPair extends AbstractSql implements UpdateOnlySql {
 
   private final String columnName;
   private final Expression expression;

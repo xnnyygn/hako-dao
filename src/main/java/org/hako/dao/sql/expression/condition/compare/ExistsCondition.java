@@ -18,16 +18,16 @@ package org.hako.dao.sql.expression.condition.compare;
 import java.util.List;
 
 import org.hako.dao.sql.clause.select.SelectClause;
-import org.hako.dao.sql.expression.condition.Condition;
+import org.hako.dao.sql.expression.condition.AbstractCondition;
 
 /**
  * Exists condition.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class ExistsCondition implements Condition {
+public class ExistsCondition extends AbstractCondition {
 
   private final SelectClause select;
 

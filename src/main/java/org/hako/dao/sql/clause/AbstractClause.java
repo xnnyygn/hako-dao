@@ -16,6 +16,7 @@
 package org.hako.dao.sql.clause;
 
 import org.hako.Option;
+import org.hako.dao.sql.AbstractSql;
 import org.hako.dao.sql.Clause;
 import org.hako.dao.sql.Sql;
 
@@ -26,7 +27,7 @@ import org.hako.dao.sql.Sql;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public abstract class AbstractClause implements Clause {
+public abstract class AbstractClause extends AbstractSql implements Clause {
 
   /**
    * Invoke {@link Sql#toPrepared()} on SQL option with prefix, or just return

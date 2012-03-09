@@ -18,6 +18,7 @@ package org.hako.dao.sql.clause.select;
 import java.util.Arrays;
 import java.util.List;
 
+import org.hako.dao.sql.AbstractSql;
 import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.util.MultipleSqlUtils;
@@ -29,7 +30,7 @@ import org.hako.dao.sql.util.MultipleSqlUtils;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class GroupBy implements SelectOnlySql {
+public class GroupBy extends AbstractSql implements SelectOnlySql {
 
   private final List<Expression> expressions;
 

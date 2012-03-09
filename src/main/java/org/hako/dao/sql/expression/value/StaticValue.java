@@ -17,6 +17,7 @@ package org.hako.dao.sql.expression.value;
 
 import java.util.List;
 
+import org.hako.dao.sql.AbstractSql;
 import org.hako.dao.sql.expression.Expression;
 
 /**
@@ -26,7 +27,7 @@ import org.hako.dao.sql.expression.Expression;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class StaticValue implements Expression {
+public class StaticValue extends AbstractSql implements Expression {
 
   private final String expression;
 

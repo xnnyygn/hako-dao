@@ -23,12 +23,12 @@ import org.hako.dao.sql.util.MultipleSqlUtils;
 
 /**
  * Multiple table.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class MultipleTable implements Table {
+public class MultipleTable extends AbstractTable {
 
   private final List<Table> tables;
 

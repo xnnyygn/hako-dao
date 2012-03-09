@@ -13,40 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql.expression;
+package org.hako.dao.sql.walker;
 
-import java.util.List;
+import org.hako.dao.sql.Sql;
 
 /**
- * Aka expression.
+ * Simple implement, just invoke {@link Sql#toPrepared()}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
+ * @see Sql#toPrepared()
  */
-public class AkaExpression extends AbstractExpression implements Expression {
-
-  private final Expression expression;
-  private final String alias;
+public class SimplePreparedSqlFactory implements PreparedSqlFactory {
 
   /**
-   * Create.
-   * 
-   * @param expression
-   * @param alias
+   * Just delegate work to {@link Sql#toPrepared()}.
    */
-  public AkaExpression(Expression expression, String alias) {
-    super();
-    this.expression = expression;
-    this.alias = alias;
-  }
-
-  public String toPrepared() {
-    return expression.toPrepared() + " AS " + alias;
-  }
-
-  public List<Object> getParams() {
-    return expression.getParams();
+  public String from(Sql sql) {
+    return sql.toPrepared();
   }
 
 }

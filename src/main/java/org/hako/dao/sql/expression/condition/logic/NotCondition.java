@@ -17,16 +17,17 @@ package org.hako.dao.sql.expression.condition.logic;
 
 import java.util.List;
 
+import org.hako.dao.sql.expression.condition.AbstractCondition;
 import org.hako.dao.sql.expression.condition.Condition;
 
 /**
  * Not condition.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class NotCondition implements Condition {
+public class NotCondition extends AbstractCondition {
 
   private final Condition condition;
 

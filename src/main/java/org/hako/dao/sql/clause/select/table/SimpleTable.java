@@ -24,7 +24,7 @@ import java.util.List;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class SimpleTable implements Table {
+public class SimpleTable extends AbstractTable {
 
   protected final String name;
 

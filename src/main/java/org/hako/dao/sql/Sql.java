@@ -18,6 +18,8 @@ package org.hako.dao.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hako.dao.sql.walker.PreparedSqlFactory;
+
 /**
  * Core object SQL. A structured object mapping of RDBMS SQL.
  * 
@@ -38,6 +40,14 @@ public interface Sql {
    * @return prepared SQL
    */
   public String toPrepared();
+
+  /**
+   * Delegate work to factory.
+   * 
+   * @param factory
+   * @return prepared SQL
+   */
+  public String toPrepared(PreparedSqlFactory factory);
 
   /**
    * Collect parameters.

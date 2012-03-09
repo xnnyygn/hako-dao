@@ -18,16 +18,17 @@ package org.hako.dao.sql.expression.condition.logic;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hako.dao.sql.expression.condition.AbstractCondition;
 import org.hako.dao.sql.expression.condition.Condition;
 
 /**
  * Abstract binary logic condition.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class AbstractBinaryLogicCondition implements Condition {
+public abstract class AbstractBinaryLogicCondition extends AbstractCondition {
 
   protected final Condition left;
   protected final String operator;
@@ -40,7 +41,8 @@ public abstract class AbstractBinaryLogicCondition implements Condition {
    * @param operator
    * @param right
    */
-  public AbstractBinaryLogicCondition(Condition left, String operator, Condition right) {
+  public AbstractBinaryLogicCondition(Condition left, String operator,
+      Condition right) {
     super();
     this.left = left;
     this.operator = operator;

@@ -21,15 +21,15 @@ import org.hako.dao.sql.expression.Expression;
 
 /**
  * Expression selection.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class ExpressionSelection implements Selection {
+public class ExpressionSelection extends AbstractSelection {
 
   protected final Expression expression;
-  
+
   /**
    * Create.
    * 

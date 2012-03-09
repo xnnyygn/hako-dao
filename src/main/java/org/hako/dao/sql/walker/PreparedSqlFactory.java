@@ -13,40 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql.expression;
+package org.hako.dao.sql.walker;
 
-import java.util.List;
+import org.hako.dao.sql.Sql;
 
 /**
- * Aka expression.
+ * Prepared SQL factory.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class AkaExpression extends AbstractExpression implements Expression {
-
-  private final Expression expression;
-  private final String alias;
+public interface PreparedSqlFactory {
 
   /**
-   * Create.
+   * Create prepared SQL from SQL model.
    * 
-   * @param expression
-   * @param alias
+   * @param sql
+   * @return prepared SQL
    */
-  public AkaExpression(Expression expression, String alias) {
-    super();
-    this.expression = expression;
-    this.alias = alias;
-  }
-
-  public String toPrepared() {
-    return expression.toPrepared() + " AS " + alias;
-  }
-
-  public List<Object> getParams() {
-    return expression.getParams();
-  }
+  public String from(Sql sql);
 
 }

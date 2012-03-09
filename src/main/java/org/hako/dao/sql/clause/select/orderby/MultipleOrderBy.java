@@ -27,7 +27,7 @@ import org.hako.dao.sql.util.MultipleSqlUtils;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class MultipleOrderBy implements OrderBy {
+public class MultipleOrderBy extends AbstractOrderBy {
 
   private final List<OrderBy> orderBys;
 

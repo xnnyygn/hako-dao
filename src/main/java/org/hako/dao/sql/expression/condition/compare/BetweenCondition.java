@@ -18,7 +18,7 @@ package org.hako.dao.sql.expression.condition.compare;
 import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
-import org.hako.dao.sql.expression.condition.Condition;
+import org.hako.dao.sql.expression.condition.AbstractCondition;
 import org.hako.dao.sql.util.MultipleSqlUtils;
 
 /**
@@ -28,7 +28,7 @@ import org.hako.dao.sql.util.MultipleSqlUtils;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class BetweenCondition implements Condition {
+public class BetweenCondition extends AbstractCondition {
 
   private final Expression operand;
   private final Expression min;
