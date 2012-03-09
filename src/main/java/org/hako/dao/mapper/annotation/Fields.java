@@ -69,6 +69,7 @@ public class Fields {
    * @return other fields
    */
   public List<FieldMeta> getOtherFields() {
+    // TODO add not auto generated property
     List<FieldMeta> fields = new ArrayList<FieldMeta>();
     for (FieldMeta f : this.fields) {
       if (!f.isPk()) {
@@ -77,5 +78,5 @@ public class Fields {
     }
     return fields;
   }
-
+  
 }

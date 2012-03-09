@@ -87,7 +87,10 @@ public class BeanUtils {
   private static Option<Object> getValueByGetterMethod(Method getter,
       Object bean) {
     try {
-      return new Some<Object>(getter.invoke(bean));
+      Object value = getter.invoke(bean);
+      if (value != null) {
+        return new Some<Object>(value);
+      }
     } catch (Exception e) {
       logger.warn("failed to get value by getter method", e);
     }
@@ -104,7 +107,10 @@ public class BeanUtils {
   private static Map<String, Object> getPropsByFields(Object bean) {
     Map<String, Object> props = new HashMap<String, Object>();
     for (Field f : bean.getClass().getFields()) {
-      props.put(f.getName(), getValueByField(f, bean));
+      Option<Object> valueOpt = getValueByField(f, bean);
+      if (valueOpt.hasValue()) {
+        props.put(f.getName(), valueOpt.get());
+      }
     }
     return props;
   }
@@ -119,7 +125,10 @@ public class BeanUtils {
    */
   private static Option<Object> getValueByField(Field field, Object bean) {
     try {
-      return new Some<Object>(field.get(bean));
+      Object value = field.get(bean);
+      if (value != null) {
+        return new Some<Object>(value);
+      }
     } catch (Exception e) {
       logger.warn("failed to get value by field", e);
     }
