@@ -13,10 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.restriction;
+package org.hako.dao.restriction.compare;
 
 import org.hako.dao.mapper.annotation.EntityMeta;
-import org.hako.dao.restriction.compare.AbstractCompareRestriction;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.value.Values;

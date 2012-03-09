@@ -15,7 +15,9 @@
  */
 package org.hako.dao.restriction;
 
+import org.hako.dao.restriction.LikeRestriction.MatchMode;
 import org.hako.dao.restriction.compare.EqualsRestriction;
+import org.hako.dao.restriction.compare.GreaterThanRestriction;
 
 /**
  * Restrictions.
@@ -47,8 +49,22 @@ public class Restrictions {
    * @return like restriction
    */
   public static Restriction like(String propertyName, String pattern) {
-    // TODO refactor with starts with, ends with, contains
-    return new LikeRestriction(propertyName, pattern);
+    return like(propertyName, pattern, MatchMode.FULL);
+
+  }
+
+  /**
+   * Create like restriction.
+   * 
+   * @param propertyName
+   * @param pattern
+   * @param mode match mode
+   * @return like restriction
+   * @see MatchMode
+   */
+  public static Restriction like(String propertyName, String pattern,
+      MatchMode mode) {
+    return new LikeRestriction(propertyName, pattern, mode);
   }
 
   /**

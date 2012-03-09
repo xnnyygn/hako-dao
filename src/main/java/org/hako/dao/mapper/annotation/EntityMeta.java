@@ -15,13 +15,9 @@
  */
 package org.hako.dao.mapper.annotation;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.hako.None;
@@ -35,7 +31,9 @@ import org.hako.dao.sql.expression.TableColumnName;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.ConditionBuilder;
 import org.hako.dao.sql.expression.condition.Conditions;
+import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
 import org.hako.dao.sql.expression.value.Values;
+import org.hako.util.BeanUtils;
 
 /**
  * Entity meta.
@@ -107,64 +105,47 @@ public class EntityMeta {
     return builder.toMultipleSelection();
   }
 
-  public Condition createPkCondition(Object id) {
+  /**
+   * Create primary key condition.
+   * 
+   * @param id id
+   * @return condition
+   * @throws IllegalStateException if no primary key
+   */
+  public Condition createPkCondition(Object id) throws IllegalStateException {
     List<FieldMeta> pkFields = fields.getPkFields();
     int pkFieldCount = pkFields.size();
     if (pkFieldCount == 0) {
-      // no primary key
       throw new IllegalStateException("no primary key");
     } else if (pkFieldCount == 1) {
       return Conditions.eq(new TableColumnName(tableAlias, pkFields.get(0)
           .getColumnName()), Values.create(id));
-    } else {
-      ConditionBuilder builder = new ConditionBuilder();
-      // TODO move to utilties
-      Map<String, Object> props = toProperties(id);
-      for (FieldMeta f : pkFields) {
-        String propertyName = f.getPropertyName();
-        if (!props.containsKey(propertyName)) {
-          throw new IllegalArgumentException("property [" + propertyName
-              + "] is required");
-        }
-        builder.add(Conditions.eq(
-            new TableColumnName(tableAlias, f.getColumnName()),
-            Values.create(props.get(propertyName))));
-      }
-      return builder.build();
     }
+    return createComplexPkConditions(id, pkFields);
   }
 
-  private Map<String, Object> toProperties(Object bean) {
-    Map<String, Object> props = new HashMap<String, Object>();
-    Class<?> beanClass = bean.getClass();
-    for (Method m : beanClass.getMethods()) {
-      String name = m.getName();
-      if (name.startsWith("get") && name.length() > 3
-          && m.getParameterTypes().length == 0) {
-        Option<Object> valueOpt = getValueByGetterMethod(m, bean);
-        if (valueOpt.hasValue()) {
-          props
-              .put(StringUtils.uncapitalize(name.substring(3)), valueOpt.get());
-        }
+  /**
+   * Create complex primary key conditions.
+   * 
+   * @param id id object
+   * @param pkFields primary key fields
+   * @return condition
+   */
+  private MultipleAndCondition createComplexPkConditions(Object id,
+      List<FieldMeta> pkFields) {
+    ConditionBuilder builder = new ConditionBuilder();
+    Map<String, Object> props = BeanUtils.getProperties(id);
+    for (FieldMeta f : pkFields) {
+      String propertyName = f.getPropertyName();
+      if (!props.containsKey(propertyName)) {
+        throw new IllegalArgumentException("property [" + propertyName
+            + "] is required");
       }
+      builder.add(Conditions.eq(
+          new TableColumnName(tableAlias, f.getColumnName()),
+          Values.create(props.get(propertyName))));
     }
-    for (Field f : beanClass.getFields()) {
-      try {
-        props.put(f.getName(), f.get(bean));
-      } catch (Exception e) {
-        // TODO log error
-      }
-    }
-    return props;
-  }
-
-  private Option<Object> getValueByGetterMethod(Method getter, Object bean) {
-    try {
-      return new Some<Object>(getter.invoke(bean));
-    } catch (Exception e) {
-      // TODO log error
-    }
-    return new None<Object>();
+    return builder.build();
   }
 
   /**

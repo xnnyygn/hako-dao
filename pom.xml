@@ -8,11 +8,6 @@
 	<description>model level of hako</description>
 
 	<dependencies>
-		<!-- dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>6.0</version>
-		</dependency-->
 		<dependency>
 		    <groupId>log4j</groupId>
 		    <artifactId>log4j</artifactId>
@@ -39,12 +34,12 @@
 			<version>2.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		<!-- dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.18</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency-->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
