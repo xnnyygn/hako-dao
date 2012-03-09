@@ -18,6 +18,8 @@ package org.hako.dao.mapper.annotation;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * A setter use setter method to set property.
@@ -28,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class MethodSetter implements Setter {
 
+  private static final Log logger = LogFactory.getLog(MethodSetter.class);
   private final Method setter;
   private final String propertyName;
 
@@ -46,7 +49,7 @@ public class MethodSetter implements Setter {
     try {
       setter.invoke(instance, value);
     } catch (Exception e) {
-      // TODO log error
+      logger.warn("failed to set value", e);
     }
     return instance;
   }

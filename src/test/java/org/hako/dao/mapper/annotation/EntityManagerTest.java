@@ -30,6 +30,7 @@ import org.hako.dao.db.client.DefaultDbClient;
 import org.hako.dao.db.vendor.DbcpVendor;
 import org.hako.dao.db.vendor.SingletonConnectionDbVender;
 import org.hako.dao.restriction.Restrictions;
+import org.hako.dao.restriction.LikeRestriction.MatchMode;
 import org.junit.Test;
 
 /**
@@ -90,7 +91,7 @@ public class EntityManagerTest {
     Timestamp lastYear =
         new Timestamp(new GregorianCalendar(2011, 0, 1).getTimeInMillis());
     System.out.println(manager.findBy(Restrictions.eq("id", 1l),
-        Restrictions.like("title", "F%"),
+        Restrictions.like("title", "F", MatchMode.STARTS_WITH),
         Restrictions.gt("dateCreated", lastYear)));
   }
 

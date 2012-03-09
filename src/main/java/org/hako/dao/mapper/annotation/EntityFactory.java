@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
@@ -35,6 +37,7 @@ import org.hako.Some;
  */
 public class EntityFactory<T> {
 
+  private static final Log logger = LogFactory.getLog(EntityFactory.class);
   private final Class<T> entityClass;
   private final List<Setter> setters;
 
@@ -103,7 +106,7 @@ public class EntityFactory<T> {
       try {
         return new Some<T>(create(propsOpt.get()));
       } catch (Exception e) {
-        // TODO log error
+        logger.warn("failed to create instance of [" + entityClass + "]", e);
       }
     }
     return new None<T>();
@@ -121,7 +124,7 @@ public class EntityFactory<T> {
       try {
         instances.add(create(props));
       } catch (Exception e) {
-        // TODO log error
+        logger.warn("failed to create instance of [" + entityClass + "]", e);
       }
     }
     return instances;

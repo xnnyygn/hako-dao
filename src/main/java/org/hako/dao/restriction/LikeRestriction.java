@@ -31,13 +31,63 @@ import org.hako.dao.sql.expression.value.Values;
 public class LikeRestriction extends AbstractCompareRestriction {
 
   /**
+   * Match mode.
+   * 
+   * @author xnnyygn
+   * @version %I%, %G%
+   * @since 1.1.0
+   */
+  public static enum MatchMode {
+    /**
+     * means use specified
+     */
+    FULL,
+
+    /**
+     * means add prefix % to string
+     */
+    STARTS_WITH,
+
+    /**
+     * means add suffix % to string
+     */
+    ENDS_WITH,
+
+    /**
+     * means add prefix and suffix % to string
+     */
+    CONTATINS;
+  }
+
+  /**
    * Create.
    * 
    * @param propertyName
    * @param value
+   * @param mode
    */
-  public LikeRestriction(String propertyName, String value) {
-    super(propertyName, value);
+  public LikeRestriction(String propertyName, String value, MatchMode mode) {
+    super(propertyName, createPattern(value, mode));
+  }
+
+  /**
+   * Create real pattern with source and match mode.
+   * 
+   * @param source
+   * @param mode
+   * @return pattern
+   */
+  private static String createPattern(String source, MatchMode mode) {
+    switch (mode) {
+      case STARTS_WITH:
+        return source + '%';
+      case ENDS_WITH:
+        return '%' + source;
+      case CONTATINS:
+        return '%' + source + '%';
+      default:
+        return source;
+    }
   }
 
   public Condition toCondition(EntityMeta entityMeta) {

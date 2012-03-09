@@ -17,6 +17,9 @@ package org.hako.dao.mapper.annotation;
 
 import java.lang.reflect.Field;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Use field to set value.
  * 
@@ -26,6 +29,7 @@ import java.lang.reflect.Field;
  */
 public class FieldSetter implements Setter {
 
+  private static final Log logger = LogFactory.getLog(FieldSetter.class);
   private final Field field;
 
   /**
@@ -42,7 +46,7 @@ public class FieldSetter implements Setter {
     try {
       field.set(instance, value);
     } catch (Exception e) {
-      // TODO log error
+      logger.warn("failed to set value", e);
     }
     return instance;
   }
