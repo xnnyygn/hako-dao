@@ -101,4 +101,14 @@ public class EntityManagerTest {
         .list(new ListParams(10, 1, "dateCreated", false)));
   }
 
+  @Test
+  public void testSave() {
+    Blog b = new Blog();
+    b.title = "foo";
+    b.content = "bar";
+    b.userId = 1l;
+    b.dateCreated = new Timestamp(System.currentTimeMillis());
+    manager.save(b);
+  }
+
 }

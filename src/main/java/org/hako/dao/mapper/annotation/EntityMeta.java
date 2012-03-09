@@ -176,13 +176,24 @@ public class EntityMeta {
    * @param propertyName property name
    * @return some column name or none
    */
-  private Option<String> getColumnNameOfProperty(String propertyName) {
+  public Option<String> getColumnNameOfProperty(String propertyName) {
     for (FieldMeta f : fields.getAllFields()) {
       if (f.getPropertyName().equals(propertyName)) {
         return new Some<String>(f.getColumnName());
       }
     }
     return new None<String>();
+  }
+
+  /**
+   * Get fields that not auto generated.
+   * 
+   * @return fields
+   * @see Fields#getOtherFields()
+   */
+  public List<FieldMeta> getNotGeneratedFields() {
+    // TODO FIXME
+    return fields.getOtherFields();
   }
 
 

@@ -17,14 +17,17 @@ package org.hako.dao.mapper.annotation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hako.Option;
 import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DbClient;
 import org.hako.dao.restriction.Restriction;
+import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.function.Functions;
+import org.hako.util.BeanUtils;
 
 /**
  * Entity manager.
@@ -59,6 +62,7 @@ public class EntityManager<T> {
    * @param id
    * @return some entity instance or none
    */
+  // TODO refactor with PK
   public Option<T> get(Object id) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(entityMeta.createAllFieldsSelection());
@@ -120,4 +124,33 @@ public class EntityManager<T> {
         .toSelectClause()));
   }
 
+  /**
+   * Save instance.
+   * 
+   * @param bean
+   * @return count of updated record
+   */
+  public int save(T bean) {
+    return save(BeanUtils.getProperties(bean));
+  }
+
+  /**
+   * Save with properties.
+   * 
+   * @param props properties
+   * @return count of updated record
+   */
+  public int save(Map<String, Object> props) {
+    InsertClauseBuilder builder = new InsertClauseBuilder();
+    builder.insertInto(entityMeta.getTableName());
+    for (FieldMeta f : entityMeta.getNotGeneratedFields()) {
+      String key = f.getPropertyName();
+      if (props.containsKey(key)) {
+        builder.add(f.getColumnName(), props.get(key));
+      }
+      // ignore additional properties
+    }
+    return client.insert(builder.toInsertClause());
+  }
+  
 }
