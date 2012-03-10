@@ -15,6 +15,9 @@
  */
 package org.hako.dao.sql.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hako.Option;
 import org.hako.dao.sql.Sql;
 
@@ -62,10 +65,24 @@ public class ToFormattedUtils {
    */
   public static void appendFormattedSql(String prefix, int depth, Sql sql,
       StringBuilder builder) {
-    appendMargins(builder, depth - 1);
-    builder.append(prefix);
-    appendMargins(builder, depth);
-    builder.append(sql.toFormatted(depth));
+    appendFormattedSql(prefix, depth, sql.toFormatted(depth), builder);
+  }
+
+  /**
+   * Append formatted SQL to string builder.
+   * 
+   * @param prefix
+   * @param depth
+   * @param formattedSql
+   * @param builder
+   */
+  public static void appendFormattedSql(String prefix, int depth,
+      String formattedSql, StringBuilder builder) {
+    if (!prefix.isEmpty()) {
+      appendMargins(builder, depth - 1);
+      builder.append(prefix);
+    }
+    builder.append(formattedSql);
     builder.append('\n');
   }
 
@@ -75,10 +92,23 @@ public class ToFormattedUtils {
    * @param builder
    * @param count
    */
-  private static void appendMargins(StringBuilder builder, int count) {
+  public static void appendMargins(StringBuilder builder, int count) {
     for (int i = 0; i < count; i++) {
       builder.append(Sql.MARGIN);
     }
+  }
+
+  /**
+   * Create count margins.
+   * 
+   * @param count
+   * @return margins
+   * @see #appendMargins(StringBuilder, int)
+   */
+  public static StringBuilder margins(int count) {
+    StringBuilder builder = new StringBuilder();
+    appendMargins(builder, count);
+    return builder;
   }
 
   /**
@@ -89,20 +119,45 @@ public class ToFormattedUtils {
    * @param sqls
    * @return delimiter separated SQL
    */
-  // TODO change third parameter to Collection<?>
+  // TODO change the third parameter to Collection<?>
   public static String formatAndConcat(int depth, String delimiter, Sql... sqls) {
-    StringBuilder builder = new StringBuilder();
+    List<String> formattedSqls = new ArrayList<String>();
     if (sqls.length > 0) {
-      int newDepth = depth + 1;
-      for (Sql sql : sqls) {
-        // TODO check count
-        builder.append(sql.toFormatted(newDepth)).append(delimiter);
-        appendMargins(builder, depth);
+      for (Sql s : sqls) {
+        formattedSqls.add(s.toFormatted(depth));
       }
-      builder.setLength(builder.length() - delimiter.length()
-          - Sql.MARGIN.length() * depth);
     }
+    return formatAndConcat(depth, delimiter, formattedSqls);
+  }
+
+  // TODO javadoc
+  public static String formatAndConcat(int depth, String delimiter,
+      List<String> formattedSqls) {
+    StringBuilder builder = new StringBuilder();
+    formatAndConcat(depth, delimiter, formattedSqls, builder);
     return builder.toString();
+  }
+
+  /**
+   * Format and concat formatted SQL.
+   * 
+   * @param depth
+   * @param delimiter
+   * @param formattedSqls
+   * @param builder string builder
+   */
+  public static void formatAndConcat(int depth, String delimiter,
+      List<String> formattedSqls, StringBuilder builder) {
+    if (!formattedSqls.isEmpty()) {
+      int formattedSqlCount = formattedSqls.size();
+//      appendMargins(builder, depth);
+      builder.append(formattedSqls.get(0));
+      for (int i = 1; i < formattedSqlCount; i++) {
+        builder.append(delimiter);
+//        appendMargins(builder, depth);
+        builder.append(formattedSqls.get(i));
+      }
+    }
   }
 
 }

@@ -64,13 +64,12 @@ public class SimpleJoinTable extends AbstractTable {
   }
 
   @Override
-  public String toFormatted(int depth) {
+  public String toFormatted(int marginCount) {
     // TODO use string builder
-    int niceDisplayOfJoinTable = depth + 1;
-    return table.toFormatted(depth) + '\n'
+    int niceDisplayOfJoinTable = marginCount + 1;
+    return table.toFormatted(marginCount) + '\n'
         + StringUtils.repeat(MARGIN, niceDisplayOfJoinTable)
-        + joinType.toString() + " JOIN "
-        + joinTable.toFormatted(niceDisplayOfJoinTable);
+        + joinType.toString() + " JOIN " + joinTable.toFormatted(0);
   }
 
   public List<Object> getParams() {

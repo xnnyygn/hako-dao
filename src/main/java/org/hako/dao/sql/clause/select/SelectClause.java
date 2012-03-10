@@ -60,9 +60,9 @@ public class SelectClause extends AbstractClause {
   }
 
   @Override
-  public String toFormatted(int depth) {
+  public String toFormatted(int marginCount) {
     StringBuilder builder = new StringBuilder();
-    int newDepth = depth + 1;
+    int newDepth = marginCount + 1;
     appendFormattedSql("SELECT\n", newDepth, bean.getSelection(), builder);
     appendFormattedSql("FROM\n", newDepth, bean.getTable(), builder);
     appendFormattedSql("WHERE\n", newDepth, bean.getWhereCondOpt(), builder);

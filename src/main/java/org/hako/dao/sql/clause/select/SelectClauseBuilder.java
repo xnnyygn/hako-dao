@@ -57,6 +57,9 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder select(Expression... expressions) {
+    if (expressions.length == 1) {
+      return select(new ExpressionSelection(expressions[0]));
+    }
     return select(new MultipleExpressionSelection(Arrays.asList(expressions)));
   }
 
@@ -88,7 +91,11 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder select(List<Selection> selections) {
-    bean.setSelectionOpt(new Some<Selection>(new MultipleSelection(selections)));
+    // TODO refactor me
+    Selection selection =
+        selections.size() == 1 ? selections.get(0) : new MultipleSelection(
+            selections);
+    bean.setSelectionOpt(new Some<Selection>(selection));
     return this;
   }
 
@@ -144,8 +151,10 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder where(Condition... conditions) {
-    bean.setWhereCondOpt(new Some<Condition>(new MultipleAndCondition(Arrays
-        .asList(conditions))));
+    Condition c =
+        conditions.length == 1 ? conditions[0] : new MultipleAndCondition(
+            Arrays.asList(conditions));
+    bean.setWhereCondOpt(new Some<Condition>(c));
     return this;
   }
 
@@ -227,7 +236,10 @@ public class SelectClauseBuilder {
    */
   public SelectClause toSelectClause() throws IllegalArgumentException {
     if (!orderBys.isEmpty()) {
-      bean.setOrderByOpt(new Some<OrderBy>(new MultipleOrderBy(orderBys)));
+      OrderBy orderBy =
+          orderBys.size() == 1 ? orderBys.get(0)
+              : new MultipleOrderBy(orderBys);
+      bean.setOrderByOpt(new Some<OrderBy>(orderBy));
     }
     return new SelectClause(bean);
   }

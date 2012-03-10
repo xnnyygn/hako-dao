@@ -15,7 +15,6 @@
  */
 package org.hako.dao.sql.clause.select.orderby;
 
-
 /**
  * Single order by.
  * 

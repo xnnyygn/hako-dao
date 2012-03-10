@@ -15,7 +15,10 @@
  */
 package org.hako.dao.sql.walker;
 
+import java.sql.Timestamp;
+
 import org.hako.dao.mapping.entity.TableName;
+import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.expression.condition.Conditions;
@@ -81,4 +84,14 @@ public class DefaultSqlFormatterTest {
     return builder.toSelectClause();
   }
 
+  @Test
+  public void testFormatInsertClause() {
+    InsertClauseBuilder builder = new InsertClauseBuilder();
+    builder.insertInto(TABLE_BLOG.getName());
+    builder.add("title", "foo");
+    builder.add("content", "bar");
+    builder.add("date_created", new Timestamp(System.currentTimeMillis()));
+    builder.add("user_id", 1l);
+    System.out.println(formatter.format(builder.toInsertClause()));
+  }
 }

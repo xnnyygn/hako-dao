@@ -15,11 +15,16 @@
  */
 package org.hako.dao.sql.clause.insert;
 
+import static org.hako.dao.sql.util.ToFormattedUtils.formatAndConcat;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.clause.insert.values.ValueSource;
+import org.hako.dao.sql.expression.ColumnName;
 
 /**
  * Insert clause.
@@ -31,7 +36,7 @@ import org.hako.dao.sql.clause.insert.values.ValueSource;
 public class InsertClause extends AbstractClause {
 
   private final String tableName;
-  private final List<String> columnNames;
+  private final List<ColumnName> columnNames = new ArrayList<ColumnName>();
   private final ValueSource values;
 
   /**
@@ -41,11 +46,14 @@ public class InsertClause extends AbstractClause {
    * @param columnNames
    * @param values
    */
+  // TODO refactor constructor
   public InsertClause(String tableName, List<String> columnNames,
       ValueSource values) {
     super();
     this.tableName = tableName;
-    this.columnNames = columnNames;
+    for (String name : columnNames) {
+      this.columnNames.add(new ColumnName(name));
+    }
     this.values = values;
   }
 
@@ -56,6 +64,17 @@ public class InsertClause extends AbstractClause {
     builder.append(StringUtils.join(columnNames, ", "));
     builder.append(") ");
     builder.append(values.toPrepared());
+    return builder.toString();
+  }
+
+  @Override
+  public String toFormatted(int marginCount) {
+    StringBuilder builder = new StringBuilder("INSERT INTO ");
+    builder.append(tableName).append("(\n");
+    builder.append(formatAndConcat(1, ",\n", columnNames.toArray(new Sql[0])));
+    builder.append("\n) VALUES(\n");
+    builder.append(values.toFormatted(1));
+    builder.append("\n)");
     return builder.toString();
   }
 

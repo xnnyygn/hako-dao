@@ -18,6 +18,7 @@ package org.hako.dao.sql.expression.condition.compare;
 import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
+import org.hako.dao.sql.expression.InnerSelectExpression;
 import org.hako.dao.sql.expression.condition.AbstractCondition;
 import org.hako.dao.sql.util.SqlUtils;
 
@@ -56,10 +57,18 @@ public abstract class AbstractCompareCondition extends AbstractCondition {
   }
 
   @Override
-  public String toFormatted(int depth) {
-    // TODO use string builder
-    return leftOperand.toFormatted(depth) + ' ' + operator + ' '
-        + rightOperand.toFormatted(depth);
+  public String toFormatted(int marginCount) {
+    logMarginCount(marginCount);
+    StringBuilder builder =
+        new StringBuilder(leftOperand.toFormatted(marginCount));
+    builder.append(' ').append(operator).append(' ');
+    if (rightOperand instanceof InnerSelectExpression) {
+      builder.append('\n');
+      builder.append(rightOperand.toFormatted(marginCount));
+    } else {
+      builder.append(rightOperand.toFormatted(0));
+    }
+    return builder.toString();
   }
 
   public List<Object> getParams() {

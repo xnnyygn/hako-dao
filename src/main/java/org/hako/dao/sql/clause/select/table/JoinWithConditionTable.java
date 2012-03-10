@@ -65,12 +65,12 @@ public class JoinWithConditionTable extends SimpleJoinTable {
   }
 
   @Override
-  public String toFormatted(int depth) {
+  public String toFormatted(int marginCount) {
     // TODO use string builder
-    int niceDisplayOfCondition = depth + 2;
-    return super.toFormatted(depth) + '\n'
+    int niceDisplayOfCondition = marginCount + 2;
+    return super.toFormatted(marginCount) + '\n'
         + StringUtils.repeat(MARGIN, niceDisplayOfCondition) + "ON "
-        + condition.toFormatted(niceDisplayOfCondition);
+        + condition.toFormatted(0);
   }
 
   @Override

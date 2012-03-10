@@ -62,8 +62,8 @@ public class MultipleSelection extends AbstractSelection {
   }
 
   @Override
-  public String toFormatted(int depth) {
-    return ToFormattedUtils.formatAndConcat(depth, ",\n",
+  public String toFormatted(int marginCount) {
+    return ToFormattedUtils.formatAndConcat(marginCount, ",\n",
         selections.toArray(new Sql[0]));
   }
 

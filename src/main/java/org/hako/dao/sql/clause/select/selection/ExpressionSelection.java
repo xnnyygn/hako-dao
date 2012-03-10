@@ -45,8 +45,8 @@ public class ExpressionSelection extends AbstractSelection {
   }
   
   @Override
-  public String toFormatted(int depth) {
-    return expression.toFormatted(depth);
+  public String toFormatted(int marginCount) {
+    return expression.toFormatted(marginCount);
   }
 
   public List<Object> getParams() {

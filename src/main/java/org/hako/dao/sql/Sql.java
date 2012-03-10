@@ -65,10 +65,10 @@ public interface Sql {
   /**
    * Generate formated SQL.
    * 
-   * @param depth
+   * @param marginCount
    * @return formatted SQL
    */
-  public String toFormatted(int depth);
+  public String toFormatted(int marginCount);
 
   /**
    * Delegate work to {@link SqlFormatter}.
