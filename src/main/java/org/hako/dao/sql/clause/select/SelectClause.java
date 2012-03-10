@@ -15,11 +15,10 @@
  */
 package org.hako.dao.sql.clause.select;
 
-import static org.hako.dao.sql.util.ToFormattedUtils.appendFormattedSql;
-
 import java.util.List;
 
 import org.hako.Option;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.util.SqlUtils;
 
@@ -61,14 +60,14 @@ public class SelectClause extends AbstractClause {
 
   @Override
   public String toFormatted(int marginCount) {
-    StringBuilder builder = new StringBuilder();
-    int newDepth = marginCount + 1;
-    appendFormattedSql("SELECT\n", newDepth, bean.getSelection(), builder);
-    appendFormattedSql("FROM\n", newDepth, bean.getTable(), builder);
-    appendFormattedSql("WHERE\n", newDepth, bean.getWhereCondOpt(), builder);
-    appendFormattedSql("GROUP BY\n", newDepth, bean.getGroupByOpt(), builder);
-    appendFormattedSql("HAVING\n", newDepth, bean.getHavingOpt(), builder);
-    appendFormattedSql("ORDER BY\n", newDepth, bean.getOrderByOpt(), builder);
+    ToFormattedBuilder builder = new ToFormattedBuilder();
+    int newMarginCount = marginCount + 1;
+    builder.append("SELECT\n", newMarginCount, bean.getSelection(), "\n");
+    builder.append("FROM\n", newMarginCount, bean.getTable(), "\n");
+    builder.append("WHERE\n", newMarginCount, bean.getWhereCondOpt(), "\n");
+    builder.append("GROUP BY\n", newMarginCount, bean.getGroupByOpt(), "\n");
+    builder.append("HAVING\n", newMarginCount, bean.getHavingOpt(), "\n");
+    builder.append("ORDER BY\n", newMarginCount, bean.getOrderByOpt(), "\n");
     return builder.toString();
   }
 

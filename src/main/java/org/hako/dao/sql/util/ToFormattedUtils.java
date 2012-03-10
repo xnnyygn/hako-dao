@@ -150,11 +150,9 @@ public class ToFormattedUtils {
       List<String> formattedSqls, StringBuilder builder) {
     if (!formattedSqls.isEmpty()) {
       int formattedSqlCount = formattedSqls.size();
-//      appendMargins(builder, depth);
       builder.append(formattedSqls.get(0));
       for (int i = 1; i < formattedSqlCount; i++) {
         builder.append(delimiter);
-//        appendMargins(builder, depth);
         builder.append(formattedSqls.get(i));
       }
     }

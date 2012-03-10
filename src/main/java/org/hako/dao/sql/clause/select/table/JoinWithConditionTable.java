@@ -60,8 +60,9 @@ public class JoinWithConditionTable extends SimpleJoinTable {
 
   @Override
   public String toPrepared() {
-    // TODO use string builder
-    return super.toPrepared() + " ON " + condition.toPrepared();
+    // TODO add ToPreparedBuilder
+    return new StringBuilder(super.toPrepared()).append(" ON ")
+        .append(condition.toPrepared()).toString();
   }
 
   @Override

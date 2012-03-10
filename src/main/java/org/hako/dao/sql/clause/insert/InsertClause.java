@@ -15,12 +15,11 @@
  */
 package org.hako.dao.sql.clause.insert;
 
-import static org.hako.dao.sql.util.ToFormattedUtils.formatAndConcat;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.clause.insert.values.ValueSource;
 import org.hako.dao.sql.expression.ColumnName;
@@ -69,11 +68,10 @@ public class InsertClause extends AbstractClause {
 
   @Override
   public String toFormatted(int marginCount) {
-    StringBuilder builder = new StringBuilder("INSERT INTO ");
+    ToFormattedBuilder builder = new ToFormattedBuilder("INSERT INTO ");
     builder.append(tableName).append("(\n");
-    builder.append(formatAndConcat(1, ",\n", columnNames.toArray(new Sql[0])));
-    builder.append("\n) VALUES(\n");
-    builder.append(values.toFormatted(1));
+    builder.append(1, ",\n", columnNames);
+    builder.append("\n) VALUES(\n", 1, values);
     builder.append("\n)");
     return builder.toString();
   }

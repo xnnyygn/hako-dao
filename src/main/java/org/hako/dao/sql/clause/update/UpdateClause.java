@@ -18,9 +18,9 @@ package org.hako.dao.sql.clause.update;
 import java.util.List;
 
 import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.util.SqlUtils;
-import org.hako.dao.sql.util.ToFormattedUtils;
 
 /**
  * Update clause.
@@ -61,18 +61,16 @@ public class UpdateClause extends AbstractClause {
 
   @Override
   public String toFormatted(int marginCount) {
-    // TODO add ToFormatterBuilder
-    StringBuilder builder = new StringBuilder("UPDATE ");
+    ToFormattedBuilder builder = new ToFormattedBuilder("UPDATE ");
     builder.append(bean.getTableName());
-    if (bean.hasTableAlias()) {
-      builder.append(" AS ").append(bean.getTableAlias());
-    }
+    builder.append(" AS ", bean.getTableNameOpt());
     builder.append('\n');
     // TODO refactor column expression pairs
-    ToFormattedUtils.appendFormattedSql("SET\n", 1, new ColumnExpressionPairs(
-        bean.getPairs()), builder);
-    ToFormattedUtils.appendFormattedSql("WHERE\n", 1, bean.getWhereCondOpt(),
-        builder);
+    // ToFormattedUtils.appendFormattedSql("SET\n", 1, new
+    // ColumnExpressionPairs(
+    // bean.getPairs()), builder);
+    builder.append("SET\n", 1, new ColumnExpressionPairs(bean.getPairs()));
+    builder.append("\nWHERE\n", 1, bean.getWhereCondOpt());
     return builder.toString();
   }
 

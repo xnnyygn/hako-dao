@@ -20,9 +20,9 @@ import java.util.List;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.expression.condition.Condition;
-import org.hako.dao.sql.util.ToFormattedUtils;
 
 /**
  * Delete clause.
@@ -76,9 +76,9 @@ public class DeleteClause extends AbstractClause {
 
   @Override
   public String toFormatted(int marginCount) {
-    StringBuilder builder = new StringBuilder("DELETE FROM ");
+    ToFormattedBuilder builder = new ToFormattedBuilder("DELETE FROM ");
     builder.append(tableName).append('\n');
-    ToFormattedUtils.appendFormattedSql("WHERE\n", 1, whereCondOpt, builder);
+    builder.append("WHERE\n", 1, whereCondOpt);
     return builder.toString();
   }
 
