@@ -22,6 +22,7 @@ import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.expression.condition.Condition;
+import org.hako.dao.sql.util.ToFormattedUtils;
 
 /**
  * Delete clause.
@@ -70,6 +71,14 @@ public class DeleteClause extends AbstractClause {
     StringBuilder builder = new StringBuilder("DELETE FROM ");
     builder.append(tableName);
     appendOptionToPrepared(" WHERE ", whereCondOpt, builder);
+    return builder.toString();
+  }
+
+  @Override
+  public String toFormatted(int marginCount) {
+    StringBuilder builder = new StringBuilder("DELETE FROM ");
+    builder.append(tableName).append('\n');
+    ToFormattedUtils.appendFormattedSql("WHERE\n", 1, whereCondOpt, builder);
     return builder.toString();
   }
 
