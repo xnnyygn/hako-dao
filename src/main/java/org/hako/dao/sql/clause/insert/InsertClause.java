@@ -20,11 +20,11 @@ import static org.hako.dao.sql.util.ToFormattedUtils.formatAndConcat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.clause.insert.values.ValueSource;
 import org.hako.dao.sql.expression.ColumnName;
+import org.hako.dao.sql.util.SqlUtils;
 
 /**
  * Insert clause.
@@ -61,7 +61,7 @@ public class InsertClause extends AbstractClause {
     StringBuilder builder = new StringBuilder("INSERT INTO ");
     builder.append(tableName);
     builder.append(" (");
-    builder.append(StringUtils.join(columnNames, ", "));
+    builder.append(SqlUtils.toPrepared(columnNames.toArray(new Sql[0])));
     builder.append(") ");
     builder.append(values.toPrepared());
     return builder.toString();
