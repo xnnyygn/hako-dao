@@ -18,10 +18,10 @@ package org.hako.dao.sql.expression.condition.logic;
 import java.util.List;
 
 import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.expression.condition.AbstractCondition;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.util.SqlUtils;
-import org.hako.dao.sql.util.ToFormattedUtils;
 
 /**
  * Multiple and condition.
@@ -55,8 +55,8 @@ public class MultipleAndCondition extends AbstractCondition {
 
   @Override
   public String toFormatted(int marginCount) {
-    return ToFormattedUtils.formatAndConcat(marginCount, " AND \n",
-        conditions.toArray(new Sql[0]));
+    return new ToFormattedBuilder().append(marginCount, "AND \n", conditions)
+        .toString();
   }
 
   public List<Object> getParams() {

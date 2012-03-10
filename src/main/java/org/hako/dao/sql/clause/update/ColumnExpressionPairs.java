@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.hako.dao.sql.AbstractSql;
 import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.util.SqlUtils;
-import org.hako.dao.sql.util.ToFormattedUtils;
 
 /**
  * Column expression pairs.
@@ -49,8 +49,9 @@ public class ColumnExpressionPairs extends AbstractSql {
 
   @Override
   public String toFormatted(int marginCount) {
-    return ToFormattedUtils.formatAndConcat(marginCount, ",\n",
-        pairs.toArray(new Sql[0]));
+    logMarginCount(marginCount);
+    return new ToFormattedBuilder().append(marginCount, ",\n", pairs)
+        .toString();
   }
 
   public List<Object> getParams() {

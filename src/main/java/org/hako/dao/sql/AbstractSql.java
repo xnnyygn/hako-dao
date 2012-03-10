@@ -17,7 +17,7 @@ package org.hako.dao.sql;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hako.dao.sql.util.ToFormattedUtils;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.walker.PreparedSqlFactory;
 import org.hako.dao.sql.walker.SqlFormatter;
 
@@ -43,8 +43,8 @@ public abstract class AbstractSql implements Sql {
 
   public String toFormatted(int marginCount) {
     logMarginCount(marginCount);
-    return ToFormattedUtils.margins(marginCount).append(toPrepared())
-        .toString();
+    return new ToFormattedBuilder().appendMargins(marginCount)
+        .append(toPrepared()).toString();
   }
 
   /**

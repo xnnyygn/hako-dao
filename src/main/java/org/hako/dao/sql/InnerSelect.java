@@ -15,10 +15,9 @@
  */
 package org.hako.dao.sql;
 
-import static org.hako.dao.sql.util.ToFormattedUtils.margins;
-
 import java.util.List;
 
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.clause.select.SelectClause;
 
 /**
@@ -50,8 +49,9 @@ public class InnerSelect extends AbstractSql {
   @Override
   public String toFormatted(int marginCount) {
     logMarginCount(marginCount);
-    return margins(marginCount).append("(\n").append(select.toFormatted(marginCount))
-        .append(margins(marginCount)).append(")").toString();
+    return new ToFormattedBuilder().appendMargins(marginCount).append("(\n")
+        .append(marginCount, select).appendMargins(marginCount).append(')')
+        .toString();
   }
 
   public List<Object> getParams() {

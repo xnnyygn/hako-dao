@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.util.SqlUtils;
-import org.hako.dao.sql.util.ToFormattedUtils;
 
 /**
  * Multiple selection.
@@ -63,8 +63,8 @@ public class MultipleSelection extends AbstractSelection {
 
   @Override
   public String toFormatted(int marginCount) {
-    return ToFormattedUtils.formatAndConcat(marginCount, ",\n",
-        selections.toArray(new Sql[0]));
+    return new ToFormattedBuilder().append(marginCount, ",\n", selections)
+        .toString();
   }
 
   public List<Object> getParams() {

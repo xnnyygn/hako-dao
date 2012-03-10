@@ -18,9 +18,9 @@ package org.hako.dao.sql.clause.insert.values;
 import java.util.List;
 
 import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.util.SqlUtils;
-import org.hako.dao.sql.util.ToFormattedUtils;
 
 /**
  * Expression values.
@@ -58,8 +58,8 @@ public class ExpressionValues extends AbstractValueSource {
   @Override
   public String toFormatted(int marginCount) {
     logMarginCount(marginCount);
-    return ToFormattedUtils.formatAndConcat(marginCount, ",\n",
-        expressions.toArray(new Sql[0]));
+    return new ToFormattedBuilder().append(marginCount, ",\n", expressions)
+        .toString();
   }
 
   public List<Object> getParams() {
