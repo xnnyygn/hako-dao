@@ -21,6 +21,7 @@ import org.hako.dao.mapping.entity.TableName;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.function.Functions;
 import org.hako.dao.sql.expression.value.Values;
@@ -94,4 +95,16 @@ public class DefaultSqlFormatterTest {
     builder.add("user_id", 1l);
     System.out.println(formatter.format(builder.toInsertClause()));
   }
+
+  @Test
+  public void testFormatUpdateClause() {
+    UpdateClauseBuilder builder = new UpdateClauseBuilder();
+    builder.update(TABLE_BLOG.getName(), TABLE_BLOG.getAlias());
+    builder.set("title", "foo");
+    builder.set("content", "bar");
+    builder.where(Conditions.eq(TABLE_BLOG.forAliasColumn("id"),
+        Values.create(1l)));
+    System.out.println(formatter.format(builder.toUpdateClause()));
+  }
+
 }
