@@ -16,6 +16,7 @@
 package org.hako.dao.sql.walker;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.hako.dao.mapping.entity.TableName;
 import org.hako.dao.sql.clause.delete.DeleteClauseBuilder;
@@ -112,8 +113,10 @@ public class DefaultSqlFormatterTest {
   public void testFormatDeleteClause() {
     DeleteClauseBuilder builder = new DeleteClauseBuilder();
     builder.deleteFrom(TABLE_BLOG_TAGS.getName());
-    builder.where(Conditions.eq(TABLE_BLOG_TAGS.forColumn("blog_id"),
-        Values.create(1l)));
+    builder.where(
+        Conditions.eq(TABLE_BLOG_TAGS.forColumn("blog_id"), Values.create(1l)),
+        Conditions.gt(TABLE_BLOG.forColumn("date_created"),
+            Values.create(new Date())));
     System.out.println(formatter.format(builder.toDeleteClause()));
   }
 

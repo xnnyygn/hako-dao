@@ -55,7 +55,7 @@ public class MultipleAndCondition extends AbstractCondition {
 
   @Override
   public String toFormatted(int marginCount) {
-    return ToFormattedUtils.formatAndConcat(marginCount, " AND ",
+    return ToFormattedUtils.formatAndConcat(marginCount, " AND \n",
         conditions.toArray(new Sql[0]));
   }
 
