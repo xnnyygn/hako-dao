@@ -203,7 +203,7 @@ public class EntityMeta {
    * @see Fields#getOtherFields()
    */
   public List<FieldMeta> getNotGeneratedFields() {
-    // TODO FIXME
+    // TODO check field generated properties
     return fields.getOtherFields();
   }
 

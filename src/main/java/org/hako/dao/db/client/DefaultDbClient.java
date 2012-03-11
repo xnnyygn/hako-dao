@@ -257,7 +257,7 @@ public class DefaultDbClient implements DbClient {
   protected PreparedStatement createPreparedStatement(Clause clause,
       boolean generateKey) throws DatabaseException {
     String preparedSql = clause.toPrepared();
-    if (printSql) System.out.println(preparedSql);
+    if (printSql) System.out.println(clause.toFormatted());
     Connection conn = connector.connect();
     try {
       return createPreparedStatement(conn, preparedSql, generateKey,

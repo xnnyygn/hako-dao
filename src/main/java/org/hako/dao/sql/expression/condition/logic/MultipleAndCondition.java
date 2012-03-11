@@ -55,7 +55,7 @@ public class MultipleAndCondition extends AbstractCondition {
 
   @Override
   public String toFormatted(int marginCount) {
-    return new ToFormattedBuilder().append(marginCount, "AND \n", conditions)
+    return new ToFormattedBuilder().append(marginCount, " AND\n", conditions)
         .toString();
   }
 

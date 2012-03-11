@@ -15,53 +15,38 @@
  */
 package org.hako.dao.mapper.annotation;
 
-import static org.junit.Assert.assertTrue;
-
 import java.sql.Timestamp;
-import java.util.GregorianCalendar;
 
 import org.hako.dao.H2MemDbClientFlyweight;
-import org.hako.dao.ListParams;
-import org.hako.dao.restriction.LikeRestriction.MatchMode;
-import org.hako.dao.restriction.Restrictions;
 import org.junit.Test;
 
 /**
- * Test of {@link EntityManager}.
+ * Test of {@link EntityManager}, save, update and delete.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class EntityManagerTest {
+public class EntityManagerDmlTest {
 
   private EntityManager<Blog> manager = new EntityManager<Blog>(
       H2MemDbClientFlyweight.get(), Blog.class);
 
   @Test
-  public void testGet() {
-    // TODO refactor test
-    System.out.println(manager.get(1l));
+  public void testSave() {
+    Blog b = new Blog();
+    b.title = "foo";
+    b.content = "bar";
+    b.userId = 1l;
+    b.dateCreated = new Timestamp(System.currentTimeMillis());
+    manager.save(b);
   }
 
   @Test
-  public void testCount() {
-    assertTrue("blog count must greater than zero", manager.count() > 0);
+  public void testUpdate() {
+    Blog instance = new Blog();
+    instance.id = 1l;
+    instance.title = "FIRST2";
+    manager.update(instance);
   }
-
-  @Test
-  public void testFindBy() {
-    Timestamp lastYear =
-        new Timestamp(new GregorianCalendar(2011, 0, 1).getTimeInMillis());
-    System.out.println(manager.findBy(Restrictions.eq("id", 1l),
-        Restrictions.like("title", "F", MatchMode.STARTS_WITH),
-        Restrictions.gt("dateCreated", lastYear)));
-  }
-
-  @Test
-  public void testList() {
-    System.out.println(manager
-        .list(new ListParams(10, 1, "dateCreated", false)));
-  }
-
 }
