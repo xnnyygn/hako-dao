@@ -264,7 +264,7 @@ public class SelectClauseBuilder {
    */
   public SelectClause toSelectClause() throws IllegalArgumentException {
     if (!orderBys.isEmpty()) {
-      OrderBy orderBy =
+      OrderBy orderBy = 
           orderBys.size() == 1 ? orderBys.get(0)
               : new MultipleOrderBy(orderBys);
       bean.setOrderByOpt(new Some<OrderBy>(orderBy));

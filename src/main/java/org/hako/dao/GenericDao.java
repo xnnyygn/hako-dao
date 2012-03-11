@@ -45,7 +45,7 @@ import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.function.Functions;
 import org.hako.dao.sql.expression.value.Values;
-import org.hako.dao.util.OptionUtils;
+import org.hako.util.OptionUtils;
 
 /**
  * Base class of user model, providing useful methods to do SQL operations.
