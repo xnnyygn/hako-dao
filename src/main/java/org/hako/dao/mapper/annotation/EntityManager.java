@@ -187,4 +187,32 @@ public class EntityManager<T> {
         .intValue();
   }
 
+  /**
+   * List entity by restrictions.
+   * 
+   * @param listParams
+   * @param restrictions
+   * @return entities
+   */
+  public List<T> listBy(ListParams listParams, Restriction... restrictions) {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(entityMeta.createAllFieldsSelection());
+    builder.from(entityMeta.createTable());
+    builder.where(createConditions(restrictions));
+    builder.addOrderBy(listParams.toMultipleOrderBy());
+    builder.limit(listParams.getMax(), listParams.getOffset());
+    return entityFactory.create(client.selectMultipleRows(builder
+        .toSelectClause()));
+  }
+
+//  /**
+//   * Delete entity.
+//   * 
+//   * @param id
+//   * @return count of deleted records
+//   */
+//  public int delete(Object id){
+//    throw new UnsupportedOperationException();
+//  }
+  
 }

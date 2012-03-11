@@ -53,6 +53,7 @@ public class EntityManagerDmlTest {
   @Test
   public void testDelete(){
     // TODO here
+    // manager.delete(2l);
   }
   
 }

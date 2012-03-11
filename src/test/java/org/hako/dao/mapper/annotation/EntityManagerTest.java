@@ -73,6 +73,10 @@ public class EntityManagerTest {
   @Test
   public void testListBy() {
     // TODO here
+    assertEquals(
+        2,
+        manager.listBy(new ListParams(10, 0, "dateCreated", false),
+            Restrictions.eq("userId", 1l)).size());
   }
 
 }
