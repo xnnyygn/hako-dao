@@ -20,7 +20,7 @@ import java.util.List;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Update clause.
@@ -74,7 +74,7 @@ public class UpdateClause extends AbstractClause {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(bean.getPairs(), bean.getWhereCondOpt());
+    return GetParamsUtils.from(bean.getPairs(), bean.getWhereCondOpt());
   }
 
   public String toString() {

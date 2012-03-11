@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.hako.None;
 import org.hako.Some;
 import org.hako.dao.sql.Sql;
 
@@ -31,10 +30,15 @@ import org.hako.dao.sql.Sql;
  * @version %I%, %G%
  * @since 1.0.0
  */
-// TODO separated to ToPreparedUtils and GetParamsUtils 
-public class SqlUtils {
+public class GetParamsUtils {
 
-  public static List<Object> getParams(Object... objects) {
+  /**
+   * Get parameters.
+   * 
+   * @param objects
+   * @return parameters
+   */
+  public static List<Object> from(Object... objects) {
     List<Sql> sqls = new ArrayList<Sql>();
     for (Object obj : objects) {
       if (obj instanceof Sql) {
@@ -54,14 +58,26 @@ public class SqlUtils {
         }
       }
     }
-    return getParams(sqls);
+    return from(sqls);
   }
 
-  public static List<Object> getParams(Sql... sqls) {
-    return getParams(Arrays.asList(sqls));
+  /**
+   * Get parameters from SQLs.
+   * 
+   * @param sqls
+   * @return parameters
+   */
+  public static List<Object> from(Sql... sqls) {
+    return from(Arrays.asList(sqls));
   }
 
-  public static List<Object> getParams(List<Sql> sqls) {
+  /**
+   * Get parameters from SQL list.
+   * 
+   * @param sqls
+   * @return parameters
+   */
+  public static List<Object> from(List<Sql> sqls) {
     if (sqls.isEmpty()) {
       return Sql.NO_PARAM;
     }
@@ -71,24 +87,5 @@ public class SqlUtils {
     }
     return all;
   }
-
-  /**
-   * Merge parameter, get value from some, omit none.
-   * 
-   * @param objects
-   * @return
-   */
-  public static List<Object> mergeParams(Object... objects) {
-    List<Object> all = new ArrayList<Object>();
-    for (Object obj : objects) {
-      if (obj instanceof None<?>) {
-        continue;
-      } else if (obj instanceof Some<?>) {
-        all.add(((Some<?>) obj).get());;
-      } else {
-        all.add(obj);
-      }
-    }
-    return all;
-  }
+  
 }

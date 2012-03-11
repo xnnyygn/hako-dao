@@ -20,7 +20,7 @@ import java.util.List;
 import org.hako.Option;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Select clause.
@@ -72,7 +72,7 @@ public class SelectClause extends AbstractClause {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(bean.getSelection(), bean.getTable(),
+    return GetParamsUtils.from(bean.getSelection(), bean.getTable(),
         bean.getWhereCondOpt(), bean.getGroupByOpt(), bean.getOrderByOpt(),
         bean.getLimitOpt());
   }

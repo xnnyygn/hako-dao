@@ -20,7 +20,7 @@ import java.util.List;
 import org.hako.dao.sql.AbstractSql;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Column expression pairs.
@@ -55,7 +55,7 @@ public class ColumnExpressionPairs extends AbstractSql {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(pairs);
+    return GetParamsUtils.from(pairs);
   }
 
 }

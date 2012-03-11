@@ -20,7 +20,7 @@ import java.util.List;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.InnerSelectExpression;
 import org.hako.dao.sql.expression.condition.AbstractCondition;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Abstract compare condition.
@@ -72,7 +72,7 @@ public abstract class AbstractCompareCondition extends AbstractCondition {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(leftOperand, rightOperand);
+    return GetParamsUtils.from(leftOperand, rightOperand);
   }
 
 

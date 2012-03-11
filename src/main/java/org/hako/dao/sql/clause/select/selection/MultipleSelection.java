@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Multiple selection.
@@ -68,7 +68,7 @@ public class MultipleSelection extends AbstractSelection {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(selections);
+    return GetParamsUtils.from(selections);
   }
 
 }

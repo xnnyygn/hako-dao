@@ -18,7 +18,7 @@ package org.hako.dao.sql.clause.select.orderby;
 import java.util.List;
 
 import org.hako.dao.sql.builder.ToPreparedBuilder;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Multiple order by.
@@ -51,7 +51,7 @@ public class MultipleOrderBy extends AbstractOrderBy {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(orderBys);
+    return GetParamsUtils.from(orderBys);
   }
 
 }

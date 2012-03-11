@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.condition.AbstractCondition;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Between condition.
@@ -58,7 +58,7 @@ public class BetweenCondition extends AbstractCondition {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(operand, min, max);
+    return GetParamsUtils.from(operand, min, max);
   }
 
 }

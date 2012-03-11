@@ -20,7 +20,7 @@ import java.util.List;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.expression.Expression;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Expression values.
@@ -61,7 +61,7 @@ public class ExpressionValues extends AbstractValueSource {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(expressions);
+    return GetParamsUtils.from(expressions);
   }
 
 }

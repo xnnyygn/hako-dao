@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Multiple table.
@@ -57,6 +57,6 @@ public class MultipleTable extends AbstractTable {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(tables.toArray(new Sql[0]));
+    return GetParamsUtils.from(tables.toArray(new Sql[0]));
   }
 }

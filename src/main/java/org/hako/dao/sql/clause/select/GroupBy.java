@@ -21,7 +21,7 @@ import java.util.List;
 import org.hako.dao.sql.AbstractSql;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.expression.Expression;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Group by sub clause.
@@ -62,7 +62,7 @@ public class GroupBy extends AbstractSql implements SelectOnlySql {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(expressions);
+    return GetParamsUtils.from(expressions);
   }
 
 }

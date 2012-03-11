@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Simple join table.
@@ -71,7 +71,7 @@ public class SimpleJoinTable extends AbstractTable {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(table, joinTable);
+    return GetParamsUtils.from(table, joinTable);
   }
 
 }

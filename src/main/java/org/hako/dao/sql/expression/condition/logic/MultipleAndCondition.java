@@ -21,7 +21,7 @@ import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.expression.condition.AbstractCondition;
 import org.hako.dao.sql.expression.condition.Condition;
-import org.hako.dao.sql.util.SqlUtils;
+import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
  * Multiple and condition.
@@ -60,7 +60,7 @@ public class MultipleAndCondition extends AbstractCondition {
   }
 
   public List<Object> getParams() {
-    return SqlUtils.getParams(conditions);
+    return GetParamsUtils.from(conditions);
   }
 
 }
