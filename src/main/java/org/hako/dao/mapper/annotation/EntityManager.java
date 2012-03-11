@@ -172,4 +172,19 @@ public class EntityManager<T> {
     return client.update(builder.toUpdateClause());
   }
 
+  /**
+   * Count by restrictions.
+   * 
+   * @param eq
+   * @return
+   */
+  public int countBy(Restriction... restrictions) {
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(Functions.countRow());
+    builder.from(entityMeta.createTable());
+    builder.where(createConditions(restrictions));
+    return ((Number) client.selectObject(builder.toSelectClause()).get())
+        .intValue();
+  }
+
 }

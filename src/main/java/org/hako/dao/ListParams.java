@@ -28,7 +28,7 @@ import org.hako.dao.sql.expression.ColumnName;
  * List parameters. If max is less than or equals zero or offset is negative,
  * max or offset will be ignored in
  * {@link DefaultDbClient#selectMultipleRows(org.hako.dao.sql.clause.select.SelectClause)}
- * ,
+ * .
  * 
  * @author xnnyygn
  * @version %I%, %G%
@@ -69,9 +69,9 @@ public class ListParams {
     }
 
     /**
-     * Get asc.
+     * Get ASC.
      * 
-     * @return the asc
+     * @return the ASC
      */
     public boolean isAsc() {
       return asc;
@@ -82,6 +82,13 @@ public class ListParams {
   private final int max;
   private final int offset;
   private final List<SortBy> sortBys;
+
+  /**
+   * Default constructor, no row limit and offset.
+   */
+  public ListParams() {
+    this(-1, -1);
+  }
 
   /**
    * Create with zero offset, no order by column.

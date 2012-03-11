@@ -15,6 +15,7 @@
  */
 package org.hako.dao.mapper.annotation;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Timestamp;
@@ -40,8 +41,7 @@ public class EntityManagerTest {
 
   @Test
   public void testGet() {
-    // TODO refactor test
-    System.out.println(manager.get(1l));
+    assertTrue(manager.get(1l).hasValue());
   }
 
   @Test
@@ -50,18 +50,29 @@ public class EntityManagerTest {
   }
 
   @Test
+  public void testCounBy() {
+    assertEquals(2, manager.countBy(Restrictions.eq("userId", 1l)));
+    assertEquals(0, manager.countBy(Restrictions.eq("userId", 2l)));
+  }
+
+  @Test
   public void testFindBy() {
     Timestamp lastYear =
         new Timestamp(new GregorianCalendar(2011, 0, 1).getTimeInMillis());
-    System.out.println(manager.findBy(Restrictions.eq("id", 1l),
+    assertTrue(manager.findBy(Restrictions.eq("id", 1l),
         Restrictions.like("title", "F", MatchMode.STARTS_WITH),
-        Restrictions.gt("dateCreated", lastYear)));
+        Restrictions.gt("dateCreated", lastYear)).hasValue());
   }
 
   @Test
   public void testList() {
-    System.out.println(manager
-        .list(new ListParams(10, 1, "dateCreated", false)));
+    assertEquals(2, manager.list(new ListParams(10, 1, "dateCreated", false))
+        .size());
+  }
+
+  @Test
+  public void testListBy() {
+    // TODO here
   }
 
 }

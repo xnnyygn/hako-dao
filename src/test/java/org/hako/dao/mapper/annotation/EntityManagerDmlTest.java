@@ -49,4 +49,10 @@ public class EntityManagerDmlTest {
     instance.title = "FIRST2";
     manager.update(instance);
   }
+  
+  @Test
+  public void testDelete(){
+    // TODO here
+  }
+  
 }
