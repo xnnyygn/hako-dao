@@ -26,8 +26,8 @@ import org.hako.dao.sql.clause.select.orderby.MultipleOrderBy;
 import org.hako.dao.sql.clause.select.orderby.OrderBy;
 import org.hako.dao.sql.clause.select.selection.ExpressionSelection;
 import org.hako.dao.sql.clause.select.selection.MultipleExpressionSelection;
-import org.hako.dao.sql.clause.select.selection.MultipleSelection;
 import org.hako.dao.sql.clause.select.selection.Selection;
+import org.hako.dao.sql.clause.select.selection.Selections;
 import org.hako.dao.sql.clause.select.table.AkaTable;
 import org.hako.dao.sql.clause.select.table.JoinWithConditionTable;
 import org.hako.dao.sql.clause.select.table.SimpleTable;
@@ -91,11 +91,7 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder select(List<Selection> selections) {
-    // TODO refactor me
-    Selection selection =
-        selections.size() == 1 ? selections.get(0) : new MultipleSelection(
-            selections);
-    bean.setSelectionOpt(new Some<Selection>(selection));
+    bean.setSelectionOpt(new Some<Selection>(Selections.create(selections)));
     return this;
   }
 

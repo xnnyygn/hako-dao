@@ -16,11 +16,11 @@
 package org.hako.dao.sql;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.hako.dao.sql.clause.insert.InsertClause;
 import org.hako.dao.sql.clause.insert.values.ExpressionValues;
+import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.value.DefaultValue;
 import org.hako.dao.sql.expression.value.LongValue;
@@ -29,7 +29,7 @@ import org.junit.Test;
 
 /**
  * Test of insert clause.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
@@ -43,9 +43,13 @@ public class InsertClauseTest {
     expressions.add(new StringValue("content0"));
     expressions.add(new DefaultValue());
     expressions.add(new LongValue(1));
+    List<ColumnName> columnNames = new ArrayList<ColumnName>();
+    columnNames.add(new ColumnName("title"));
+    columnNames.add(new ColumnName("content"));
+    columnNames.add(new ColumnName("date_created"));
+    columnNames.add(new ColumnName("user_id"));
     InsertClause clause =
-        new InsertClause("BLOG", Arrays.asList("title", "content",
-            "date_created", "user_id"), new ExpressionValues(expressions));
+        new InsertClause("BLOG", columnNames, new ExpressionValues(expressions));
     System.out.println(clause.toPrepared());
     System.out.println(clause.getParams());
   }

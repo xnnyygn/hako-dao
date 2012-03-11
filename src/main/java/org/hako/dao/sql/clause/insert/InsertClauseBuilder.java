@@ -23,6 +23,7 @@ import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.sql.clause.insert.values.ExpressionValues;
 import org.hako.dao.sql.clause.insert.values.ValueSource;
+import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.value.Values;
 
@@ -36,7 +37,7 @@ import org.hako.dao.sql.expression.value.Values;
 public class InsertClauseBuilder {
 
   private Option<String> tableNameOpt = new None<String>();
-  private final List<String> columnNames = new ArrayList<String>();
+  private final List<ColumnName> columnNames = new ArrayList<ColumnName>();
   private Option<ValueSource> valuesOpt = new None<ValueSource>();
   private final List<Expression> expressions = new ArrayList<Expression>();
 
@@ -58,7 +59,7 @@ public class InsertClauseBuilder {
    * @return this
    */
   public InsertClauseBuilder addColumn(String columnName) {
-    columnNames.add(columnName);
+    columnNames.add(new ColumnName(columnName));
     return this;
   }
 

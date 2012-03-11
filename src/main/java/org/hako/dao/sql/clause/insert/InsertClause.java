@@ -15,7 +15,6 @@
  */
 package org.hako.dao.sql.clause.insert;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hako.dao.sql.builder.ToFormattedBuilder;
@@ -34,7 +33,7 @@ import org.hako.dao.sql.expression.ColumnName;
 public class InsertClause extends AbstractClause {
 
   private final String tableName;
-  private final List<ColumnName> columnNames = new ArrayList<ColumnName>();
+  private final List<ColumnName> columnNames;
   private final ValueSource values;
 
   /**
@@ -44,14 +43,11 @@ public class InsertClause extends AbstractClause {
    * @param columnNames
    * @param values
    */
-  // TODO refactor constructor
-  public InsertClause(String tableName, List<String> columnNames,
+  public InsertClause(String tableName, List<ColumnName> columnNames,
       ValueSource values) {
     super();
     this.tableName = tableName;
-    for (String name : columnNames) {
-      this.columnNames.add(new ColumnName(name));
-    }
+    this.columnNames = columnNames;
     this.values = values;
   }
 
