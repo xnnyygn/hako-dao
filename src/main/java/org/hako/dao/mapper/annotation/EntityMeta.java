@@ -27,6 +27,7 @@ import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
 import org.hako.dao.sql.clause.select.selection.Selection;
 import org.hako.dao.sql.clause.select.table.Table;
 import org.hako.dao.sql.clause.select.table.TableFactory;
+import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.TableColumnName;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.ConditionBuilder;
@@ -109,17 +110,24 @@ public class EntityMeta {
    * Create primary key condition.
    * 
    * @param id id
+   * @param withTableAlias
    * @return condition
    * @throws IllegalStateException if no primary key
    */
-  public Condition createPkCondition(Object id) throws IllegalStateException {
+  public Condition createPkCondition(Object id, boolean withTableAlias)
+      throws IllegalStateException {
     List<FieldMeta> pkFields = fields.getPkFields();
     int pkFieldCount = pkFields.size();
     if (pkFieldCount == 0) {
       throw new IllegalStateException("no primary key");
     } else if (pkFieldCount == 1) {
-      return Conditions.eq(new TableColumnName(tableAlias, pkFields.get(0)
-          .getColumnName()), Values.create(id));
+      // TODO refactor this feature
+      if (withTableAlias) {
+        return Conditions.eq(new TableColumnName(tableAlias, pkFields.get(0)
+            .getColumnName()), Values.create(id));
+      }
+      return Conditions.eq(new ColumnName(pkFields.get(0).getColumnName()),
+          Values.create(id));
     }
     return createComplexPkConditions(BeanUtils.getProperties(id), pkFields);
   }

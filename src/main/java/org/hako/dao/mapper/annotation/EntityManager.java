@@ -23,6 +23,7 @@ import org.hako.Option;
 import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DbClient;
 import org.hako.dao.restriction.Restriction;
+import org.hako.dao.sql.clause.delete.DeleteClauseBuilder;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
@@ -68,7 +69,7 @@ public class EntityManager<T> {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(entityMeta.createAllFieldsSelection());
     builder.from(entityMeta.createTable());
-    builder.where(entityMeta.createPkCondition(id));
+    builder.where(entityMeta.createPkCondition(id, true));
     return entityFactory
         .create(client.selectSingleRow(builder.toSelectClause()));
   }
@@ -205,14 +206,17 @@ public class EntityManager<T> {
         .toSelectClause()));
   }
 
-//  /**
-//   * Delete entity.
-//   * 
-//   * @param id
-//   * @return count of deleted records
-//   */
-//  public int delete(Object id){
-//    throw new UnsupportedOperationException();
-//  }
-  
+  /**
+   * Delete entity.
+   * 
+   * @param id
+   * @return count of deleted records
+   */
+  public int delete(Object id) {
+    DeleteClauseBuilder builder = new DeleteClauseBuilder();
+    builder.deleteFrom(entityMeta.getTableName());
+    builder.where(entityMeta.createPkCondition(id, false));
+    return client.delete(builder.toDeleteClause());
+  }
+
 }
