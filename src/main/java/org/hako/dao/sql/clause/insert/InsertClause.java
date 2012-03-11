@@ -18,12 +18,11 @@ package org.hako.dao.sql.clause.insert;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.clause.insert.values.ValueSource;
 import org.hako.dao.sql.expression.ColumnName;
-import org.hako.dao.sql.util.SqlUtils;
 
 /**
  * Insert clause.
@@ -57,13 +56,8 @@ public class InsertClause extends AbstractClause {
   }
 
   public String toPrepared() {
-    StringBuilder builder = new StringBuilder("INSERT INTO ");
-    builder.append(tableName);
-    builder.append(" (");
-    builder.append(SqlUtils.toPrepared(columnNames.toArray(new Sql[0])));
-    builder.append(") ");
-    builder.append(values.toPrepared());
-    return builder.toString();
+    return new ToPreparedBuilder("INSERT INTO ").append(tableName).append(" (")
+        .append(columnNames).append(") ").append(values).toString();
   }
 
   @Override

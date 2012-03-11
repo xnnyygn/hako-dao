@@ -17,8 +17,8 @@ package org.hako.dao.sql.expression.condition.logic;
 
 import java.util.List;
 
-import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.expression.condition.AbstractCondition;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.util.SqlUtils;
@@ -50,7 +50,7 @@ public class MultipleAndCondition extends AbstractCondition {
   }
 
   public String toPrepared() {
-    return SqlUtils.toPrepared(" AND ", conditions.toArray(new Sql[0]));
+    return new ToPreparedBuilder().append(" AND ", conditions).toString();
   }
 
   @Override

@@ -15,10 +15,11 @@
  */
 package org.hako.dao.sql.clause.select.table;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
+import org.hako.dao.sql.util.SqlUtils;
 
 /**
  * Simple join table.
@@ -58,25 +59,19 @@ public class SimpleJoinTable extends AbstractTable {
   }
 
   public String toPrepared() {
-    // TODO use string builder
-    return table.toPrepared() + " " + joinType.toString() + " JOIN "
-        + joinTable.toPrepared();
+    return new ToPreparedBuilder().append(table).append(' ').append(joinType)
+        .append(" JOIN ").append(joinTable).toString();
   }
 
   @Override
   public String toFormatted(int marginCount) {
-    // TODO use string builder
-    int niceDisplayOfJoinTable = marginCount + 1;
-    return table.toFormatted(marginCount) + '\n'
-        + StringUtils.repeat(MARGIN, niceDisplayOfJoinTable)
-        + joinType.toString() + " JOIN " + joinTable.toFormatted(0);
+    return new ToFormattedBuilder().append(marginCount, table).append('\n')
+        .appendMargins(marginCount + 1).append(joinType).append(" JOIN ")
+        .append(joinTable).toString();
   }
 
   public List<Object> getParams() {
-    List<Object> all = new ArrayList<Object>();
-    all.addAll(table.getParams());
-    all.addAll(joinTable.getParams());
-    return all;
+    return SqlUtils.getParams(table, joinTable);
   }
 
 }

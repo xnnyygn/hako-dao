@@ -21,6 +21,7 @@ import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.expression.condition.Condition;
 
@@ -43,6 +44,7 @@ public class DeleteClause extends AbstractClause {
    */
   public DeleteClause(String tableName) {
     this(tableName, new None<Condition>());
+
   }
 
   /**
@@ -68,9 +70,9 @@ public class DeleteClause extends AbstractClause {
   }
 
   public String toPrepared() {
-    StringBuilder builder = new StringBuilder("DELETE FROM ");
+    ToPreparedBuilder builder = new ToPreparedBuilder("DELETE FROM ");
     builder.append(tableName);
-    appendOptionToPrepared(" WHERE ", whereCondOpt, builder);
+    builder.append(" WHERE ", whereCondOpt);
     return builder.toString();
   }
 

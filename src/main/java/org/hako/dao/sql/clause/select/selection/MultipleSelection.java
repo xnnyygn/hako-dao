@@ -18,8 +18,8 @@ package org.hako.dao.sql.clause.select.selection;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.util.SqlUtils;
 
 /**
@@ -58,7 +58,7 @@ public class MultipleSelection extends AbstractSelection {
   }
 
   public String toPrepared() {
-    return SqlUtils.toPrepared(selections.toArray(new Sql[0]));
+    return new ToPreparedBuilder(selections).toString();
   }
 
   @Override

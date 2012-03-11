@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hako.dao.sql.AbstractSql;
-import org.hako.dao.sql.Sql;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.util.SqlUtils;
 
@@ -58,7 +58,7 @@ public class GroupBy extends AbstractSql implements SelectOnlySql {
   }
 
   public String toPrepared() {
-    return SqlUtils.toPrepared(expressions.toArray(new Sql[0]));
+    return new ToPreparedBuilder(expressions).toString();
   }
 
   public List<Object> getParams() {

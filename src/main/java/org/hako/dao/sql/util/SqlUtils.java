@@ -34,34 +34,6 @@ import org.hako.dao.sql.Sql;
 // TODO separated to ToPreparedUtils and GetParamsUtils 
 public class SqlUtils {
 
-  /**
-   * Join multiple SQL prepared string with {@code ",  "}.
-   * 
-   * @param sqls multiple SQL
-   * @return comma separated SQL
-   */
-  public static String toPrepared(Sql... sqls) {
-    return toPrepared(", ", sqls);
-  }
-
-  /**
-   * Join multiple SQL prepared string with delimiter.
-   * 
-   * @param delimiter
-   * @param sqls
-   * @return delimiter separated SQL
-   */
-  public static String toPrepared(String delimiter, Sql... sqls) {
-    StringBuilder builder = new StringBuilder();
-    if (sqls.length > 0) {
-      for (Sql sql : sqls) {
-        builder.append(sql.toPrepared()).append(delimiter);
-      }
-      builder.setLength(builder.length() - delimiter.length());
-    }
-    return builder.toString();
-  }
-
   public static List<Object> getParams(Object... objects) {
     List<Sql> sqls = new ArrayList<Sql>();
     for (Object obj : objects) {

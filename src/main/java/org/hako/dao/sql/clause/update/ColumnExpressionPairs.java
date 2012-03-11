@@ -18,8 +18,8 @@ package org.hako.dao.sql.clause.update;
 import java.util.List;
 
 import org.hako.dao.sql.AbstractSql;
-import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.util.SqlUtils;
 
 /**
@@ -44,7 +44,7 @@ public class ColumnExpressionPairs extends AbstractSql {
   }
 
   public String toPrepared() {
-    return SqlUtils.toPrepared(pairs.toArray(new Sql[0]));
+    return new ToPreparedBuilder().append(pairs).toString();
   }
 
   @Override

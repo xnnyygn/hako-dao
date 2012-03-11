@@ -125,6 +125,15 @@ public class ToFormattedBuilder {
     return this;
   }
 
+  /**
+   * Append with suffix.
+   * 
+   * @param prefix
+   * @param marginCount
+   * @param objOpt
+   * @param suffix
+   * @return this
+   */
   public ToFormattedBuilder append(String prefix, int marginCount,
       Option<?> objOpt, String suffix) {
     if (objOpt.hasValue()) {
@@ -146,10 +155,26 @@ public class ToFormattedBuilder {
     return append(marginCount - 1, prefix).append(sql.toFormatted(marginCount));
   }
 
+  /**
+   * Append margins and prefix.
+   * 
+   * @param marginCount
+   * @param prefix
+   * @return this
+   */
   public ToFormattedBuilder append(int marginCount, String prefix) {
     return appendMargins(marginCount).append(prefix);
   }
 
+  /**
+   * Append with suffix.
+   * 
+   * @param prefix
+   * @param marginCount
+   * @param sql
+   * @param suffix
+   * @return
+   */
   public ToFormattedBuilder append(String prefix, int marginCount, Sql sql,
       String suffix) {
     return append(prefix, marginCount, sql).append(suffix);

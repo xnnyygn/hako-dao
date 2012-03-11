@@ -17,8 +17,8 @@ package org.hako.dao.sql.clause.update;
 
 import java.util.List;
 
-import org.hako.dao.sql.Sql;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.util.SqlUtils;
 
@@ -50,12 +50,11 @@ public class UpdateClause extends AbstractClause {
   }
 
   public String toPrepared() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("UPDATE ").append(bean.getTableName());
-    appendOptionToPrepared(" AS ", bean.getTableAliasOpt(), builder);
-    builder.append(" SET ");
-    builder.append(SqlUtils.toPrepared(bean.getPairs().toArray(new Sql[0])));
-    appendOptionToPrepared(" WHERE ", bean.getWhereCondOpt(), builder);
+    ToPreparedBuilder builder = new ToPreparedBuilder("UPDATE ");
+    builder.append(bean.getTableName());
+    builder.append(" AS ").append(bean.getTableAlias());
+    builder.append(" SET ").append(bean.getPairs());
+    builder.append(" WHERE ", bean.getWhereCondOpt());
     return builder.toString();
   }
 

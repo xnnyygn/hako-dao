@@ -18,7 +18,8 @@ package org.hako.dao.sql.clause.select.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.expression.condition.Condition;
 
 /**
@@ -60,18 +61,15 @@ public class JoinWithConditionTable extends SimpleJoinTable {
 
   @Override
   public String toPrepared() {
-    // TODO add ToPreparedBuilder
-    return new StringBuilder(super.toPrepared()).append(" ON ")
-        .append(condition.toPrepared()).toString();
+    return new ToPreparedBuilder(super.toPrepared()).append(" ON ")
+        .append(condition).toString();
   }
 
   @Override
   public String toFormatted(int marginCount) {
-    // TODO use string builder
-    int niceDisplayOfCondition = marginCount + 2;
-    return super.toFormatted(marginCount) + '\n'
-        + StringUtils.repeat(MARGIN, niceDisplayOfCondition) + "ON "
-        + condition.toFormatted(0);
+    return new ToFormattedBuilder(super.toFormatted(marginCount)).append('\n')
+        .appendMargins(marginCount + 2).append("ON ").append(condition)
+        .toString();
   }
 
   @Override
