@@ -52,7 +52,7 @@ public class UpdateClause extends AbstractClause {
   public String toPrepared() {
     ToPreparedBuilder builder = new ToPreparedBuilder("UPDATE ");
     builder.append(bean.getTableName());
-    builder.append(" AS ").append(bean.getTableAlias());
+    builder.append(" AS ", bean.getTableAliasOpt());
     builder.append(" SET ").append(bean.getPairs());
     builder.append(" WHERE ", bean.getWhereCondOpt());
     return builder.toString();
@@ -63,12 +63,7 @@ public class UpdateClause extends AbstractClause {
     ToFormattedBuilder builder = new ToFormattedBuilder("UPDATE ");
     builder.append(bean.getTableName());
     builder.append(" AS ", bean.getTableNameOpt());
-    builder.append('\n');
-    // TODO refactor column expression pairs
-    // ToFormattedUtils.appendFormattedSql("SET\n", 1, new
-    // ColumnExpressionPairs(
-    // bean.getPairs()), builder);
-    builder.append("SET\n", 1, new ColumnExpressionPairs(bean.getPairs()));
+    builder.append("\nSET\n").append(1, ",\n", bean.getPairs());
     builder.append("\nWHERE\n", 1, bean.getWhereCondOpt());
     return builder.toString();
   }
