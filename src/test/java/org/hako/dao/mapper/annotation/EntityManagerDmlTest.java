@@ -29,7 +29,7 @@ import org.junit.Test;
  */
 public class EntityManagerDmlTest {
 
-  private EntityManager<Blog> manager = new EntityManager<Blog>(
+  private EntityManager<Blog, Long> manager = new EntityManager<Blog, Long>(
       H2MemDbClientFlyweight.get(), Blog.class);
 
   @Test

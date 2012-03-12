@@ -38,7 +38,7 @@ import org.hako.util.BeanUtils;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class EntityManager<T> {
+public class EntityManager<T, PK> {
 
   private final DbClient client;
   private final EntityMeta entityMeta;
@@ -64,8 +64,7 @@ public class EntityManager<T> {
    * @param id
    * @return some entity instance or none
    */
-  // TODO refactor with PK
-  public Option<T> get(Object id) {
+  public Option<T> get(PK id) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(entityMeta.createAllFieldsSelection());
     builder.from(entityMeta.createTable());
@@ -155,6 +154,12 @@ public class EntityManager<T> {
     return client.insert(builder.toInsertClause());
   }
 
+  /**
+   * Update instance.
+   * 
+   * @param instance
+   * @return count of updated entity, usually be {@code 1}
+   */
   public int update(T instance) {
     return update(BeanUtils.getProperties(instance));
   }
@@ -212,7 +217,7 @@ public class EntityManager<T> {
    * @param id
    * @return count of deleted records
    */
-  public int delete(Object id) {
+  public int delete(PK id) {
     DeleteClauseBuilder builder = new DeleteClauseBuilder();
     builder.deleteFrom(entityMeta.getTableName());
     builder.where(entityMeta.createPkCondition(id, false));
