@@ -16,7 +16,6 @@ import org.hako.dao.sql.expression.InnerSelectExpression;
 import org.hako.dao.sql.expression.TableColumnName;
 import org.hako.dao.sql.expression.condition.ConditionBuilder;
 import org.hako.dao.sql.expression.condition.Conditions;
-import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
 import org.hako.dao.sql.expression.condition.compare.IsNullCondition;
 import org.hako.dao.sql.expression.value.Values;
 import org.junit.Test;
@@ -96,9 +95,9 @@ public class SelectClauseBuilderTest {
     SelectClauseBuilder innerBuilder = new SelectClauseBuilder();
     innerBuilder.select(new ExpressionSelection(new ColumnName("dept_no")));
     innerBuilder.from(new SimpleTable("emp"));
-    innerBuilder.where(new EqualsCondition(new ColumnName("name"), Values
+    innerBuilder.where(Conditions.eq(new ColumnName("name"), Values
         .create("JONES")));
-    builder.where(new EqualsCondition(new ColumnName("dept_no"),
+    builder.where(Conditions.eq(new ColumnName("dept_no"),
         new InnerSelectExpression(innerBuilder.toSelectClause())));
     SelectClause select = builder.toSelectClause();
     System.out.println(select.toPrepared());
@@ -119,7 +118,7 @@ public class SelectClauseBuilderTest {
     selectBuilder.select(selectionBuilder.toMultipleSelection());
     selectBuilder.from(new JoinWithConditionTable(new AkaTable(new SimpleTable(
         "customers"), "c"), JoinType.INNER, new SimpleTable("orders"),
-        new EqualsCondition(columnCustomerId, new TableColumnName("orders",
+       Conditions.eq(columnCustomerId, new TableColumnName("orders",
             "customer_id"))));
     SelectClause select = selectBuilder.toSelectClause();
     System.out.println(select.toPrepared());

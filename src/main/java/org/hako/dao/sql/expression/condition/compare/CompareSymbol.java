@@ -15,25 +15,38 @@
  */
 package org.hako.dao.sql.expression.condition.compare;
 
-import org.hako.dao.sql.expression.Expression;
-
 /**
- * Less than condition.
- *
+ * Compare symbol.
+ * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class LessThanCondition extends AbstractCompareCondition {
+public enum CompareSymbol {
 
   /**
-   * Create.
-   * 
-   * @param leftOperand
-   * @param rightOperand
+   * {@code =}.
    */
-  public LessThanCondition(Expression leftOperand, Expression rightOperand) {
-    super(leftOperand, "<", rightOperand);
-  }
+  EQUAL,
+  /**
+   * {@code !=}.
+   */
+  NOT_EQUAL,
+  /**
+   * {@code <}.
+   */
+  LESS_THAN,
+  /**
+   * {@code <=}.
+   */
+  LESS_THAN_AND_EQUAL,
+  /**
+   * {@code >}.
+   */
+  GREATER_THAN,
+  /**
+   * {@code >=}.
+   */
+  GREATER_THAN_AND_EQUAL;
 
 }

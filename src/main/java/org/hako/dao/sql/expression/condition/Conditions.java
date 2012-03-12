@@ -15,15 +15,18 @@
  */
 package org.hako.dao.sql.expression.condition;
 
+import static org.hako.dao.sql.expression.condition.compare.CompareSymbol.EQUAL;
+import static org.hako.dao.sql.expression.condition.compare.CompareSymbol.GREATER_THAN;
+import static org.hako.dao.sql.expression.condition.compare.CompareSymbol.NOT_EQUAL;
+
 import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.InnerSelectExpression;
 import org.hako.dao.sql.expression.condition.compare.BetweenCondition;
-import org.hako.dao.sql.expression.condition.compare.EqualsCondition;
-import org.hako.dao.sql.expression.condition.compare.GreaterThanCondition;
+import org.hako.dao.sql.expression.condition.compare.CompareCondition;
+import org.hako.dao.sql.expression.condition.compare.CompareSymbol;
 import org.hako.dao.sql.expression.condition.compare.InCondition;
 import org.hako.dao.sql.expression.condition.compare.LikeCondition;
-import org.hako.dao.sql.expression.condition.compare.NotEqualCondition;
 import org.hako.dao.sql.expression.condition.logic.OrCondition;
 
 /**
@@ -35,14 +38,40 @@ import org.hako.dao.sql.expression.condition.logic.OrCondition;
  */
 public class Conditions {
 
-  public static EqualsCondition eq(Expression left, Expression right) {
-    return new EqualsCondition(left, right);
+  /**
+   * Create equal condition.
+   * 
+   * @param left
+   * @param right
+   * @return equal condition
+   * @see CompareSymbol#EQUAL
+   * @see CompareCondition
+   */
+  public static Condition eq(Expression left, Expression right) {
+    return new CompareCondition(left, EQUAL, right);
   }
 
-  public static NotEqualCondition ne(Expression left, Expression right) {
-    return new NotEqualCondition(left, right);
+  /**
+   * Create not equal condition.
+   * 
+   * @param left
+   * @param right
+   * @return not equal condition
+   * @see CompareSymbol#NOT_EQUAL
+   * @see CompareCondition
+   */
+  public static Condition ne(Expression left, Expression right) {
+    return new CompareCondition(left, NOT_EQUAL, right);
   }
 
+  /**
+   * Create or condition.
+   * 
+   * @param left
+   * @param right
+   * @return or condition
+   * @see OrCondition
+   */
   public static OrCondition or(Condition left, Condition right) {
     return new OrCondition(left, right);
   }
@@ -54,8 +83,8 @@ public class Conditions {
    * @param right
    * @return greater than condition
    */
-  public static GreaterThanCondition gt(Expression left, Expression right) {
-    return new GreaterThanCondition(left, right);
+  public static Condition gt(Expression left, Expression right) {
+    return new CompareCondition(left, GREATER_THAN, right);
   }
 
   /**

@@ -17,6 +17,7 @@ package org.hako.dao.sql.expression.condition.compare;
 
 import java.util.List;
 
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.InnerSelectExpression;
 import org.hako.dao.sql.expression.condition.AbstractCondition;
@@ -29,7 +30,7 @@ import org.hako.dao.sql.util.GetParamsUtils;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class AbstractCompareCondition extends AbstractCondition {
+public class CompareCondition extends AbstractCondition {
 
   protected final Expression leftOperand;
   protected final String operator;
@@ -42,7 +43,48 @@ public abstract class AbstractCompareCondition extends AbstractCondition {
    * @param operator
    * @param rightOperand
    */
-  public AbstractCompareCondition(Expression leftOperand, String operator,
+  public CompareCondition(Expression leftOperand, CompareSymbol symbol,
+      Expression rightOperand) {
+    this(leftOperand, sqlOfSymbol(symbol), rightOperand);
+  }
+
+  /**
+   * Get SQL of compare symbol.
+   * <p>
+   * Returned SQL with leading and ending space.
+   * </p>
+   * 
+   * @param symbol
+   * @return SQL of symbol
+   */
+  private static String sqlOfSymbol(CompareSymbol symbol) {
+    switch (symbol) {
+      case EQUAL:
+        return " = ";
+      case NOT_EQUAL:
+        return " != ";
+      case LESS_THAN:
+        return " < ";
+      case LESS_THAN_AND_EQUAL:
+        return " <= ";
+      case GREATER_THAN:
+        return " > ";
+      case GREATER_THAN_AND_EQUAL:
+        return " >= ";
+      default:
+        throw new IllegalArgumentException("no SQL mapping for symbol ["
+            + symbol + "]");
+    }
+  }
+  
+  /**
+   * Create.
+   * 
+   * @param leftOperand
+   * @param operator
+   * @param rightOperand
+   */
+  public CompareCondition(Expression leftOperand, String operator,
       Expression rightOperand) {
     super();
     this.leftOperand = leftOperand;
@@ -50,10 +92,12 @@ public abstract class AbstractCompareCondition extends AbstractCondition {
     this.rightOperand = rightOperand;
   }
 
+
+ 
+
   public String toPrepared() {
-    return new StringBuilder(leftOperand.toPrepared()).append(' ')
-        .append(operator).append(' ').append(rightOperand.toPrepared())
-        .toString();
+    return new ToPreparedBuilder().append(leftOperand).append(operator)
+        .append(rightOperand).toString();
   }
 
   @Override
@@ -61,7 +105,7 @@ public abstract class AbstractCompareCondition extends AbstractCondition {
     logMarginCount(marginCount);
     StringBuilder builder =
         new StringBuilder(leftOperand.toFormatted(marginCount));
-    builder.append(' ').append(operator).append(' ');
+    builder.append(operator);
     if (rightOperand instanceof InnerSelectExpression) {
       builder.append('\n');
       builder.append(rightOperand.toFormatted(marginCount));
@@ -74,6 +118,5 @@ public abstract class AbstractCompareCondition extends AbstractCondition {
   public List<Object> getParams() {
     return GetParamsUtils.from(leftOperand, rightOperand);
   }
-
 
 }

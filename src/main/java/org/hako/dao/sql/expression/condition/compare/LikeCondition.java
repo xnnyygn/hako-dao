@@ -24,7 +24,7 @@ import org.hako.dao.sql.expression.Expression;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class LikeCondition extends AbstractCompareCondition {
+public class LikeCondition extends CompareCondition {
 
   /**
    * Create.
@@ -33,7 +33,7 @@ public class LikeCondition extends AbstractCompareCondition {
    * @param rightOperand
    */
   public LikeCondition(Expression leftOperand, Expression rightOperand) {
-    super(leftOperand, "LIKE", rightOperand);
+    super(leftOperand, " LIKE ", rightOperand);
   }
 
 }
