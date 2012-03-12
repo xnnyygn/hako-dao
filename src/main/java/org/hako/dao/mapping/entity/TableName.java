@@ -28,6 +28,7 @@ import org.hako.dao.sql.expression.TableColumnName;
  * @version %I%, %G%
  * @since 1.0.0
  */
+@Deprecated
 public class TableName {
 
   private final String name;

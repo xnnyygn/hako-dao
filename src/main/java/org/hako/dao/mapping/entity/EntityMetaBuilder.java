@@ -15,16 +15,6 @@
  */
 package org.hako.dao.mapping.entity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.hako.None;
-import org.hako.Option;
-import org.hako.Some;
-import org.hako.dao.mapping.field.FieldMeta;
-import org.hako.dao.mapping.field.MappedField;
-
 /**
  * Entity meta builder.
  * 
@@ -33,45 +23,5 @@ import org.hako.dao.mapping.field.MappedField;
  * @since 1.0.0
  */
 public class EntityMetaBuilder {
-
-  private final Map<MappedField<?>, FieldMeta> fields =
-      new HashMap<MappedField<?>, FieldMeta>();
-  private Option<TableName> tableNameOpt = new None<TableName>();
-
-  /**
-   * Update table name and alias.
-   * 
-   * @param name table name
-   * @param alias table alias
-   * @return this
-   */
-  public EntityMetaBuilder updateTableName(String name, String alias) {
-    tableNameOpt = new Some<TableName>(new TableName(name, alias));
-    return this;
-  }
-
-  /**
-   * Update field meta.
-   * 
-   * @param field
-   * @param columnName
-   * @param propertyName
-   * @return this
-   */
-  public EntityMetaBuilder updateFieldMeta(MappedField<?> field,
-      String columnName, String propertyName) {
-    fields.put(field, new FieldMeta(columnName, propertyName, field));
-    return this;
-  }
-
-  /**
-   * Build entity meta.
-   * 
-   * @return entity meta instance
-   */
-  public EntityMeta build() {
-    return new EntityMeta(tableNameOpt.get(), new ArrayList<FieldMeta>(
-        fields.values()));
-  }
 
 }

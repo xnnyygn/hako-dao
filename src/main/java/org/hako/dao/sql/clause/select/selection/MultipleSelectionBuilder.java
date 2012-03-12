@@ -19,10 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hako.dao.sql.expression.Expression;
+import org.hako.dao.sql.expression.TableColumnName;
 
 /**
  * Multiple selection builder.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
@@ -43,6 +44,12 @@ public class MultipleSelectionBuilder {
   public MultipleSelectionBuilder addExpressionAka(Expression expression,
       String alias) {
     return add(new ExpressionAkaSelection(expression, alias));
+  }
+
+  public MultipleSelectionBuilder addTableColumnNameAka(String tableAlias,
+      String columnName, String expressionAlias) {
+    return addExpressionAka(new TableColumnName(tableAlias, columnName),
+        expressionAlias);
   }
 
   public MultipleSelectionBuilder addDistinctExpression(Expression expression) {

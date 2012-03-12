@@ -13,33 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.user.domain;
-
-import org.hako.dao.mapping.entity.EntityMetaBuilder;
-import org.hako.dao.mapping.field.AutoIncreasedPrimaryKey;
-import org.hako.dao.mapping.field.MappedField;
-import org.hako.dao.mapping.field.NormalField;
+package org.hako.dao.sql.expression.value;
 
 /**
- * Domain USER.
+ * Null value.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class User {
-
-  public static final MappedField<Long> id =
-      new AutoIncreasedPrimaryKey<Long>();
-  public static final MappedField<String> name = new NormalField<String>();
+public class NullValue extends StaticValue {
 
   /**
-   * Post setup.
-   * 
-   * @param builder entity meta builder
+   * Create with expression {@code NULL}.
    */
-  public static void postSetup(EntityMetaBuilder builder) {
-    builder.updateTableName("USER", "u");
+  public NullValue() {
+    super("NULL");
   }
-  
+
 }
