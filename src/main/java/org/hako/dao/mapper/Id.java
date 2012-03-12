@@ -13,35 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.dao.mapper;
 
-import java.util.Map;
-
-import org.hako.util.MapUtils;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Id primary key.
+ * Id.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class PrimaryKey<T> extends BaseMappedField<T> {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD})
+public @interface Id {
 
   /**
-   * Create.
-   */
-  public PrimaryKey() {
-    this(OPTIONS_EMPTY);
-  }
-
-  /**
-   * Create with options.
+   * Indicate if id is generated.
    * 
-   * @param options
+   * @return true if generated, otherwise false
    */
-  public PrimaryKey(Map<FieldOptions, Object> options) {
-    super(MapUtils.merge(options, FieldOptions.PK, Boolean.TRUE));
-  }
+  boolean generated() default true;
 
 }

@@ -13,12 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hako.dao.mapping.EntityMeta;
+import org.hako.dao.mapping.EntityName;
+import org.hako.dao.mapping.FieldMeta;
 
 /**
  * Annotation mapper.
@@ -30,7 +33,6 @@ import org.apache.commons.lang.StringUtils;
 public class AnnotationMapper {
 
   public EntityMeta setUp(Class<?> clazz) {
-    // setup table name and alias
     if (!clazz.isAnnotationPresent(Entity.class)) {
       throw new IllegalArgumentException("class must with Entity annotation");
     }
@@ -38,8 +40,9 @@ public class AnnotationMapper {
     String tableName =
         StringUtils.defaultIfBlank(entityAnno.tableName(),
             clazz.getSimpleName());
-    String tableAlias =
+    String alias =
         StringUtils.defaultIfBlank(entityAnno.tableAlias(), tableName);
+    EntityName entityName = new EntityName(tableName, alias);
     // setup fields
     List<FieldMeta> fields = new ArrayList<FieldMeta>();
     for (java.lang.reflect.Field f : clazz.getFields()) {
@@ -49,11 +52,11 @@ public class AnnotationMapper {
         String columnName =
             StringUtils.defaultIfBlank(fieldAnno.columnName(),
                 toDashSeparated(propertyName));
-        fields.add(new FieldMeta(propertyName, columnName, f
+        fields.add(new FieldMeta(columnName, propertyName, f
             .isAnnotationPresent(Id.class)));
       }
     }
-    return new EntityMeta(tableName, tableAlias, fields);
+    return new EntityMeta(entityName, fields);
   }
 
   /**
@@ -74,4 +77,5 @@ public class AnnotationMapper {
     }
     return builder.toString();
   }
+
 }

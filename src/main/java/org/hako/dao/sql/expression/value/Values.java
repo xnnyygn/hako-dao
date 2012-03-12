@@ -24,6 +24,9 @@ package org.hako.dao.sql.expression.value;
  */
 public class Values {
 
+  public static final NullValue NULL = new NullValue();
+  public static final DefaultValue DEFAULT = new DefaultValue();
+
   public static LongValue create(long l) {
     return new LongValue(l);
   }

@@ -46,4 +46,13 @@ public class SimpleTable extends AbstractTable {
     return NO_PARAM;
   }
 
+  /**
+   * Get name.
+   * 
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
+  
 }

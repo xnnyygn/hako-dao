@@ -13,42 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapper;
 
-import java.sql.Timestamp;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.hako.dao.mapper.AnnotationMapper;
+import org.junit.Test;
 
 /**
- * Entity blog.
+ * Test of {@link AnnotationMapper}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-@Entity(tableName = "blog", tableAlias = "b")
-public class Blog {
+public class AnnotationMapperTest {
 
-  @Id
-  @Field
-  public Long id;
-
-  @Field
-  public String title;
-
-  @Field
-  public String content;
-
-  @Field
-  public Timestamp dateCreated;
-
-  @Field
-  public Long userId;
-
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this,
-        ToStringStyle.MULTI_LINE_STYLE);
+  @Test
+  public void testSetUp() {
+    System.out.println(new AnnotationMapper().setUp(Blog.class));
   }
-  
+
 }

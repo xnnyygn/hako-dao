@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapping;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -27,41 +27,22 @@ import org.apache.commons.lang.builder.ToStringStyle;
  */
 public class FieldMeta {
 
-  private final String propertyName;
   private final String columnName;
+  private final String propertyName;
   private final boolean pk;
 
   /**
    * Create.
    * 
-   * @param propertyName
    * @param columnName
+   * @param propertyName
    * @param pk
    */
-  public FieldMeta(String propertyName, String columnName, boolean pk) {
+  public FieldMeta(String columnName, String propertyName, boolean pk) {
     super();
-    this.propertyName = propertyName;
     this.columnName = columnName;
+    this.propertyName = propertyName;
     this.pk = pk;
-  }
-
-  /**
-   * Is primary key?
-   * 
-   * @return the pk
-   */
-  public boolean isPk() {
-    return pk;
-  }
-
-
-  /**
-   * Get property name.
-   * 
-   * @return the propertyName
-   */
-  public String getPropertyName() {
-    return propertyName;
   }
 
   /**
@@ -73,10 +54,26 @@ public class FieldMeta {
     return columnName;
   }
 
-  @Override
+  /**
+   * Get property name.
+   * 
+   * @return the propertyName
+   */
+  public String getPropertyName() {
+    return propertyName;
+  }
+
+  /**
+   * Get PK.
+   * 
+   * @return the pk
+   */
+  public boolean isPk() {
+    return pk;
+  }
+
   public String toString() {
     return ToStringBuilder.reflectionToString(this,
         ToStringStyle.MULTI_LINE_STYLE);
   }
-
 }

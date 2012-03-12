@@ -13,42 +13,42 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.restriction.logic;
+package org.hako.dao.sql.expression.condition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hako.dao.mapping.EntityMeta;
-import org.hako.dao.restriction.Restriction;
-import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
 
 /**
- * Multiple and restriction.
+ * Builder of {@link MultipleAndCondition}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public class MultipleAndRestriction implements Restriction {
+public class MultipleConditionBuilder {
 
-  private final List<Restriction> restrictions;
+  private final List<Condition> conditions = new ArrayList<Condition>();
 
   /**
-   * Create.
+   * Add condition.
    * 
-   * @param restrictions
+   * @param condition
+   * @return this
    */
-  public MultipleAndRestriction(List<Restriction> restrictions) {
-    super();
-    this.restrictions = restrictions;
+  public MultipleConditionBuilder add(Condition condition) {
+    conditions.add(condition);
+    return this;
   }
 
-  public Condition toCondition(EntityMeta entityMeta, boolean withAlias) {
-    List<Condition> conditions = new ArrayList<Condition>();
-    for (Restriction r : restrictions) {
-      conditions.add(r.toCondition(entityMeta, withAlias));
-    }
+  /**
+   * Build multiple and condition.
+   * 
+   * @return mutliple and condition
+   * @see MultipleAndCondition
+   */
+  public MultipleAndCondition build() {
     return new MultipleAndCondition(conditions);
   }
 

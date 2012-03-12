@@ -13,11 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapper;
 
 import java.sql.Timestamp;
 
 import org.hako.dao.H2MemDbClientFlyweight;
+import org.hako.dao.mapper.EntityManager;
 import org.junit.Test;
 
 /**

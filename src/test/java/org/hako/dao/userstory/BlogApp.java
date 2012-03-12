@@ -17,7 +17,7 @@ package org.hako.dao.userstory;
 
 import java.sql.Timestamp;
 
-import org.hako.dao.mapping.entity.TableName;
+import org.hako.dao.mapping.TableName;
 import org.hako.dao.sql.clause.delete.DeleteClauseBuilder;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;

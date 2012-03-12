@@ -23,6 +23,8 @@ import java.util.Map;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
+import org.hako.dao.sql.clause.select.table.Table;
+import org.hako.dao.sql.clause.select.table.Tables;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
@@ -37,9 +39,10 @@ import org.hako.dao.sql.expression.value.Values;
  */
 public class UpdateClauseBuilder {
 
+  private Option<Table> tableOpt = new None<Table>();
   private final List<ColumnExpressionPair> pairs =
       new ArrayList<ColumnExpressionPair>();
-  private final UpdateClauseBean bean = new UpdateClauseBean();
+  private Option<Condition> whereCondOpt = new None<Condition>();
 
   /**
    * Set table name.
@@ -48,7 +51,7 @@ public class UpdateClauseBuilder {
    * @return this
    */
   public UpdateClauseBuilder update(String tableName) {
-    return update(tableName, new None<String>());
+    return update(Tables.createSimple(tableName));
   }
 
   /**
@@ -59,19 +62,17 @@ public class UpdateClauseBuilder {
    * @return this
    */
   public UpdateClauseBuilder update(String tableName, String alias) {
-    return update(tableName, new Some<String>(alias));
+    return update(Tables.createSimpleAkaTable(tableName, alias));
   }
 
   /**
-   * Set table name with alias option.
+   * Set table.
    * 
-   * @param tableName
-   * @param aliasOpt alias option
+   * @param table
    * @return this
    */
-  private UpdateClauseBuilder update(String tableName, Option<String> aliasOpt) {
-    bean.setTableNameOpt(new Some<String>(tableName));
-    bean.setTableAliasOpt(aliasOpt);
+  public UpdateClauseBuilder update(Table table) {
+    tableOpt = new Some<Table>(table);
     return this;
   }
 
@@ -160,8 +161,9 @@ public class UpdateClauseBuilder {
    * @return this
    */
   public UpdateClauseBuilder where(Condition... conditions) {
-    bean.setWhereCondOpt(new Some<Condition>(new MultipleAndCondition(Arrays
-        .asList(conditions))));
+    // TODO refactor me
+    whereCondOpt =
+        new Some<Condition>(new MultipleAndCondition(Arrays.asList(conditions)));
     return this;
   }
 
@@ -169,10 +171,13 @@ public class UpdateClauseBuilder {
    * Create update clause.
    * 
    * @return update clause
+   * @throws IllegalArgumentException if table not specified
    */
-  public UpdateClause toUpdateClause() {
-    bean.setPairs(pairs);
-    return new UpdateClause(bean);
+  public UpdateClause toUpdateClause() throws IllegalArgumentException {
+    if (!tableOpt.hasValue()) {
+      throw new IllegalArgumentException("table required");
+    }
+    return new UpdateClause(tableOpt.get(), pairs, whereCondOpt);
   }
 
 }

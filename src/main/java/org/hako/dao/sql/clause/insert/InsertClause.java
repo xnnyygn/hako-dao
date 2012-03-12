@@ -21,7 +21,6 @@ import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.clause.insert.values.ValueSource;
-import org.hako.dao.sql.expression.ColumnName;
 
 /**
  * Insert clause.
@@ -33,7 +32,7 @@ import org.hako.dao.sql.expression.ColumnName;
 public class InsertClause extends AbstractClause {
 
   private final String tableName;
-  private final List<ColumnName> columnNames;
+  private final List<String> columnNames;
   private final ValueSource values;
 
   /**
@@ -43,7 +42,7 @@ public class InsertClause extends AbstractClause {
    * @param columnNames
    * @param values
    */
-  public InsertClause(String tableName, List<ColumnName> columnNames,
+  public InsertClause(String tableName, List<String> columnNames,
       ValueSource values) {
     super();
     this.tableName = tableName;

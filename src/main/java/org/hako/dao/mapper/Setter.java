@@ -13,31 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.sql.clause.select.table;
+package org.hako.dao.mapper;
 
 /**
- * Table factory.
- *
+ * Setter.
+ * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class TableFactory {
+public interface Setter {
 
-  public static SimpleTable createSimple(String tableName) {
-    return new SimpleTable(tableName);
-  }
+  /**
+   * Set value.
+   * 
+   * @param instance
+   * @param value
+   * @return instance
+   */
+  public abstract <T> T set(T instance, Object value);
 
-  public static SchemaTable createSchemaTable(String schema, String tableName) {
-    return new SchemaTable(schema, tableName);
-  }
-
-  public static AkaTable createAkaTable(Table table, String alias) {
-    return new AkaTable(table, alias);
-  }
-
-  public static AkaTable createSimpleAkaTable(String tableName, String alias) {
-    return new AkaTable(new SimpleTable(tableName), alias);
-  }
+  /**
+   * Get property name.
+   * 
+   * @return property name
+   */
+  public String getPropertyName();
 
 }

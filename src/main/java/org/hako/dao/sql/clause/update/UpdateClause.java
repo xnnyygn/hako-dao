@@ -17,9 +17,12 @@ package org.hako.dao.sql.clause.update;
 
 import java.util.List;
 
+import org.hako.Option;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
 import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
+import org.hako.dao.sql.clause.select.table.Table;
+import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.util.GetParamsUtils;
 
 /**
@@ -31,45 +34,48 @@ import org.hako.dao.sql.util.GetParamsUtils;
  */
 public class UpdateClause extends AbstractClause {
 
-  private final UpdateClauseBean bean;
+  private final Table table;
+  private final List<ColumnExpressionPair> pairs;
+  private final Option<Condition> whereCondOpt;
+
 
   /**
    * Create.
    * 
-   * @param bean
-   * @throws IllegalArgumentException if no table name or empty column value
-   *         pair in bean
+   * @param table
+   * @param pairs
+   * @param whereCondOpt
    */
-  public UpdateClause(UpdateClauseBean bean) throws IllegalArgumentException {
+  public UpdateClause(Table table, List<ColumnExpressionPair> pairs,
+      Option<Condition> whereCondOpt) throws IllegalArgumentException {
     super();
-    if (!bean.hasTableName() || bean.getPairs().isEmpty()) {
-      throw new IllegalArgumentException("table name must be specified and "
-          + "column value pair must not be empty");
+    if (pairs.isEmpty()) {
+      throw new IllegalArgumentException("column value pair must not be empty");
     }
-    this.bean = bean;
+    this.table = table;
+    this.pairs = pairs;
+    this.whereCondOpt = whereCondOpt;
   }
 
   public String toPrepared() {
     ToPreparedBuilder builder = new ToPreparedBuilder("UPDATE ");
-    builder.append(bean.getTableName());
-    builder.append(" AS ", bean.getTableAliasOpt());
-    builder.append(" SET ").append(bean.getPairs());
-    builder.append(" WHERE ", bean.getWhereCondOpt());
+    builder.append(table);
+    builder.append(" SET ").append(pairs);
+    builder.append(" WHERE ", whereCondOpt);
     return builder.toString();
   }
 
   @Override
   public String toFormatted(int marginCount) {
     ToFormattedBuilder builder = new ToFormattedBuilder("UPDATE ");
-    builder.append(bean.getTableName());
-    builder.append(" AS ", bean.getTableNameOpt());
-    builder.append("\nSET\n").append(1, ",\n", bean.getPairs());
-    builder.append("\nWHERE\n", 1, bean.getWhereCondOpt());
+    builder.append(table);
+    builder.append("\nSET\n").append(1, ",\n", pairs);
+    builder.append("\nWHERE\n", 1, whereCondOpt);
     return builder.toString();
   }
 
   public List<Object> getParams() {
-    return GetParamsUtils.from(bean.getPairs(), bean.getWhereCondOpt());
+    return GetParamsUtils.from(pairs, whereCondOpt);
   }
 
   public String toString() {

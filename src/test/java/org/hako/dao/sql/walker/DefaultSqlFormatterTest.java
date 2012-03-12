@@ -18,7 +18,7 @@ package org.hako.dao.sql.walker;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import org.hako.dao.mapping.entity.TableName;
+import org.hako.dao.mapping.TableName;
 import org.hako.dao.sql.clause.delete.DeleteClauseBuilder;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClause;

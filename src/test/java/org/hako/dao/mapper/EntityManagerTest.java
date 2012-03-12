@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -23,7 +23,8 @@ import java.util.GregorianCalendar;
 
 import org.hako.dao.H2MemDbClientFlyweight;
 import org.hako.dao.ListParams;
-import org.hako.dao.restriction.LikeRestriction.MatchMode;
+import org.hako.dao.mapper.EntityManager;
+import org.hako.dao.restriction.compare.LikeRestriction.MatchMode;
 import org.hako.dao.restriction.Restrictions;
 import org.junit.Test;
 

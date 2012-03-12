@@ -10,11 +10,11 @@ import org.hako.dao.sql.clause.select.table.JoinType;
 import org.hako.dao.sql.clause.select.table.JoinWithConditionTable;
 import org.hako.dao.sql.clause.select.table.MultipleTableBuilder;
 import org.hako.dao.sql.clause.select.table.SimpleTable;
-import org.hako.dao.sql.clause.select.table.TableFactory;
+import org.hako.dao.sql.clause.select.table.Tables;
 import org.hako.dao.sql.expression.ColumnName;
 import org.hako.dao.sql.expression.InnerSelectExpression;
 import org.hako.dao.sql.expression.TableColumnName;
-import org.hako.dao.sql.expression.condition.ConditionBuilder;
+import org.hako.dao.sql.expression.condition.MultipleConditionBuilder;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.condition.compare.IsNullCondition;
 import org.hako.dao.sql.expression.value.Values;
@@ -45,10 +45,10 @@ public class SelectClauseBuilderTest {
     selectionBuilder.addTableAll("u");
     // create tables
     MultipleTableBuilder tableBuilder = new MultipleTableBuilder();
-    tableBuilder.add(TableFactory.createSimpleAkaTable("BLOG", "b"));
-    tableBuilder.add(TableFactory.createSimpleAkaTable("USER", "u"));
+    tableBuilder.add(Tables.createSimpleAkaTable("BLOG", "b"));
+    tableBuilder.add(Tables.createSimpleAkaTable("USER", "u"));
     // create where condition
-    ConditionBuilder conditionBuilder = new ConditionBuilder();
+    MultipleConditionBuilder conditionBuilder = new MultipleConditionBuilder();
     conditionBuilder.add(Conditions.eq(columnId, Values.create(1l)));
     conditionBuilder.add(Conditions.ne(columnUserId, Values.create(2l)));
     // use select builder
@@ -69,12 +69,12 @@ public class SelectClauseBuilderTest {
     ExpressionSelection selection =
         new ExpressionSelection(new TableColumnName("e1", "name"));
     MultipleTableBuilder tableBuilder = new MultipleTableBuilder();
-    tableBuilder.add(TableFactory.createSimpleAkaTable("emp", "e1"));
-    tableBuilder.add(TableFactory.createSimpleAkaTable("emp", "e2"));
+    tableBuilder.add(Tables.createSimpleAkaTable("emp", "e1"));
+    tableBuilder.add(Tables.createSimpleAkaTable("emp", "e2"));
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(selection);
     builder.from(tableBuilder.toMultipleTable());
-    ConditionBuilder conditionBuilder = new ConditionBuilder();
+    MultipleConditionBuilder conditionBuilder = new MultipleConditionBuilder();
     conditionBuilder.add(Conditions.eq(new TableColumnName("e1", "dept_no"),
         new TableColumnName("e2", "dept_no")));
     conditionBuilder.add(Conditions.eq(new TableColumnName("e2", "name"),

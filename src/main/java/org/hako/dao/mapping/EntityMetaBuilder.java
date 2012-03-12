@@ -13,19 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.dao.mapping;
 
 /**
- * Field options.
+ * Entity meta builder.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
  */
-public enum FieldOptions {
-
-  PK, // is primary key? Boolean, default false
-  AUTO_INCREMENT, // is auto increased? Boolean default false  
-  FK; // is foreign key? Boolean, default false
+public class EntityMetaBuilder {
 
 }

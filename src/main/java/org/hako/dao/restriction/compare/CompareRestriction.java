@@ -15,7 +15,12 @@
  */
 package org.hako.dao.restriction.compare;
 
+import org.hako.dao.mapping.EntityMeta;
 import org.hako.dao.restriction.Restriction;
+import org.hako.dao.sql.expression.condition.Condition;
+import org.hako.dao.sql.expression.condition.compare.CompareCondition;
+import org.hako.dao.sql.expression.condition.compare.CompareSymbol;
+import org.hako.dao.sql.expression.value.Values;
 
 /**
  * Abstract compare restriction.
@@ -24,21 +29,30 @@ import org.hako.dao.restriction.Restriction;
  * @version %I%, %G%
  * @since 1.0.0
  */
-public abstract class AbstractCompareRestriction implements Restriction {
+public class CompareRestriction implements Restriction {
 
   protected final String propertyName;
+  protected final CompareSymbol symbol;
   protected final Object value;
 
   /**
    * Create.
    * 
    * @param propertyName
+   * @param symbol
    * @param value
    */
-  public AbstractCompareRestriction(String propertyName, Object value) {
+  public CompareRestriction(String propertyName, CompareSymbol symbol,
+      Object value) {
     super();
     this.propertyName = propertyName;
+    this.symbol = symbol;
     this.value = value;
+  }
+
+  public Condition toCondition(EntityMeta entityMeta, boolean withAlias) {
+    return new CompareCondition(entityMeta.createColumnExpression(propertyName,
+        withAlias), symbol, Values.create(value));
   }
 
 }

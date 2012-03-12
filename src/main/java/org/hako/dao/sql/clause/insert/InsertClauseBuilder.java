@@ -23,7 +23,8 @@ import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.sql.clause.insert.values.ExpressionValues;
 import org.hako.dao.sql.clause.insert.values.ValueSource;
-import org.hako.dao.sql.expression.ColumnName;
+import org.hako.dao.sql.clause.select.table.SimpleTable;
+import org.hako.dao.sql.clause.select.table.Table;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.value.Values;
 
@@ -37,7 +38,7 @@ import org.hako.dao.sql.expression.value.Values;
 public class InsertClauseBuilder {
 
   private Option<String> tableNameOpt = new None<String>();
-  private final List<ColumnName> columnNames = new ArrayList<ColumnName>();
+  private final List<String> columnNames = new ArrayList<String>();
   private Option<ValueSource> valuesOpt = new None<ValueSource>();
   private final List<Expression> expressions = new ArrayList<Expression>();
 
@@ -53,13 +54,27 @@ public class InsertClauseBuilder {
   }
 
   /**
+   * Set insert into table name.
+   * 
+   * @param table
+   * @return this
+   */
+  public InsertClauseBuilder insertInto(Table table) {
+    if (table instanceof SimpleTable) {
+      return insertInto(((SimpleTable) table).getName());
+    }
+    throw new IllegalArgumentException("cannot get table name from [" + table
+        + "]");
+  }
+
+  /**
    * Add column.
    * 
    * @param columnName column name
    * @return this
    */
   public InsertClauseBuilder addColumn(String columnName) {
-    columnNames.add(new ColumnName(columnName));
+    columnNames.add(columnName);
     return this;
   }
 

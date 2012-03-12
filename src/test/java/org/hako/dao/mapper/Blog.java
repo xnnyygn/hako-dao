@@ -13,56 +13,45 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.entity;
+package org.hako.dao.mapper;
+
+import java.sql.Timestamp;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.hako.dao.mapper.Entity;
+import org.hako.dao.mapper.Field;
+import org.hako.dao.mapper.Id;
 
 /**
- * Name of entity.
+ * Entity blog.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class EntityName {
+@Entity(tableName = "blog", tableAlias = "b")
+public class Blog {
 
-  private final String tableName;
-  private final String alias;
+  @Id
+  @Field
+  public Long id;
 
-  /**
-   * Create.
-   * 
-   * @param tableName
-   * @param alias
-   */
-  public EntityName(String tableName, String alias) {
-    super();
-    this.tableName = tableName;
-    this.alias = alias;
-  }
+  @Field
+  public String title;
 
-  /**
-   * Get table name.
-   * 
-   * @return the tableName
-   */
-  public String getTableName() {
-    return tableName;
-  }
+  @Field
+  public String content;
 
-  /**
-   * Get alias.
-   * 
-   * @return the alias
-   */
-  public String getAlias() {
-    return alias;
-  }
+  @Field
+  public Timestamp dateCreated;
+
+  @Field
+  public Long userId;
 
   public String toString() {
     return ToStringBuilder.reflectionToString(this,
         ToStringStyle.MULTI_LINE_STYLE);
   }
-
+  
 }

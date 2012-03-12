@@ -13,38 +13,41 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapper;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Use field to set value.
+ * A setter use setter method to set property.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class FieldSetter implements Setter {
+public class MethodSetter implements Setter {
 
-  private static final Log logger = LogFactory.getLog(FieldSetter.class);
-  private final Field field;
+  private static final Log logger = LogFactory.getLog(MethodSetter.class);
+  private final Method setter;
+  private final String propertyName;
 
   /**
    * Create.
    * 
-   * @param field
+   * @param setter
    */
-  public FieldSetter(Field field) {
+  public MethodSetter(Method setter) {
     super();
-    this.field = field;
+    this.setter = setter;
+    this.propertyName = StringUtils.uncapitalize(setter.getName().substring(3));
   }
 
   public <T> T set(T instance, Object value) {
     try {
-      field.set(instance, value);
+      setter.invoke(instance, value);
     } catch (Exception e) {
       logger.warn("failed to set value", e);
     }
@@ -52,7 +55,7 @@ public class FieldSetter implements Setter {
   }
 
   public String getPropertyName() {
-    return field.getName();
+    return propertyName;
   }
 
 }

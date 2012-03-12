@@ -27,6 +27,7 @@ import org.hako.dao.sql.expression.condition.compare.CompareCondition;
 import org.hako.dao.sql.expression.condition.compare.CompareSymbol;
 import org.hako.dao.sql.expression.condition.compare.InCondition;
 import org.hako.dao.sql.expression.condition.compare.LikeCondition;
+import org.hako.dao.sql.expression.condition.logic.AndCondition;
 import org.hako.dao.sql.expression.condition.logic.OrCondition;
 
 /**
@@ -62,6 +63,17 @@ public class Conditions {
    */
   public static Condition ne(Expression left, Expression right) {
     return new CompareCondition(left, NOT_EQUAL, right);
+  }
+
+  /**
+   * Create and condition.
+   * 
+   * @param left
+   * @param right
+   * @return condition
+   */
+  public static Condition and(Condition left, Condition right) {
+    return new AndCondition(left, right);
   }
 
   /**

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper.annotation;
+package org.hako.dao.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,8 @@ import java.util.Map;
 import org.hako.Option;
 import org.hako.dao.ListParams;
 import org.hako.dao.db.client.DbClient;
+import org.hako.dao.mapping.EntityMeta;
+import org.hako.dao.mapping.FieldMeta;
 import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.clause.delete.DeleteClauseBuilder;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
@@ -29,6 +31,7 @@ import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.function.Functions;
+import org.hako.dao.sql.expression.value.Values;
 import org.hako.util.BeanUtils;
 
 /**
@@ -66,9 +69,9 @@ public class EntityManager<T, PK> {
    */
   public Option<T> get(PK id) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(entityMeta.createAllFieldsSelection());
+    builder.select(entityMeta.createSelectionOfAllFields());
     builder.from(entityMeta.createTable());
-    builder.where(entityMeta.createPkCondition(id, true));
+    builder.where(entityMeta.createPkCondition(id));
     return entityFactory
         .create(client.selectSingleRow(builder.toSelectClause()));
   }
@@ -94,7 +97,7 @@ public class EntityManager<T, PK> {
    */
   public Option<T> findBy(Restriction... restrictions) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(entityMeta.createAllFieldsSelection());
+    builder.select(entityMeta.createSelectionOfAllFields());
     builder.from(entityMeta.createTable());
     builder.where(createConditions(restrictions));
     return entityFactory
@@ -104,7 +107,7 @@ public class EntityManager<T, PK> {
   private List<Condition> createConditions(Restriction... restrictions) {
     List<Condition> conditions = new ArrayList<Condition>();
     for (Restriction r : restrictions) {
-      conditions.add(r.toCondition(entityMeta));
+      conditions.add(r.toCondition(entityMeta, true));
     }
     return conditions;
   }
@@ -117,7 +120,7 @@ public class EntityManager<T, PK> {
    */
   public List<T> list(ListParams params) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(entityMeta.createAllFieldsSelection());
+    builder.select(entityMeta.createSelectionOfAllFields());
     builder.from(entityMeta.createTable());
     builder.addOrderBy(params.toMultipleOrderBy());
     builder.limit(params.getMax(), params.getOffset());
@@ -143,13 +146,14 @@ public class EntityManager<T, PK> {
    */
   public int save(Map<String, Object> props) {
     InsertClauseBuilder builder = new InsertClauseBuilder();
-    builder.insertInto(entityMeta.getTableName());
-    for (FieldMeta f : entityMeta.getNotGeneratedFields()) {
+    builder.insertInto(entityMeta.createTable(false));
+    for (FieldMeta f : entityMeta.getFields()) {
       String key = f.getPropertyName();
       if (props.containsKey(key)) {
         builder.add(f.getColumnName(), props.get(key));
+      } else {
+        builder.add(f.getColumnName(), Values.NULL);
       }
-      // ignore additional properties
     }
     return client.insert(builder.toInsertClause());
   }
@@ -166,15 +170,15 @@ public class EntityManager<T, PK> {
 
   public int update(Map<String, Object> props) {
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
-    builder.update(entityMeta.getTableName(), entityMeta.getTableAlias());
+    builder.update(entityMeta.createTable());
     // TODO not primary key fields
-    for (FieldMeta f : entityMeta.getNotGeneratedFields()) {
+    for (FieldMeta f : entityMeta.getFields()) {
       String key = f.getPropertyName();
       if (props.containsKey(key)) {
         builder.set(f.getColumnName(), props.get(key));
       }
     }
-    builder.where(entityMeta.createComplexPkConditions(props));
+    builder.where(entityMeta.createComplexPkCondition(props, false));
     return client.update(builder.toUpdateClause());
   }
 
@@ -202,7 +206,7 @@ public class EntityManager<T, PK> {
    */
   public List<T> listBy(ListParams listParams, Restriction... restrictions) {
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(entityMeta.createAllFieldsSelection());
+    builder.select(entityMeta.createSelectionOfAllFields());
     builder.from(entityMeta.createTable());
     builder.where(createConditions(restrictions));
     builder.addOrderBy(listParams.toMultipleOrderBy());
@@ -219,7 +223,7 @@ public class EntityManager<T, PK> {
    */
   public int delete(PK id) {
     DeleteClauseBuilder builder = new DeleteClauseBuilder();
-    builder.deleteFrom(entityMeta.getTableName());
+    builder.deleteFrom(entityMeta.createTable(false));
     builder.where(entityMeta.createPkCondition(id, false));
     return client.delete(builder.toDeleteClause());
   }

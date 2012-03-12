@@ -20,6 +20,8 @@ import java.util.Arrays;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
+import org.hako.dao.sql.clause.select.table.SimpleTable;
+import org.hako.dao.sql.clause.select.table.Table;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
 
@@ -44,6 +46,19 @@ public class DeleteClauseBuilder {
   public DeleteClauseBuilder deleteFrom(String tableName) {
     tableNameOpt = new Some<String>(tableName);
     return this;
+  }
+
+  /**
+   * Set table.
+   * 
+   * @param table
+   * @return this
+   */
+  public DeleteClauseBuilder deleteFrom(Table table) {
+    if (table instanceof SimpleTable) {
+      return deleteFrom(((SimpleTable) table).getName());
+    }
+    throw new IllegalArgumentException("cannot get name from [" + table + "]");
   }
 
   /**

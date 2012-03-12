@@ -15,9 +15,10 @@
  */
 package org.hako.dao.restriction;
 
-import org.hako.dao.restriction.LikeRestriction.MatchMode;
-import org.hako.dao.restriction.compare.EqualsRestriction;
-import org.hako.dao.restriction.compare.GreaterThanRestriction;
+import org.hako.dao.restriction.compare.CompareRestriction;
+import org.hako.dao.restriction.compare.LikeRestriction;
+import org.hako.dao.restriction.compare.LikeRestriction.MatchMode;
+import org.hako.dao.sql.expression.condition.compare.CompareSymbol;
 
 /**
  * Restrictions.
@@ -36,9 +37,8 @@ public class Restrictions {
    * @return equals restriction
    * @see EqualsRestriction
    */
-  public static EqualsRestriction eq(String propertyName, Object value) {
-    // TODO refactor restriction
-    return new EqualsRestriction(propertyName, value);
+  public static Restriction eq(String propertyName, Object value) {
+    return new CompareRestriction(propertyName, CompareSymbol.EQUAL, value);
   }
 
   /**
@@ -76,7 +76,8 @@ public class Restrictions {
    * @see GreaterThanRestriction
    */
   public static Restriction gt(String propertyName, Object value) {
-    return new GreaterThanRestriction(propertyName, value);
+    return new CompareRestriction(propertyName, CompareSymbol.GREATER_THAN,
+        value);
   }
 
 }

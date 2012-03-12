@@ -94,7 +94,7 @@ public class ToFormattedBuilder {
     if (obj instanceof Sql) {
       return append(((Sql) obj).toFormatted(marginCount));
     }
-    return append(obj.toString());
+    return appendMargins(marginCount).append(obj.toString());
   }
 
   /**

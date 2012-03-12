@@ -13,41 +13,46 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping.field;
+package org.hako.dao.mapper;
 
-import static org.hako.dao.mapping.field.FieldOptions.*;
+import java.lang.reflect.Field;
 
-import java.util.Map;
-
-import org.hako.util.MapUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * Abstract field.
+ * Use field to set value.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class BaseMappedField<T> implements MappedField<T> {
+public class FieldSetter implements Setter {
 
-  private final Map<FieldOptions, Object> options;
+  private static final Log logger = LogFactory.getLog(FieldSetter.class);
+  private final Field field;
 
   /**
-   * Create with options.
+   * Create.
    * 
-   * @param options
+   * @param field
    */
-  public BaseMappedField(Map<FieldOptions, Object> options) {
+  public FieldSetter(Field field) {
     super();
-    this.options = MapUtils.merge(OPTIONS_DEFAULT, options);
+    this.field = field;
   }
 
-  public boolean isPk() {
-    return (Boolean) options.get(PK);
+  public <T> T set(T instance, Object value) {
+    try {
+      field.set(instance, value);
+    } catch (Exception e) {
+      logger.warn("failed to set value", e);
+    }
+    return instance;
   }
 
-  public boolean isFk() {
-    return (Boolean) options.get(FK);
+  public String getPropertyName() {
+    return field.getName();
   }
 
 }

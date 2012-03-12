@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.restriction;
+package org.hako.dao.restriction.compare;
 
-import org.hako.dao.mapper.annotation.EntityMeta;
-import org.hako.dao.restriction.compare.AbstractCompareRestriction;
+import org.hako.dao.mapping.EntityMeta;
+import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.value.Values;
@@ -28,7 +28,10 @@ import org.hako.dao.sql.expression.value.Values;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class LikeRestriction extends AbstractCompareRestriction {
+public class LikeRestriction implements Restriction {
+
+  protected final String propertyName;
+  protected final String pattern;
 
   /**
    * Match mode.
@@ -63,11 +66,12 @@ public class LikeRestriction extends AbstractCompareRestriction {
    * Create.
    * 
    * @param propertyName
-   * @param value
+   * @param pattern
    * @param mode
    */
-  public LikeRestriction(String propertyName, String value, MatchMode mode) {
-    super(propertyName, createPattern(value, mode));
+  public LikeRestriction(String propertyName, String pattern, MatchMode mode) {
+    this.propertyName = propertyName;
+    this.pattern = createPattern(pattern, mode);
   }
 
   /**
@@ -90,9 +94,10 @@ public class LikeRestriction extends AbstractCompareRestriction {
     }
   }
 
-  public Condition toCondition(EntityMeta entityMeta) {
-    return Conditions.like(entityMeta.createTableColumnName(propertyName),
-        Values.create(value));
+  public Condition toCondition(EntityMeta entityMeta, boolean withAlias) {
+    return Conditions.like(
+        entityMeta.createColumnExpression(propertyName, withAlias),
+        Values.create(pattern));
   }
 
 }

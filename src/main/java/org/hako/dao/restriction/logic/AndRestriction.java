@@ -15,10 +15,10 @@
  */
 package org.hako.dao.restriction.logic;
 
-import org.hako.dao.mapper.annotation.EntityMeta;
+import org.hako.dao.mapping.EntityMeta;
 import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.expression.condition.Condition;
-import org.hako.dao.sql.expression.condition.logic.AndCondition;
+import org.hako.dao.sql.expression.condition.Conditions;
 
 /**
  * And restriction.
@@ -39,9 +39,9 @@ public class AndRestriction extends AbstractBinaryLogicRestriction {
     super(left, right);
   }
 
-  public Condition toCondition(EntityMeta entityMeta) {
-    return new AndCondition(left.toCondition(entityMeta),
-        right.toCondition(entityMeta));
+  public Condition toCondition(EntityMeta entityMeta, boolean withAlias) {
+    return Conditions.and(left.toCondition(entityMeta, withAlias),
+        right.toCondition(entityMeta, withAlias));
   }
 
 }
