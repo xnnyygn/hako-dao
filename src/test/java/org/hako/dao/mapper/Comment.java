@@ -13,15 +13,34 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping;
+package org.hako.dao.mapper;
+
+import java.sql.Timestamp;
 
 /**
- * Entity meta builder.
+ * Domain comment.
  * 
  * @author xnnyygn
  * @version %I%, %G%
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class EntityMetaBuilder {
+@Entity(tableName = "comment", tableAlias = "c")
+public class Comment {
 
+  @Id
+  @Field
+  public Long id;
+  
+  @Field
+  public String content;
+  
+  @Field
+  public Long blogId;
+  
+  @Field
+  public Long userId;
+  
+  @Field
+  public Timestamp dateCreated;
+  
 }

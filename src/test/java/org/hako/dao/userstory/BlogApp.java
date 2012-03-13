@@ -17,13 +17,19 @@ package org.hako.dao.userstory;
 
 import java.sql.Timestamp;
 
-import org.hako.dao.mapping.TableName;
+import org.hako.dao.mapper.AnnotationMapper;
+import org.hako.dao.mapper.Blog;
+import org.hako.dao.mapper.BlogTags;
+import org.hako.dao.mapper.Comment;
+import org.hako.dao.mapper.Tag;
+import org.hako.dao.mapper.User;
+import org.hako.dao.mapping.EntityMeta;
 import org.hako.dao.sql.clause.delete.DeleteClauseBuilder;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.ColumnName;
-import org.hako.dao.sql.expression.TableColumnName;
+import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.function.Functions;
 import org.hako.dao.sql.expression.value.Values;
@@ -38,24 +44,25 @@ import org.junit.Test;
  */
 public class BlogApp {
 
-  private static TableName TABLE_BLOG = new TableName("blog", "b");
-  private static TableName TABLE_USER = new TableName("user", "u");
-  private static TableName TABLE_TAG = new TableName("tag", "t");
-  private static TableName TABLE_BLOG_TAGS = new TableName("blog_tags", "bt");
-  private static TableName TABLE_COMMENT = new TableName("comment", "c");
+  private static AnnotationMapper mapper = new AnnotationMapper();
+  private static EntityMeta entityBlog = mapper.setUp(Blog.class);
+  private static EntityMeta entityUser = mapper.setUp(User.class);
+  private static EntityMeta entityBlogTags = mapper.setUp(BlogTags.class);
+  private static EntityMeta entityTag = mapper.setUp(Tag.class);
+  private static EntityMeta entityComment = mapper.setUp(Comment.class);
 
   @Test
   public void testShowBlogBlogAndUser() {
     // SELECT b.*, u.* FROM blog as b JOIN user as u ON b.user_id = u.id \
     // WHERE b.id = ?
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(TABLE_BLOG.forAliasAsteriskSel(),
-        TABLE_USER.forAliasAsteriskSel());
+    builder.select(entityBlog.createAsteriskSelection(),
+        entityUser.createAsteriskSelection());
     builder.fromJoin(
-        TABLE_BLOG.forAka(),
-        TABLE_USER.forAka(),
-        Conditions.eq(TABLE_BLOG.forAliasColumn("user_id"),
-            TABLE_USER.forAliasColumn("id")));
+        entityBlog.createTable(),
+        entityUser.createTable(),
+        Conditions.eq(entityBlog.createColumnExpression("userId"),
+            entityUser.createColumnExpression("id")));
     System.out.println(builder.toSelectClause());
   }
 
@@ -64,15 +71,15 @@ public class BlogApp {
     // SELECT t.* FROM tag as t WHERE t.id IN ( SELECT bt.tag_id \
     // FROM blog_tags as bt WHERE bt.blog_id = ? )
     SelectClauseBuilder subBuilder = new SelectClauseBuilder();
-    subBuilder.select(TABLE_BLOG_TAGS.forAliasColumn("tag_id"));
-    subBuilder.from(TABLE_BLOG_TAGS.forAka());
-    subBuilder.where(Conditions.eq(TABLE_BLOG_TAGS.forAliasColumn("blog_id"),
-        Values.create(1l)));
+    subBuilder.select(entityBlogTags.createColumnExpression("tagId"));
+    subBuilder.from(entityBlogTags.createTable());
+    subBuilder.where(Conditions.eq(
+        entityBlogTags.createColumnExpression("blogId"), Values.create(1l)));
 
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(TABLE_TAG.forAliasAsteriskSel());
-    builder.from(TABLE_TAG.forAka());
-    builder.where(Conditions.in(TABLE_TAG.forAliasColumn("id"),
+    builder.select(entityTag.createAsteriskSelection());
+    builder.from(entityTag.createTable());
+    builder.where(Conditions.in(entityTag.createColumnExpression("id"),
         subBuilder.toInnerSelectExpr()));
     System.out.println(builder.toSelectClause());
   }
@@ -82,16 +89,15 @@ public class BlogApp {
     // SELECT c.*, u.* FROM comment as c JOIN user as u ON c.user_id = u.id \
     // WHERE c.blog_id = ? ORDER BY c.date_created DESC
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(TABLE_COMMENT.forAliasAsteriskSel(),
-        TABLE_USER.forAliasAsteriskSel());
-    builder.fromJoin(
-        TABLE_COMMENT.forAka(),
-        TABLE_USER.forAka(),
-        Conditions.eq(TABLE_COMMENT.forAliasColumn("user_id"),
-            TABLE_USER.forAliasColumn("id")));
-    builder.where(Conditions.eq(TABLE_COMMENT.forAliasColumn("blog_id"),
+    builder.select(entityComment.createAsteriskSelection(),
+        entityUser.createAsteriskSelection());
+    builder.fromJoin(entityComment.createTable(), entityUser.createTable(),
+        Conditions.eq(entityComment.createColumnExpression("userId"),
+            entityUser.createColumnExpression("id")));
+    builder.where(Conditions.eq(entityComment.createColumnExpression("blogId"),
         Values.create(1l)));
-    builder.addOrderBy(TABLE_COMMENT.forAliasColumn("date_created"), false);
+    builder.addOrderBy(entityComment.createColumnExpression("dateCreated"),
+        false);
     System.out.println(builder.toSelectClause());
   }
 
@@ -100,7 +106,7 @@ public class BlogApp {
     // SELECT COUNT(b.*) FROM blog as b
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(Functions.countRow());
-    builder.from(TABLE_BLOG.forAka());
+    builder.from(entityBlog.createTable(false));
     System.out.println(builder.toSelectClause());
   }
 
@@ -113,38 +119,38 @@ public class BlogApp {
     // u.id ORDER BY b.date_created DESC (with limit)
     SelectClauseBuilder commentCountBuilder = new SelectClauseBuilder();
     commentCountBuilder.select(Functions.countRow());
-    commentCountBuilder.from(TABLE_COMMENT.forAka());
+    commentCountBuilder.from(entityComment.createTable());
     commentCountBuilder.where(Conditions.eq(
-        TABLE_COMMENT.forAliasColumn("blog_id"),
-        TABLE_BLOG.forAliasColumn("id")));
+        entityComment.createColumnExpression("blogId"),
+        entityBlog.createColumnExpression("id")));
 
     SelectClauseBuilder blogTagsBuilder = new SelectClauseBuilder();
-    blogTagsBuilder.select(TABLE_BLOG_TAGS.forAliasColumn("tag_id"));
-    blogTagsBuilder.from(TABLE_BLOG_TAGS.forAka());
+    blogTagsBuilder.select(entityBlogTags.createColumnExpression("tagId"));
+    blogTagsBuilder.from(entityBlogTags.createTable());
     blogTagsBuilder.where(Conditions.eq(
-        TABLE_BLOG_TAGS.forAliasColumn("blog_id"),
-        TABLE_BLOG.forAliasColumn("id")));
+        entityBlogTags.createColumnExpression("blogId"),
+        entityBlog.createColumnExpression("id")));
 
     SelectClauseBuilder tagsBuilder = new SelectClauseBuilder();
     tagsBuilder.select(Functions.binaryFun("CONCAT_WS",
-        Values.createStatic(" "), TABLE_TAG.forAliasColumn("text")));
-    tagsBuilder.from(TABLE_TAG.forAka());
-    tagsBuilder.where(Conditions.in(TABLE_TAG.forAliasColumn("id"),
+        Values.createStatic(" "), entityTag.createColumnExpression("text")));
+    tagsBuilder.from(entityTag.createTable());
+    tagsBuilder.where(Conditions.in(entityTag.createColumnExpression("id"),
         blogTagsBuilder.toInnerSelectExpr()));
 
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(TABLE_BLOG.forAliasAsteriskSel(),
-        TABLE_USER.forAliasAsteriskSel(),
+    builder.select(entityBlog.createAsteriskSelection(),
+        entityUser.createAsteriskSelection(),
         commentCountBuilder.toInnerSelectSelection(),
         tagsBuilder.toInnerSelectSelection());
     builder.fromJoin(
-        TABLE_BLOG.forAka(),
-        TABLE_USER.forAka(),
-        Conditions.eq(TABLE_BLOG.forAliasColumn("user_id"),
-            TABLE_USER.forAliasColumn("id")));
-    builder.addOrderBy(TABLE_BLOG.forAliasColumn("date_created"), false);
+        entityBlog.createTable(),
+        entityUser.createTable(),
+        Conditions.eq(entityBlog.createColumnExpression("userId"),
+            entityUser.createColumnExpression("id")));
+    builder.addOrderBy(entityBlog.createColumnExpression("dateCreated"), false);
     builder.limit(10, 0);
-    System.out.println(builder.toSelectClause());
+    System.out.println(builder.toSelectClause().toFormatted());
   }
 
   @Test
@@ -155,17 +161,18 @@ public class BlogApp {
     SelectClauseBuilder builder = new SelectClauseBuilder();
     String dayAlias = "dom";
     ColumnName dayAliasColumn = new ColumnName(dayAlias);
-    TableColumnName fieldDateCreated =
-        TABLE_BLOG.forAliasColumn("date_created");
+    Expression fieldDateCreated =
+        entityBlog.createColumnExpression("dateCreated");
     builder.selectAs(Functions.unaryFun("DAY", fieldDateCreated), dayAlias);
     Timestamp minTimestamp = new Timestamp(System.currentTimeMillis());
     Timestamp maxTimestamp = new Timestamp(System.currentTimeMillis());
     builder.where(Conditions.between(fieldDateCreated,
         Values.create(minTimestamp), Values.create(maxTimestamp)));
     builder.groupBy(dayAliasColumn);
-    builder.from(TABLE_BLOG.forAka());
-    builder.having(Conditions.gt(dayAliasColumn, Values.createStatic(0)));
-    System.out.println(builder.toSelectClause());
+    builder.from(entityBlog.createTable());
+    builder.having(Conditions.gt(Functions.count(dayAliasColumn),
+        Values.createStatic(0)));
+    System.out.println(builder.toSelectClause().toFormatted());
   }
 
   @Test
@@ -173,8 +180,8 @@ public class BlogApp {
     // SELECT COUNT(t.id) FROM tag as t WHERE t.name = ?
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(Functions.countRow());
-    builder.from(TABLE_TAG.forAka());
-    builder.where(Conditions.eq(TABLE_TAG.forAliasColumn("text"),
+    builder.from(entityTag.createTable());
+    builder.where(Conditions.eq(entityTag.createColumnExpression("text"),
         Values.create("foo")));
     System.out.println(builder.toSelectClause());
   }
@@ -183,7 +190,7 @@ public class BlogApp {
   public void testCreateBlogInsertTag() {
     // INSERT INTO tag(...) VALUES(?...)
     InsertClauseBuilder builder = new InsertClauseBuilder();
-    builder.insertInto(TABLE_TAG.getName());
+    builder.insertInto(entityTag.createTable(false));
     builder.add("text", "bar");
     System.out.println(builder.toInsertClause());
   }
@@ -192,12 +199,12 @@ public class BlogApp {
   public void testCreateBlogInsertBlog() {
     // INSERT INTO blog(...) VALUES(?...)
     InsertClauseBuilder builder = new InsertClauseBuilder();
-    builder.insertInto(TABLE_BLOG.getName());
+    builder.insertInto(entityBlog.createTable(false));
     builder.add("title", "foo");
     builder.add("content", "bar");
     builder.add("date_created", new Timestamp(System.currentTimeMillis()));
     builder.add("user_id", 1l);
-    System.out.println(builder.toInsertClause());
+    System.out.println(builder.toInsertClause().toFormatted());
   }
 
   @Test
@@ -211,58 +218,59 @@ public class BlogApp {
     // ORDER BY b.date_created DESC (with limit)
     SelectClauseBuilder commentCountBuilder = new SelectClauseBuilder();
     commentCountBuilder.select(Functions.countRow());
-    commentCountBuilder.from(TABLE_COMMENT.forAka());
+    commentCountBuilder.from(entityComment.createTable());
     commentCountBuilder.where(Conditions.eq(
-        TABLE_COMMENT.forAliasColumn("blog_id"),
-        TABLE_BLOG.forAliasColumn("id")));
+        entityComment.createColumnExpression("blogId"),
+        entityBlog.createColumnExpression("id")));
 
     SelectClauseBuilder tagBuilder = new SelectClauseBuilder();
-    tagBuilder.select(TABLE_TAG.forAliasColumn("id"));
-    tagBuilder.from(TABLE_TAG.forAka());
-    tagBuilder.where(Conditions.eq(TABLE_TAG.forAliasColumn("text"),
+    tagBuilder.select(entityTag.createColumnExpression("id"));
+    tagBuilder.from(entityTag.createTable());
+    tagBuilder.where(Conditions.eq(entityTag.createColumnExpression("text"),
         Values.create("foo")));
 
     SelectClauseBuilder blogsWithTagBuilder = new SelectClauseBuilder();
-    blogsWithTagBuilder.select(TABLE_BLOG_TAGS.forAliasColumn("blog_id"));
-    blogsWithTagBuilder.from(TABLE_BLOG_TAGS.forAka());
+    blogsWithTagBuilder.select(entityBlogTags.createColumnExpression("blogId"));
+    blogsWithTagBuilder.from(entityBlogTags.createTable());
     blogsWithTagBuilder.where(Conditions.eq(
-        TABLE_BLOG_TAGS.forAliasColumn("tag_id"),
+        entityBlogTags.createColumnExpression("tagId"),
         tagBuilder.toInnerSelectExpr()));
 
     SelectClauseBuilder builder = new SelectClauseBuilder();
-    builder.select(TABLE_BLOG.forAliasAsteriskSel(),
-        TABLE_USER.forAliasAsteriskSel(),
+    builder.select(entityBlog.createAsteriskSelection(),
+        entityUser.createAsteriskSelection(),
         commentCountBuilder.toInnerSelectSelection());
     builder.fromJoin(
-        TABLE_BLOG.forAka(),
-        TABLE_USER.forAka(),
-        Conditions.eq(TABLE_BLOG.forAliasColumn("user_id"),
-            TABLE_USER.forAliasColumn("id")));
-    builder.where(Conditions.in(TABLE_BLOG.forAliasColumn("id"),
+        entityBlog.createTable(),
+        entityUser.createTable(),
+        Conditions.eq(entityBlog.createColumnExpression("userId"),
+            entityUser.createColumnExpression("id")));
+    builder.where(Conditions.in(entityBlog.createColumnExpression("id"),
         blogsWithTagBuilder.toInnerSelectExpr()));
-    builder.addOrderBy(TABLE_BLOG.forAliasColumn("date_created"), false);
+    builder.addOrderBy(entityBlog.createColumnExpression("dateCreated"), false);
     builder.limit(10, 0);
-    System.out.println(builder.toSelectClause());
+    System.out.println(builder.toSelectClause().toFormatted());
   }
 
   @Test
   public void testUpdateBlog() {
     // UPDATE blog b set title = ?, ...
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
-    builder.update(TABLE_BLOG.getName(), TABLE_BLOG.getAlias());
+    builder.update(entityBlog.createTable());
     builder.set("title", "foo");
     builder.set("content", "bar");
-    builder.where(Conditions.eq(TABLE_BLOG.forAliasColumn("id"),
+    builder.where(Conditions.eq(entityBlog.createColumnExpression("id"),
         Values.create(1l)));
-    System.out.println(builder.toUpdateClause());
+    System.out.println(builder.toUpdateClause().toFormatted());
   }
 
   @Test
   public void testDeleteBlogDeleteBlog() {
     // DELETE FROM blog WHERE id = ?
     DeleteClauseBuilder builder = new DeleteClauseBuilder();
-    builder.deleteFrom(TABLE_BLOG.getName());
-    builder.where(Conditions.eq(TABLE_BLOG.forColumn("id"), Values.create(1l)));
+    builder.deleteFrom(entityBlog.createTable(false));
+    builder.where(Conditions.eq(entityBlog.createColumnExpression("id", false),
+        Values.create(1l)));
     System.out.println(builder.toDeleteClause());
   }
 
@@ -270,8 +278,9 @@ public class BlogApp {
   public void testDeleteBlogTags() {
     // DELETE FROM blog_tags WHERE blog_id = ?
     DeleteClauseBuilder builder = new DeleteClauseBuilder();
-    builder.deleteFrom(TABLE_BLOG_TAGS.getName());
-    builder.where(Conditions.eq(TABLE_BLOG_TAGS.forColumn("blog_id"),
+    builder.deleteFrom(entityBlogTags.createTable(false));
+    builder.where(Conditions.eq(
+        entityBlogTags.createColumnExpression("blogId", false),
         Values.create(1l)));
     System.out.println(builder.toDeleteClause());
   }
@@ -280,10 +289,11 @@ public class BlogApp {
   public void testDeleteBlogComments() {
     // DELETE FROM comment WHERE blog_id = ?
     DeleteClauseBuilder builder = new DeleteClauseBuilder();
-    builder.deleteFrom(TABLE_COMMENT.getName());
-    builder.where(Conditions.eq(TABLE_COMMENT.forColumn("blog_id"),
+    builder.deleteFrom(entityComment.createTable(false));
+    builder.where(Conditions.eq(
+        entityComment.createColumnExpression("blogId", false),
         Values.create(1l)));
-    System.out.println(builder.toDeleteClause());
+    System.out.println(builder.toDeleteClause().toFormatted());
   }
 
 }

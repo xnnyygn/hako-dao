@@ -23,6 +23,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.hako.dao.sql.clause.select.selection.MultipleSelectionBuilder;
 import org.hako.dao.sql.clause.select.selection.Selection;
+import org.hako.dao.sql.clause.select.selection.TableAliasAsteriskSelection;
 import org.hako.dao.sql.clause.select.table.Table;
 import org.hako.dao.sql.clause.select.table.Tables;
 import org.hako.dao.sql.expression.ColumnName;
@@ -95,6 +96,27 @@ public class EntityMeta {
   }
 
   /**
+   * Create table alias asterisk selection. e.g {@code b.*}.
+   * 
+   * @return table alias asterisk selection
+   * @see TableAliasAsteriskSelection
+   */
+  public Selection createAsteriskSelection() {
+    return new TableAliasAsteriskSelection(name.getAlias());
+  }
+
+  /**
+   * Create column expression with table alias.
+   * 
+   * @param propertyName
+   * @return expression
+   * @see #createColumnExpression(String, boolean)
+   */
+  public Expression createColumnExpression(String propertyName) {
+    return createColumnExpression(propertyName, true);
+  }
+
+  /**
    * Create column expression.
    * 
    * @param propertyName
@@ -109,7 +131,7 @@ public class EntityMeta {
       }
     }
     throw new IllegalArgumentException("no such property [" + propertyName
-        + "]");
+        + "] in entity [" + name.getTableName() + "]");
   }
 
   /**
