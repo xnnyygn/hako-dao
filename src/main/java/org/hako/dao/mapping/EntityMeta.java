@@ -178,8 +178,8 @@ public class EntityMeta {
             createColumnExpression(pkFields.get(0), withAlias),
             Values.create(id));
       default:
-        return createComplexPkCondition(ObjectUtils.getProperties(id), withAlias,
-            pkFields);
+        return createComplexPkCondition(ObjectUtils.getProperties(id),
+            withAlias, pkFields);
     }
   }
 

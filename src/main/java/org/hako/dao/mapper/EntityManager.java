@@ -171,7 +171,6 @@ public class EntityManager<T, PK> {
   public int update(Map<String, Object> props) {
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
     builder.update(entityMeta.createTable());
-    // TODO not primary key fields
     for (FieldMeta f : entityMeta.getFields()) {
       String key = f.getPropertyName();
       if (props.containsKey(key)) {
