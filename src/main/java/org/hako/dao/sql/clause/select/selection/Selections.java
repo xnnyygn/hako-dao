@@ -33,7 +33,7 @@ public class Selections {
    * @return single or multiple selections
    * @throws IllegalArgumentException if selections is empty
    */
-  public static Selection create(List<Selection> selections)
+  public static Selection from(List<Selection> selections)
       throws IllegalArgumentException {
     switch (selections.size()) {
       case 0:

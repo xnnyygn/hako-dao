@@ -91,7 +91,7 @@ public class SelectClauseBuilder {
    * @return this
    */
   public SelectClauseBuilder select(List<Selection> selections) {
-    bean.setSelectionOpt(new Some<Selection>(Selections.create(selections)));
+    bean.setSelectionOpt(new Some<Selection>(Selections.from(selections)));
     return this;
   }
 

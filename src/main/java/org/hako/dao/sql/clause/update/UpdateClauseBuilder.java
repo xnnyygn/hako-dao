@@ -27,7 +27,7 @@ import org.hako.dao.sql.clause.select.table.Table;
 import org.hako.dao.sql.clause.select.table.Tables;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.condition.Condition;
-import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
+import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.value.Values;
 
 /**
@@ -161,9 +161,8 @@ public class UpdateClauseBuilder {
    * @return this
    */
   public UpdateClauseBuilder where(Condition... conditions) {
-    // TODO refactor me
     whereCondOpt =
-        new Some<Condition>(new MultipleAndCondition(Arrays.asList(conditions)));
+        new Some<Condition>(Conditions.from(Arrays.asList(conditions)));
     return this;
   }
 

@@ -19,6 +19,8 @@ import static org.hako.dao.sql.expression.condition.compare.CompareSymbol.EQUAL;
 import static org.hako.dao.sql.expression.condition.compare.CompareSymbol.GREATER_THAN;
 import static org.hako.dao.sql.expression.condition.compare.CompareSymbol.NOT_EQUAL;
 
+import java.util.List;
+
 import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.expression.Expression;
 import org.hako.dao.sql.expression.InnerSelectExpression;
@@ -28,6 +30,7 @@ import org.hako.dao.sql.expression.condition.compare.CompareSymbol;
 import org.hako.dao.sql.expression.condition.compare.InCondition;
 import org.hako.dao.sql.expression.condition.compare.LikeCondition;
 import org.hako.dao.sql.expression.condition.logic.AndCondition;
+import org.hako.dao.sql.expression.condition.logic.MultipleAndCondition;
 import org.hako.dao.sql.expression.condition.logic.OrCondition;
 
 /**
@@ -148,6 +151,23 @@ public class Conditions {
    */
   public static LikeCondition like(Expression left, Expression right) {
     return new LikeCondition(left, right);
+  }
+
+  /**
+   * Create single condition or multiple conditions from conditions.
+   * 
+   * @param conditions
+   * @return single condition or multiple conditions
+   */
+  public static Condition from(List<Condition> conditions) {
+    switch (conditions.size()) {
+      case 0:
+        throw new IllegalArgumentException("no condition");
+      case 1:
+        return conditions.get(0);
+      default:
+        return new MultipleAndCondition(conditions);
+    }
   }
 
 }
