@@ -13,47 +13,47 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper;
+package org.hako.util.object;
 
 import java.sql.Timestamp;
 
-import org.hako.dao.H2MemDbClientFlyweight;
-import org.hako.dao.mapper.EntityManager;
+import org.hako.dao.mapper.Blog;
+import org.hako.util.object.ObjectUtils;
 import org.junit.Test;
 
 /**
- * Test of {@link EntityManager}, save, update and delete.
+ * Test of {@link ObjectUtils}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class EntityManagerDmlTest {
+public class ObjectUtilsTest {
 
-  private EntityManager<Blog, Long> manager = new EntityManager<Blog, Long>(
-      H2MemDbClientFlyweight.get(), Blog.class);
+  /**
+   * Test method for
+   * {@link org.hako.util.object.ObjectUtils#getProperties(java.lang.Object)}.
+   */
+  @Test
+  public void testGetProperties() {
+    Blog b = new Blog();
+    b.id = 1l;
+    b.title = "foo";
+    b.content = "bar";
+    b.dateCreated = new Timestamp(System.currentTimeMillis());
+    b.userId = 1l;
+    System.out.println(ObjectUtils.getProperties(b));
+  }
 
   @Test
-  public void testSave() {
+  public void testGetPropertiesAllowNull() throws Exception {
     Blog b = new Blog();
+    b.id = 1l;
     b.title = "foo";
     b.content = "bar";
     b.userId = 1l;
-    b.dateCreated = new Timestamp(System.currentTimeMillis());
-    manager.save(b);
+    // dateCreated must be null
+    System.out.println(ObjectUtils.getProperties(b));
   }
 
-  @Test
-  public void testUpdate() {
-    Blog instance = new Blog();
-    instance.id = 1l;
-    instance.title = "FIRST2";
-    manager.update(instance);
-  }
-  
-  @Test
-  public void testDelete(){
-     manager.delete(2l);
-  }
-  
 }

@@ -33,7 +33,7 @@ import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.condition.MultipleConditionBuilder;
 import org.hako.dao.sql.expression.value.Values;
-import org.hako.util.BeanUtils;
+import org.hako.util.object.ObjectUtils;
 
 /**
  * Entity meta.
@@ -178,7 +178,7 @@ public class EntityMeta {
             createColumnExpression(pkFields.get(0), withAlias),
             Values.create(id));
       default:
-        return createComplexPkCondition(BeanUtils.getProperties(id), withAlias,
+        return createComplexPkCondition(ObjectUtils.getProperties(id), withAlias,
             pkFields);
     }
   }

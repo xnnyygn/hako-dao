@@ -32,7 +32,7 @@ import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.function.Functions;
 import org.hako.dao.sql.expression.value.Values;
-import org.hako.util.BeanUtils;
+import org.hako.util.object.ObjectUtils;
 
 /**
  * Entity manager.
@@ -135,7 +135,7 @@ public class EntityManager<T, PK> {
    * @return count of updated record
    */
   public int save(T bean) {
-    return save(BeanUtils.getProperties(bean));
+    return save(ObjectUtils.getProperties(bean));
   }
 
   /**
@@ -165,7 +165,7 @@ public class EntityManager<T, PK> {
    * @return count of updated entity, usually be {@code 1}
    */
   public int update(T instance) {
-    return update(BeanUtils.getProperties(instance));
+    return update(ObjectUtils.getProperties(instance));
   }
 
   public int update(Map<String, Object> props) {
