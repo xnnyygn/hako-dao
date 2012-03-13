@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.hako.Option;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.clause.AbstractClause;
 import org.hako.dao.sql.util.GetParamsUtils;
 
@@ -48,13 +49,13 @@ public class SelectClause extends AbstractClause {
   }
 
   public String toPrepared() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("SELECT ").append(bean.getSelection().toPrepared());
-    builder.append(" FROM ").append(bean.getTable().toPrepared());
-    appendOptionToPrepared(" WHERE ", bean.getWhereCondOpt(), builder);
-    appendOptionToPrepared(" GROUP BY ", bean.getGroupByOpt(), builder);
-    appendOptionToPrepared(" HAVING ", bean.getHavingOpt(), builder);
-    appendOptionToPrepared(" ORDER BY ", bean.getOrderByOpt(), builder);
+    ToPreparedBuilder builder = new ToPreparedBuilder();
+    builder.append("SELECT ").append(bean.getSelection());
+    builder.append(" FROM ").append(bean.getTable());
+    builder.append(" WHERE ", bean.getWhereCondOpt());
+    builder.append(" GROUP BY ", bean.getGroupByOpt());
+    builder.append(" HAVING ").append(bean.getHavingOpt());
+    builder.append(" ORDER BY ").append(bean.getOrderByOpt());
     return builder.toString();
   }
 

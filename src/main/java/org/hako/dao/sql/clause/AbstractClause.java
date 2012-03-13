@@ -15,10 +15,8 @@
  */
 package org.hako.dao.sql.clause;
 
-import org.hako.Option;
 import org.hako.dao.sql.AbstractSql;
 import org.hako.dao.sql.Clause;
-import org.hako.dao.sql.Sql;
 
 /**
  * Abstract clause.
@@ -30,42 +28,10 @@ import org.hako.dao.sql.Sql;
 public abstract class AbstractClause extends AbstractSql implements Clause {
 
   /**
-   * Invoke {@link Sql#toPrepared()} on SQL option with prefix, or just return
-   * empty string.
-   * 
-   * @param prefix
-   * @param objOpt object option
-   * @return {@code prefix + objOpt.get().toPrepared()} or {@code ""}
-   */
-  protected String optionToPrepared(String prefix, Option<?> objOpt) {
-    if (objOpt.hasValue()) {
-      Object obj = objOpt.get();
-      if (obj instanceof Sql) {
-        return prefix + ((Sql) obj).toPrepared();
-      }
-      // TODO separated for not SQL
-      return prefix + obj;
-    }
-    return "";
-  }
-
-  /**
-   * Append prepared SQL of option or do nothing.
-   * 
-   * @param prefix
-   * @param objOpt object option
-   * @param builder
-   * @see #optionToPrepared(String, Option)
-   */
-  protected void appendOptionToPrepared(String prefix, Option<?> objOpt,
-      StringBuilder builder) {
-    builder.append(optionToPrepared(prefix, objOpt));
-  }
-
-  /**
    * Generate <code>SQL=this.toPrepared(), Parameters=this.getParams()</code>.
    */
   public String toString() {
     return "SQL=" + toPrepared() + ", Parameters=" + getParams();
   }
+  
 }
