@@ -23,13 +23,13 @@ import org.hako.dao.sql.Clause;
 import org.hako.dao.sql.clause.select.SelectClause;
 
 /**
- * A database client provide simple sharing feature.
+ * A database client provide simple sharding feature.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class SimpleSharingDbClient extends DefaultDbClient {
+public class ShardingDbClient extends DefaultDbClient {
 
   /**
    * Create.
@@ -37,7 +37,7 @@ public class SimpleSharingDbClient extends DefaultDbClient {
    * @param connector
    * @param printSql
    */
-  public SimpleSharingDbClient(DbVendor connector, boolean printSql) {
+  public ShardingDbClient(DbVendor connector, boolean printSql) {
     super(connector, printSql);
   }
 
