@@ -16,7 +16,9 @@
 package org.hako.dao.sql;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hako.dao.sql.walker.PreparedSqlFactory;
 import org.hako.dao.sql.walker.SqlFormatter;
@@ -34,6 +36,11 @@ public interface Sql {
    * No parameter.
    */
   public static final List<Object> NO_PARAM = new ArrayList<Object>(0);
+  /**
+   * NO named parameters.
+   */
+  public static final Map<String, Object> NO_NAMED_PARAM =
+      new HashMap<String, Object>();
   /**
    * Margin used in format SQL.
    */
@@ -85,5 +92,12 @@ public interface Sql {
    * @return parameters
    */
   public List<Object> getParams();
+
+  /**
+   * Get named parameters.
+   * 
+   * @return named parameters
+   */
+  public Map<String, Object> getNamedParams();
 
 }

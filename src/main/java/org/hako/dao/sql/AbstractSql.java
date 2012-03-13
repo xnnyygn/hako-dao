@@ -15,6 +15,8 @@
  */
 package org.hako.dao.sql;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hako.dao.sql.builder.ToFormattedBuilder;
@@ -63,4 +65,9 @@ public abstract class AbstractSql implements Sql {
     return formatter.format(this);
   }
 
+  public Map<String, Object> getNamedParams() {
+    // TODO implement me
+    throw new UnsupportedOperationException();
+  }
+  
 }
