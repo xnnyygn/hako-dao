@@ -54,8 +54,8 @@ public class SelectClause extends AbstractClause {
     builder.append(" FROM ").append(bean.getTable());
     builder.append(" WHERE ", bean.getWhereCondOpt());
     builder.append(" GROUP BY ", bean.getGroupByOpt());
-    builder.append(" HAVING ").append(bean.getHavingOpt());
-    builder.append(" ORDER BY ").append(bean.getOrderByOpt());
+    builder.append(" HAVING ", bean.getHavingOpt());
+    builder.append(" ORDER BY ", bean.getOrderByOpt());
     return builder.toString();
   }
 

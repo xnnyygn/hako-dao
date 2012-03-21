@@ -13,24 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper;
+package org.hako.dao.demo.blog.domain;
 
 import java.sql.Timestamp;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 import org.hako.dao.mapper.Entity;
 import org.hako.dao.mapper.Field;
 import org.hako.dao.mapper.Id;
 
 /**
- * Entity blog.
+ * Domain blog.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-@Entity(tableName = "blog", tableAlias = "b")
+@Entity(tableAlias = "b")
 public class Blog {
 
   private Long id;
@@ -38,11 +36,11 @@ public class Blog {
   private String content;
   private Timestamp dateCreated;
   private Long userId;
-  
+
   /**
-   * Get id.
+   * Getter method for property <tt>id</tt>.
    * 
-   * @return the id
+   * @return property value of id
    */
   @Id
   @Field
@@ -51,18 +49,18 @@ public class Blog {
   }
 
   /**
-   * Set id.
+   * Setter method for property <tt>id</tt>.
    * 
-   * @param id the id to set
+   * @param id value to be assigned to property id
    */
   public void setId(Long id) {
     this.id = id;
   }
 
   /**
-   * Get title.
+   * Getter method for property <tt>title</tt>.
    * 
-   * @return the title
+   * @return property value of title
    */
   @Field
   public String getTitle() {
@@ -70,18 +68,18 @@ public class Blog {
   }
 
   /**
-   * Set title.
+   * Setter method for property <tt>title</tt>.
    * 
-   * @param title the title to set
+   * @param title value to be assigned to property title
    */
   public void setTitle(String title) {
     this.title = title;
   }
 
   /**
-   * Get content.
+   * Getter method for property <tt>content</tt>.
    * 
-   * @return the content
+   * @return property value of content
    */
   @Field
   public String getContent() {
@@ -89,18 +87,18 @@ public class Blog {
   }
 
   /**
-   * Set content.
+   * Setter method for property <tt>content</tt>.
    * 
-   * @param content the content to set
+   * @param content value to be assigned to property content
    */
   public void setContent(String content) {
     this.content = content;
   }
 
   /**
-   * Get create date.
+   * Getter method for property <tt>dateCreated</tt>.
    * 
-   * @return the dateCreated
+   * @return property value of dateCreated
    */
   @Field
   public Timestamp getDateCreated() {
@@ -108,18 +106,18 @@ public class Blog {
   }
 
   /**
-   * Set create date.
+   * Setter method for property <tt>dateCreated</tt>.
    * 
-   * @param dateCreated the dateCreated to set
+   * @param dateCreated value to be assigned to property dateCreated
    */
   public void setDateCreated(Timestamp dateCreated) {
     this.dateCreated = dateCreated;
   }
 
   /**
-   * Get user id.
+   * Getter method for property <tt>userId</tt>.
    * 
-   * @return the userId
+   * @return property value of userId
    */
   @Field
   public Long getUserId() {
@@ -127,17 +125,12 @@ public class Blog {
   }
 
   /**
-   * Set user id.
+   * Setter method for property <tt>userId</tt>.
    * 
-   * @param userId the userId to set
+   * @param userId value to be assigned to property userId
    */
   public void setUserId(Long userId) {
     this.userId = userId;
   }
 
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this,
-        ToStringStyle.MULTI_LINE_STYLE);
-  }
-  
 }

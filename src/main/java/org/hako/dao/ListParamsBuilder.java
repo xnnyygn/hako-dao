@@ -93,6 +93,6 @@ public class ListParamsBuilder {
    * @see ListParams#ListParams(int, int, List)
    */
   public ListParams toListParams() {
-    return new ListParams(max, offset, sortBys);
+    return new ListParams(offset, max, sortBys);
   }
 }

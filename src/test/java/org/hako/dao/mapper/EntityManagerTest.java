@@ -67,7 +67,7 @@ public class EntityManagerTest {
 
   @Test
   public void testList() {
-    assertEquals(2, manager.list(new ListParams(10, 1, "dateCreated", false))
+    assertEquals(2, manager.list(new ListParams(1, 10, "dateCreated", false))
         .size());
   }
 
@@ -75,7 +75,7 @@ public class EntityManagerTest {
   public void testListBy() {
     assertEquals(
         2,
-        manager.listBy(new ListParams(10, 0, "dateCreated", false),
+        manager.listBy(new ListParams(0, 10, "dateCreated", false),
             Restrictions.eq("userId", 1l)).size());
   }
 

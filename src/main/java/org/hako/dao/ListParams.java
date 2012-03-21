@@ -96,39 +96,39 @@ public class ListParams {
    * @param max
    */
   public ListParams(int max) {
-    this(max, 0);
+    this(0, max);
   }
 
   /**
    * Create with no order by columns.
    * 
-   * @param max
    * @param offset
+   * @param max
    */
-  public ListParams(int max, int offset) {
-    this(max, offset, new ArrayList<SortBy>());
+  public ListParams(int offset, int max) {
+    this(offset, max, new ArrayList<SortBy>());
   }
 
   /**
    * Create.
    * 
-   * @param max
    * @param offset
+   * @param max
    * @param name column name or alias
    * @param asc
    */
-  public ListParams(int max, int offset, String name, boolean asc) {
-    this(max, offset, Arrays.asList(new SortBy(name, asc)));
+  public ListParams(int offset, int max, String name, boolean asc) {
+    this(offset, max, Arrays.asList(new SortBy(name, asc)));
   }
 
   /**
    * Create.
    * 
-   * @param max
    * @param offset
+   * @param max
    * @param sortBys
    */
-  public ListParams(int max, int offset, List<SortBy> sortBys) {
+  public ListParams(int offset, int max, List<SortBy> sortBys) {
     super();
     this.max = max;
     this.offset = offset;

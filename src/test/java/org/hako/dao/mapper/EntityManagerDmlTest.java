@@ -36,18 +36,18 @@ public class EntityManagerDmlTest {
   @Test
   public void testSave() {
     Blog b = new Blog();
-    b.title = "foo";
-    b.content = "bar";
-    b.userId = 1l;
-    b.dateCreated = new Timestamp(System.currentTimeMillis());
+    b.setTitle("foo");
+    b.setContent("bar");
+    b.setUserId(1l);
+    b.setDateCreated(new Timestamp(System.currentTimeMillis()));
     manager.save(b);
   }
 
   @Test
   public void testUpdate() {
     Blog instance = new Blog();
-    instance.id = 1l;
-    instance.title = "FIRST2";
+    instance.setId(1l);
+    instance.setTitle("FIRST2");
     manager.update(instance);
   }
   

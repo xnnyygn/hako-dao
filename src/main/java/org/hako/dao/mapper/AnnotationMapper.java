@@ -15,10 +15,13 @@
  */
 package org.hako.dao.mapper;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hako.dao.mapping.EntityMeta;
 import org.hako.dao.mapping.EntityName;
 import org.hako.dao.mapping.FieldMeta;
@@ -31,6 +34,8 @@ import org.hako.dao.mapping.FieldMeta;
  * @since 1.1.0
  */
 public class AnnotationMapper {
+
+  private static final Log logger = LogFactory.getLog(AnnotationMapper.class);
 
   public EntityMeta setUp(Class<?> clazz) {
     if (!clazz.isAnnotationPresent(Entity.class)) {
@@ -45,6 +50,24 @@ public class AnnotationMapper {
     EntityName entityName = new EntityName(tableName, alias);
     // setup fields
     List<FieldMeta> fields = new ArrayList<FieldMeta>();
+    // TODO REFACTOR ME
+    for (Method method : clazz.getMethods()) {
+      String methodName = method.getName();
+      if (method.getParameterTypes().length == 0 && methodName.length() > 3
+          && methodName.startsWith("get")
+          && method.isAnnotationPresent(Field.class)) {
+        String propertyName = StringUtils.uncapitalize(methodName.substring(3));
+        String columnName =
+            StringUtils.defaultIfBlank(method.getAnnotation(Field.class)
+                .columnName(), toDashSeparated(propertyName));
+        if (logger.isDebugEnabled()) {
+          logger.debug("find field column name [" + columnName
+              + "] property name [" + propertyName + "] from getter");
+        }
+        fields.add(new FieldMeta(columnName, propertyName, method
+            .isAnnotationPresent(Id.class)));
+      }
+    }
     for (java.lang.reflect.Field f : clazz.getFields()) {
       if (f.isAnnotationPresent(Field.class)) {
         String propertyName = f.getName();
@@ -52,6 +75,10 @@ public class AnnotationMapper {
         String columnName =
             StringUtils.defaultIfBlank(fieldAnno.columnName(),
                 toDashSeparated(propertyName));
+        if (logger.isDebugEnabled()) {
+          logger.debug("find field column name [" + columnName
+              + "] property name [" + propertyName + "] from field");
+        }
         fields.add(new FieldMeta(columnName, propertyName, f
             .isAnnotationPresent(Id.class)));
       }

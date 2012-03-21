@@ -37,21 +37,21 @@ public class ObjectUtilsTest {
   @Test
   public void testGetProperties() {
     Blog b = new Blog();
-    b.id = 1l;
-    b.title = "foo";
-    b.content = "bar";
-    b.dateCreated = new Timestamp(System.currentTimeMillis());
-    b.userId = 1l;
+    b.setId(1l);
+    b.setTitle("foo");
+    b.setContent("bar");
+    b.setDateCreated(new Timestamp(System.currentTimeMillis()));
+    b.setUserId(1l);
     System.out.println(ObjectUtils.getProperties(b));
   }
 
   @Test
   public void testGetPropertiesAllowNull() throws Exception {
     Blog b = new Blog();
-    b.id = 1l;
-    b.title = "foo";
-    b.content = "bar";
-    b.userId = 1l;
+    b.setId(1l);
+    b.setTitle("foo");
+    b.setContent("bar");
+    b.setUserId(1l);
     // dateCreated must be null
     System.out.println(ObjectUtils.getProperties(b));
   }
