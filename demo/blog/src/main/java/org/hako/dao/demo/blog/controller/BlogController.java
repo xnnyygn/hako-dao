@@ -27,19 +27,24 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 /**
- * Controller for create blog.
+ * Controller for blog.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
 @Controller
-public class BlogCreateController {
+public class BlogController {
 
   private BlogService blogService;
 
+  @RequestMapping("/blog/list")
+  public ModelAndView list(HttpServletRequest request) {
+    return new ModelAndView("blog-list", "blogs", blogService.listRecent(0, 10));
+  }
+
   @RequestMapping("/blog/create")
-  public ModelAndView showForm() {
+  public ModelAndView create() {
     return new ModelAndView("blog-create");
   }
 
