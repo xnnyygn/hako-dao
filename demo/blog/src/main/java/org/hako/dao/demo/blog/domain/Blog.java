@@ -35,7 +35,6 @@ public class Blog {
   private String title;
   private String content;
   private Timestamp dateCreated;
-  private Long userId;
 
   /**
    * Getter method for property <tt>id</tt>.
@@ -112,25 +111,6 @@ public class Blog {
    */
   public void setDateCreated(Timestamp dateCreated) {
     this.dateCreated = dateCreated;
-  }
-
-  /**
-   * Getter method for property <tt>userId</tt>.
-   * 
-   * @return property value of userId
-   */
-  @Field
-  public Long getUserId() {
-    return userId;
-  }
-
-  /**
-   * Setter method for property <tt>userId</tt>.
-   * 
-   * @param userId value to be assigned to property userId
-   */
-  public void setUserId(Long userId) {
-    this.userId = userId;
   }
 
 }

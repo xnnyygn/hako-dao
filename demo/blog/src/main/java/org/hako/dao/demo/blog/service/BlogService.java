@@ -15,7 +15,10 @@
  */
 package org.hako.dao.demo.blog.service;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hako.dao.ListParams;
 import org.hako.dao.demo.blog.domain.Blog;
@@ -43,6 +46,19 @@ public class BlogService {
     return blogManager.list(new ListParams(offset, max, "dateCreated", false));
   }
 
+  /**
+   * Save blog.
+   * 
+   * @param title
+   * @param content
+   */
+  public void save(String title, String content) {
+    Map<String, Object> props = new HashMap<String, Object>();
+    props.put("title", title);
+    props.put("content", content);
+    props.put("dateCreated", new Timestamp(System.currentTimeMillis()));
+    blogManager.save(props);
+  }
 
   /**
    * Setter method for property <tt>blogManager</tt>.
