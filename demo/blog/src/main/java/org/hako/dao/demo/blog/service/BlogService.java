@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hako.None;
+import org.hako.Option;
+import org.hako.Some;
 import org.hako.dao.ListParams;
 import org.hako.dao.demo.blog.domain.Blog;
 
@@ -58,6 +61,31 @@ public class BlogService {
     props.put("content", content);
     props.put("dateCreated", new Timestamp(System.currentTimeMillis()));
     blogManager.save(props);
+  }
+
+
+  /**
+   * Get blog by id.
+   * 
+   * @param id
+   * @return some blog or none
+   */
+  public Option<Blog> get(String id) {
+    Option<Long> idOption = stringToLong(id);
+    if(idOption.hasValue()){
+      return blogManager.get(idOption.get());
+    }
+    return new None<Blog>();
+  }
+
+  // TODO javadoc
+  private Option<Long> stringToLong(String string) {
+    try {
+      return new Some<Long>(Long.valueOf(string));
+    } catch (NumberFormatException e) {
+      // omit error
+    }
+    return new None<Long>();
   }
 
   /**

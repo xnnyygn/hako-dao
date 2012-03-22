@@ -5,19 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Blog List</title>
+        <title>Create Blog</title>
+        <style type="text/css">
+            textarea, input{width: 600px;}
+            textarea{height: 500px;}
+        </style>
     </head>
     <body>
-        <a href="${ctx}/blog/create.htm">Create Blog</a>
-        <c:forEach items="${blogs}" var="blog">
-            <div class="blog">
-                <h2>
-                    <a href="${ctx}/blog/show.htm?id=${blog.id}">
-                        <c:out value="${blog.title}" />
-                    </a>
-                </h2>
-                <p><c:out value="${blog.content}" /></p>
-            </div>
-        </c:forEach>
+        <h1><c:out value="${blog.title}" /></h1>
+        <p><c:out value="${blog.content}" /></p>
     </body>
 </html>

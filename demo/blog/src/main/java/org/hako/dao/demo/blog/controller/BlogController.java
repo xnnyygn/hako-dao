@@ -18,6 +18,8 @@ package org.hako.dao.demo.blog.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.hako.Option;
+import org.hako.dao.demo.blog.domain.Blog;
 import org.hako.dao.demo.blog.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,6 +60,17 @@ public class BlogController {
     }
     return new ModelAndView("blog-create");
   }
+
+  @RequestMapping("/blog/show")
+  public ModelAndView show(HttpServletRequest request) {
+    Option<Blog> blogOption = blogService.get(request.getParameter("id"));
+    if (blogOption.hasValue()) {
+      return new ModelAndView("blog-show", "blog", blogOption.get());
+    }
+    return new ModelAndView(new RedirectView("/blog/list.htm", true));
+  }
+
+
 
   /**
    * Setter method for property <tt>blogService</tt>.
