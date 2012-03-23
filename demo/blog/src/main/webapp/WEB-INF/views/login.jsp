@@ -7,15 +7,19 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Login</title>
         <style type="text/css">
+            .login-error{color: red;}
         </style>
     </head>
     <body>
+        <c:if test="${incorrect}">
+            <p class="login-error">Incorrect username or password.</p>
+        </c:if>
         <form action="${ctx}/handle_login.htm" method="post">
             <fieldset>
                 <legend>Login</legend>
                 <p>
 	                <label for="username">Username</label><br />
-	                <input type="text" name="username" required="required" value="${username}" />
+	                <input type="text" name="username" required="required" />
 	            </p>
 	            <p>
 	               <label for="password">Password</label><br />

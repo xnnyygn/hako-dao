@@ -52,7 +52,7 @@ public class LoginController {
     if (userOption.hasValue()) {
       return new ModelAndView(new RedirectView("/index.htm", true));
     }
-    return new ModelAndView("login", "username", username);
+    return new ModelAndView("login", "incorrect", Boolean.TRUE);
   }
 
   /**
