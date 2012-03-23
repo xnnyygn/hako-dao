@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hako.Option;
 import org.hako.dao.demo.blog.domain.User;
+import org.hako.dao.demo.blog.filter.SecurityFilter;
 import org.hako.dao.demo.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,6 +51,8 @@ public class LoginController {
     Option<User> userOption =
         userService.findByNameAndPassword(username, password);
     if (userOption.hasValue()) {
+      request.getSession().setAttribute(SecurityFilter.KEY_USER,
+          userOption.get());
       return new ModelAndView(new RedirectView("/index.htm", true));
     }
     return new ModelAndView("login", "incorrect", Boolean.TRUE);
