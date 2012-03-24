@@ -34,19 +34,35 @@ public class ObjectUtils {
   private static final Log logger = LogFactory.getLog(ObjectUtils.class);
 
   /**
+   * Get properties from bean, including {@code null} value.
+   * 
+   * @param object
+   * @return properties
+   * @see #getProperties(Object, boolean)
+   */
+  public static Map<String, Object> getProperties(Object object) {
+    return getProperties(object, false);
+  }
+
+  /**
    * Get properties from bean.
    * 
    * @param object bean, may be {@code null}
+   * @param emitNull should filter null value ?
    * @return properties, if bean is null, just return a empty map
    */
-  public static Map<String, Object> getProperties(Object object) {
+  public static Map<String, Object> getProperties(Object object,
+      boolean emitNull) {
     Map<String, Object> properties = new HashMap<String, Object>();
     if (object != null) {
       List<Getter> getters = Getters.list(object.getClass());
       boolean debugEnabled = logger.isDebugEnabled();
       for (Getter getter : getters) {
         try {
-          properties.put(getter.getPropertyName(), getter.from(object));
+          Object value = getter.from(object);
+          if (!emitNull || value != null) {
+            properties.put(getter.getPropertyName(), value);
+          }
         } catch (Exception e) {
           // omit
           if (debugEnabled) {

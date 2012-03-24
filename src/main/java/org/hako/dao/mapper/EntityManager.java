@@ -163,11 +163,29 @@ public class EntityManager<T, PK> {
    * 
    * @param instance
    * @return count of updated entity, usually be {@code 1}
+   * @see #update(Object, boolean)
    */
   public int update(T instance) {
-    return update(ObjectUtils.getProperties(instance));
+    return update(instance, false);
   }
 
+  /**
+   * Update instance.
+   * 
+   * @param instance
+   * @param emitNull should emit null property from instance
+   * @return count of updated entity
+   */
+  public int update(T instance, boolean emitNull) {
+    return update(ObjectUtils.getProperties(instance, emitNull));
+  }
+
+  /**
+   * Update with properties.
+   * 
+   * @param props entity properties
+   * @return count of updated entity
+   */
   public int update(Map<String, Object> props) {
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
     builder.update(entityMeta.createTable());

@@ -18,7 +18,6 @@ package org.hako.dao.mapper;
 import java.sql.Timestamp;
 
 import org.hako.dao.H2MemDbClientFlyweight;
-import org.hako.dao.mapper.EntityManager;
 import org.junit.Test;
 
 /**
@@ -48,12 +47,12 @@ public class EntityManagerDmlTest {
     Blog instance = new Blog();
     instance.setId(1l);
     instance.setTitle("FIRST2");
-    manager.update(instance);
+    manager.update(instance, true);
   }
-  
+
   @Test
-  public void testDelete(){
-     manager.delete(2l);
+  public void testDelete() {
+    manager.delete(2l);
   }
-  
+
 }
