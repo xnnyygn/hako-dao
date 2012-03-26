@@ -35,6 +35,7 @@ import org.hako.Some;
  * @version %I%, %G%
  * @since 1.1.0
  */
+// TODO rename to bean factory
 public class EntityFactory<T> {
 
   private static final Log logger = LogFactory.getLog(EntityFactory.class);
