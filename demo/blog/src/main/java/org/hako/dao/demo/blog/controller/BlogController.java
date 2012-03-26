@@ -15,11 +15,16 @@
  */
 package org.hako.dao.demo.blog.controller;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.hako.None;
 import org.hako.Option;
-import org.hako.dao.demo.blog.domain.Blog;
+import org.hako.Some;
 import org.hako.dao.demo.blog.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -63,14 +68,42 @@ public class BlogController {
 
   @RequestMapping("/blog/show")
   public ModelAndView show(HttpServletRequest request) {
-    Option<Blog> blogOption = blogService.get(request.getParameter("id"));
-    if (blogOption.hasValue()) {
-      return new ModelAndView("blog-show", "blog", blogOption.get());
+    Option<Long> idOption = getLongParam(request, "id");
+    if (idOption.hasValue()) {
+      Option<Map<String, Object>> blogOption =
+          blogService.getForShow(idOption.get());
+      if (blogOption.hasValue()) {
+        return new ModelAndView("blog-show", "blog", blogOption.get());
+      }
     }
     return new ModelAndView(new RedirectView("/blog/list.htm", true));
   }
 
+  @RequestMapping(value = "/blog/save_comment", method = RequestMethod.POST)
+  public ModelAndView saveComment(HttpServletRequest request) {
+    Option<Long> blogIdOption = getLongParam(request, "blogId");
+    String content = request.getParameter("content");
+    String username = request.getParameter("username");
+    if (blogIdOption.hasValue() && isNotBlank(content) && isNotBlank(username)) {
+      Long blogId = blogIdOption.get();
+      blogService.saveComment(content, username, blogId);
+      return new ModelAndView(new RedirectView("/blog/show.htm?id=" + blogId,
+          true));
+    }
+    return new ModelAndView(new RedirectView("/blog/list.htm", true));
+  }
 
+  private Option<Long> getLongParam(HttpServletRequest request, String name) {
+    String value = request.getParameter(name);
+    if (value != null) {
+      try {
+        return new Some<Long>(Long.valueOf(value));
+      } catch (NumberFormatException e) {
+        // omit format exception
+      }
+    }
+    return new None<Long>();
+  }
 
   /**
    * Setter method for property <tt>blogService</tt>.

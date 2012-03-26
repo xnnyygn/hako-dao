@@ -41,6 +41,7 @@ import org.hako.util.object.ObjectUtils;
  * @version %I%, %G%
  * @since 1.1.0
  */
+// TODO add entity meta manager
 public class EntityManager<T, PK> {
 
   private final DbClient client;
@@ -243,6 +244,15 @@ public class EntityManager<T, PK> {
     builder.deleteFrom(entityMeta.createTable(false));
     builder.where(entityMeta.createPkCondition(id, false));
     return client.delete(builder.toDeleteClause());
+  }
+
+  /**
+   * Get entity meta.
+   * 
+   * @return the entityMeta
+   */
+  public EntityMeta getEntityMeta() {
+    return entityMeta;
   }
 
 }

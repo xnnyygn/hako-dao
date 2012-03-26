@@ -18,6 +18,8 @@ package org.hako.dao.demo.blog.service;
 import org.hako.Option;
 import org.hako.dao.demo.blog.domain.User;
 import org.hako.dao.restriction.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Service for user.
@@ -26,6 +28,7 @@ import org.hako.dao.restriction.Restrictions;
  * @version %I%, %G%
  * @since 1.1.0
  */
+@Service
 public class UserService {
 
   private UserManager userManager;
@@ -47,6 +50,7 @@ public class UserService {
    * 
    * @param userManager value to be assigned to property userManager
    */
+  @Autowired
   public void setUserManager(UserManager userManager) {
     this.userManager = userManager;
   }

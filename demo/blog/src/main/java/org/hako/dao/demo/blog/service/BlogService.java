@@ -25,6 +25,10 @@ import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.ListParams;
 import org.hako.dao.demo.blog.domain.Blog;
+import org.hako.dao.demo.blog.domain.Comment;
+import org.hako.dao.restriction.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Blog service.
@@ -33,10 +37,11 @@ import org.hako.dao.demo.blog.domain.Blog;
  * @version %I%, %G%
  * @since 1.1.0
  */
+@Service
 public class BlogService {
 
   private BlogManager blogManager;
-
+  private CommentManager commentManager;
 
   /**
    * List recent blogs.
@@ -70,22 +75,37 @@ public class BlogService {
    * @param id
    * @return some blog or none
    */
-  public Option<Blog> get(String id) {
-    Option<Long> idOption = stringToLong(id);
-    if(idOption.hasValue()){
-      return blogManager.get(idOption.get());
+  public Option<Map<String, Object>> getForShow(Long id) {
+    Option<Blog> blogOption = blogManager.get(id);
+    if (blogOption.hasValue()) {
+      Blog blog = blogOption.get();
+      Map<String, Object> blogProps = new HashMap<String, Object>();
+      blogProps.put("id", blog.getId());
+      blogProps.put("title", blog.getTitle());
+      blogProps.put("content", blog.getContent());
+      blogProps.put("dateCreated", blog.getDateCreated());
+      blogProps.put("comments", commentManager.listBy(new ListParams(
+          "dateCommented", false), Restrictions.eq("blogId", blog.getId())));
+      return new Some<Map<String, Object>>(blogProps);
     }
-    return new None<Blog>();
+    return new None<Map<String, Object>>();
   }
 
-  // TODO javadoc
-  private Option<Long> stringToLong(String string) {
-    try {
-      return new Some<Long>(Long.valueOf(string));
-    } catch (NumberFormatException e) {
-      // omit error
-    }
-    return new None<Long>();
+  /**
+   * Save comment.
+   * 
+   * @param content
+   * @param username
+   * @param blogId
+   * @see CommentManager#save(Comment)
+   */
+  public void saveComment(String content, String username, Long blogId) {
+    Comment comment = new Comment();
+    comment.setBlogId(blogId);
+    comment.setContent(content);
+    comment.setDateCommented(new Timestamp(System.currentTimeMillis()));
+    comment.setUsername(username);
+    commentManager.save(comment);
   }
 
   /**
@@ -93,8 +113,19 @@ public class BlogService {
    * 
    * @param blogManager value to be assigned to property blogManager
    */
+  @Autowired
   public void setBlogManager(BlogManager blogManager) {
     this.blogManager = blogManager;
+  }
+
+  /**
+   * Setter method for property <tt>commentManager</tt>.
+   * 
+   * @param commentManager value to be assigned to property commentManager
+   */
+  @Autowired
+  public void setCommentManager(CommentManager commentManager) {
+    this.commentManager = commentManager;
   }
 
 }

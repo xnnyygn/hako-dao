@@ -37,6 +37,16 @@ import org.hako.dao.sql.expression.ColumnName;
 public class ListParams {
 
   /**
+   * If you don't want to limit the result count, use this for max of list
+   * parameters. Value {@code -1}.
+   */
+  public static final int MAX_NO_LIMIT = -1;
+  /**
+   * Default offset {@code 0}.
+   */
+  public static final int OFFSET_DEFAULT = 0;
+
+  /**
    * Sort by.
    * 
    * @author xnnyygn
@@ -87,7 +97,7 @@ public class ListParams {
    * Default constructor, no row limit and offset.
    */
   public ListParams() {
-    this(-1, -1);
+    this(MAX_NO_LIMIT, OFFSET_DEFAULT);
   }
 
   /**
@@ -107,6 +117,16 @@ public class ListParams {
    */
   public ListParams(int offset, int max) {
     this(offset, max, new ArrayList<SortBy>());
+  }
+
+  /**
+   * Create with order but without limit.
+   * 
+   * @param name
+   * @param asc
+   */
+  public ListParams(String name, boolean asc) {
+    this(MAX_NO_LIMIT, OFFSET_DEFAULT, name, asc);
   }
 
   /**

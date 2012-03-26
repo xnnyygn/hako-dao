@@ -14,14 +14,18 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 
-	<bean id="dbVendor" class="org.hako.dao.db.vendor.DbcpVendor">
+	<bean id="dbVendor" class="org.hako.dao.db.vendor.SingletonConnectionDbVender">
 		<constructor-arg>
-			<map>
-				<entry key="driverClassName" value="org.h2.Driver" />
-				<entry key="url" value="jdbc:h2:mem:dev" />
-				<entry key="username" value="sa" />
-				<entry key="password" value="" />
-			</map>
+			<bean class="org.hako.dao.db.vendor.DbcpVendor">
+				<constructor-arg>
+					<map>
+						<entry key="driverClassName" value="org.h2.Driver" />
+						<entry key="url" value="jdbc:h2:mem:dev" />
+						<entry key="username" value="sa" />
+						<entry key="password" value="" />
+					</map>
+				</constructor-arg>
+			</bean>
 		</constructor-arg>
 	</bean>
 
@@ -35,20 +39,16 @@
 		<constructor-arg value="true" />
 	</bean>
 
-	<bean id="blogService" class="org.hako.dao.demo.blog.service.BlogService">
-		<property name="blogManager">
-			<bean class="org.hako.dao.demo.blog.service.BlogManager">
-				<constructor-arg ref="dbClient" />
-			</bean>
-		</property>
+	<bean id="blogManager" class="org.hako.dao.demo.blog.service.BlogManager">
+		<constructor-arg ref="dbClient" />
+	</bean>
+	<bean id="commentManager" class="org.hako.dao.demo.blog.service.CommentManager">
+		<constructor-arg ref="dbClient" />
+	</bean>
+	<bean id="userManager" class="org.hako.dao.demo.blog.service.UserManager">
+		<constructor-arg ref="dbClient" />
 	</bean>
 
-    <bean id="userService" class="org.hako.dao.demo.blog.service.UserService">
-        <property name="userManager">
-            <bean class="org.hako.dao.demo.blog.service.UserManager">
-                <constructor-arg ref="dbClient" />
-            </bean>
-        </property>
-    </bean>
-    
+	<context:component-scan base-package="org.hako.dao.demo.blog.service" />
+
 </beans>
