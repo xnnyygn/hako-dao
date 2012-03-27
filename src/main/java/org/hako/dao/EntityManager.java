@@ -25,11 +25,16 @@ import org.hako.Option;
 import org.hako.dao.db.client.DbClient;
 import org.hako.dao.mapper.EntityFactory;
 import org.hako.dao.mapping.EntityMeta;
+import org.hako.dao.mapping.FieldMeta;
 import org.hako.dao.restriction.Restriction;
+import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
+import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.function.Functions;
+import org.hako.dao.sql.expression.value.Values;
+import org.hako.util.object.ObjectUtils;
 
 /**
  * Entity manager.
@@ -149,6 +154,42 @@ public class EntityManager {
       conditions.add(restriction.toCondition(entityMeta, true));
     }
     return Conditions.from(conditions);
+  }
+
+  /**
+   * List instances of class by list parameters.
+   * 
+   * @param clazz
+   * @param params list parameters
+   * @return instances
+   * @see DbClient#selectMultipleRows(SelectClause)
+   */
+  public <T> List<T> list(Class<T> clazz, ListParams params) {
+    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+    SelectClauseBuilder builder = new SelectClauseBuilder();
+    builder.select(entityMeta.createSelectionOfAllFields());
+    builder.from(entityMeta.createTable());
+    builder.limit(params.getMax(), params.getOffset());
+    builder.addOrderBy(params.toMultipleOrderBy());
+    return getBeanFactory(clazz).create(
+        client.selectMultipleRows(builder.toSelectClause()));
+  }
+
+  // TODO return persisted entity
+  public void save(Object bean) {
+    Map<String, Object> properties = ObjectUtils.getProperties(bean);
+    EntityMeta entityMeta = getEntityMetaByClass(bean.getClass());
+    InsertClauseBuilder builder = new InsertClauseBuilder();
+    builder.insertInto(entityMeta.createTable(false));
+    for (FieldMeta field : entityMeta.getFields()) {
+      String name = field.getPropertyName();
+      if (properties.containsKey(name)) {
+        builder.add(field.getColumnName(), properties.get(name));
+      } else {
+        builder.add(field.getColumnName(), Values.NULL);
+      }
+    }
+    client.insert(builder.toInsertClause());
   }
 
 }

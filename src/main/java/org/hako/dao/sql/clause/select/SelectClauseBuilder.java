@@ -240,6 +240,7 @@ public class SelectClauseBuilder {
    * @param offset
    * @return this
    */
+  // TODO change to int offset int max
   public SelectClauseBuilder limit(int max, int offset) {
     bean.setLimitOpt(new Some<Limit>(new Limit(max, offset)));
     return this;

@@ -15,11 +15,13 @@
  */
 package org.hako.dao.sql.clause.select.selection;
 
+import org.hako.dao.sql.builder.ToFormattedBuilder;
+import org.hako.dao.sql.builder.ToPreparedBuilder;
 import org.hako.dao.sql.expression.Expression;
 
 /**
  * Expression aka selection.
- *
+ * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.0.0
@@ -41,7 +43,14 @@ public class ExpressionAkaSelection extends ExpressionSelection {
 
   @Override
   public String toPrepared() {
-    return super.toPrepared() + " AS " + alias;
+    return new ToPreparedBuilder(super.toPrepared()).append(" AS ")
+        .append(alias).toString();
+  }
+
+  @Override
+  public String toFormatted(int marginCount) {
+    return new ToFormattedBuilder(super.toFormatted(marginCount))
+        .append(" AS ").append(alias).toString();
   }
 
 }

@@ -15,6 +15,7 @@
  */
 package org.hako.dao;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
 import org.hako.dao.mapper.Blog;
@@ -59,6 +60,22 @@ public class EntityManagerTest {
   public void testFindBy() {
     System.out.println(entityManager.findBy(Blog.class,
         Restrictions.eq("id", 1l), Restrictions.eq("userId", 1l)));
+  }
+
+  @Test
+  public void testList() {
+    System.out.println(entityManager.list(Blog.class, new ListParams(
+        "dateCreated", false)));
+  }
+
+  @Test
+  public void testSave() {
+    Blog blog = new Blog();
+    blog.setTitle("foo");
+    blog.setContent("bar");
+    blog.setDateCreated(new Timestamp(System.currentTimeMillis()));
+    blog.setUserId(1l);
+    entityManager.save(blog);
   }
 
 }
