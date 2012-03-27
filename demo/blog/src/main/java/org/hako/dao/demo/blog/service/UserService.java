@@ -16,6 +16,7 @@
 package org.hako.dao.demo.blog.service;
 
 import org.hako.Option;
+import org.hako.dao.EntityManager;
 import org.hako.dao.demo.blog.domain.User;
 import org.hako.dao.restriction.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-  private UserManager userManager;
+  private EntityManager entityManager;
 
   /**
    * Find user by name and password.
@@ -41,18 +42,20 @@ public class UserService {
    * @return some user or none
    */
   public Option<User> findByNameAndPassword(String name, String password) {
-    return userManager.findBy(Restrictions.eq("name", name),
+    return entityManager.findBy(
+        User.class, 
+        Restrictions.eq("name", name),
         Restrictions.eq("password", password));
   }
 
   /**
-   * Setter method for property <tt>userManager</tt>.
+   * Setter method for property <tt>entityManager</tt>.
    * 
-   * @param userManager value to be assigned to property userManager
+   * @param entityManager value to be assigned to property entityManager
    */
   @Autowired
-  public void setUserManager(UserManager userManager) {
-    this.userManager = userManager;
+  public void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
 }

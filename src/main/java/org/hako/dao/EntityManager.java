@@ -27,8 +27,8 @@ import org.hako.dao.mapper.EntityFactory;
 import org.hako.dao.mapping.EntityMeta;
 import org.hako.dao.mapping.FieldMeta;
 import org.hako.dao.restriction.Restriction;
+import org.hako.dao.sql.clause.delete.DeleteClauseBuilder;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
-import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
 import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.condition.Condition;
@@ -179,23 +179,54 @@ public class EntityManager {
    * @param clazz
    * @param params list parameters
    * @return instances
-   * @see DbClient#selectMultipleRows(SelectClause)
+   * @see #listBy(Class, ListParams, Restriction...)
    */
   public <T> List<T> list(Class<T> clazz, ListParams params) {
+    return listBy(clazz, params);
+  }
+
+  /**
+   * List instance of class by list parameters and restrictions.
+   * 
+   * @param clazz
+   * @param params
+   * @param restrictions
+   * @return instances
+   */
+  public <T> List<T> listBy(Class<T> clazz, ListParams params,
+      Restriction... restrictions) {
     EntityMeta entityMeta = getEntityMetaByClass(clazz);
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(entityMeta.createSelectionOfAllFields());
     builder.from(entityMeta.createTable());
+    if (restrictions.length > 0) {
+      builder.where(createConditions(Arrays.asList(restrictions), entityMeta));
+    }
     builder.limit(params.getMax(), params.getOffset());
     builder.addOrderBy(params.toMultipleOrderBy());
     return getBeanFactory(clazz).create(
         client.selectMultipleRows(builder.toSelectClause()));
   }
 
-  // TODO return persisted entity
+  /**
+   * Save entity.
+   * 
+   * @param bean
+   * @see #save(Class, Map)
+   */
   public void save(Object bean) {
-    Map<String, Object> properties = ObjectUtils.getProperties(bean);
-    EntityMeta entityMeta = getEntityMetaByClass(bean.getClass());
+    // TODO return persisted entity
+    save(bean.getClass(), ObjectUtils.getProperties(bean));
+  }
+
+  /**
+   * Save entity of specified class with properties.
+   * 
+   * @param clazz
+   * @param properties
+   */
+  public void save(Class<?> clazz, Map<String, Object> properties) {
+    EntityMeta entityMeta = getEntityMetaByClass(clazz);
     InsertClauseBuilder builder = new InsertClauseBuilder();
     builder.insertInto(entityMeta.createTable(false));
     for (FieldMeta field : entityMeta.getFields()) {
@@ -233,6 +264,20 @@ public class EntityManager {
     // TODO add support to no primary key limit
     builder.where(entityMeta.createPkCondition(pk, false));
     client.update(builder.toUpdateClause());
+  }
+
+  /**
+   * Delete entity by id.
+   * 
+   * @param clazz
+   * @param pk
+   */
+  public void deleteById(Class<?> clazz, Object pk) {
+    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+    DeleteClauseBuilder builder = new DeleteClauseBuilder();
+    builder.deleteFrom(entityMeta.createTable(false));
+    builder.where(entityMeta.createPkCondition(pk, false));
+    client.delete(builder.toDeleteClause());
   }
 
 }

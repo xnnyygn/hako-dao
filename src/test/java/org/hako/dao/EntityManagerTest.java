@@ -76,6 +76,12 @@ public class EntityManagerTest {
   }
 
   @Test
+  public void testListBy() {
+    System.out.println(entityManager.listBy(Blog.class, new ListParams(
+        "dateCreated", false), Restrictions.eq("userId", 1l)));
+  }
+
+  @Test
   public void testSave() {
     Blog blog = new Blog();
     blog.setTitle("foo");
@@ -90,6 +96,11 @@ public class EntityManagerTest {
     Map<String, Object> properties = new HashMap<String, Object>();
     properties.put("title", "foo");
     entityManager.update(Blog.class, properties, 1l);
+  }
+
+  @Test
+  public void testDeleteById() {
+    entityManager.deleteById(Blog.class, 1l);
   }
 
 }

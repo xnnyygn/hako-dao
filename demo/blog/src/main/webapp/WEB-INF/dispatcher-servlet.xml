@@ -38,15 +38,16 @@
 		<constructor-arg ref="dbVendor" />
 		<constructor-arg value="true" />
 	</bean>
-
-	<bean id="blogManager" class="org.hako.dao.demo.blog.service.BlogManager">
-		<constructor-arg ref="dbClient" />
-	</bean>
-	<bean id="commentManager" class="org.hako.dao.demo.blog.service.CommentManager">
-		<constructor-arg ref="dbClient" />
-	</bean>
-	<bean id="userManager" class="org.hako.dao.demo.blog.service.UserManager">
-		<constructor-arg ref="dbClient" />
+	
+	<bean id="entityManager" class="org.hako.dao.spring.EntityManagerFactoryBean">
+	   <property name="classes">
+	       <list>
+	           <value>org.hako.dao.demo.blog.domain.Blog</value>
+	           <value>org.hako.dao.demo.blog.domain.Comment</value>
+	           <value>org.hako.dao.demo.blog.domain.User</value>
+	       </list>
+	   </property>
+	   <property name="dbClient" ref="dbClient" />
 	</bean>
 
 	<context:component-scan base-package="org.hako.dao.demo.blog.service" />

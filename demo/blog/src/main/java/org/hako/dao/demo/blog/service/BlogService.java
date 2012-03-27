@@ -23,6 +23,7 @@ import java.util.Map;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
+import org.hako.dao.EntityManager;
 import org.hako.dao.ListParams;
 import org.hako.dao.demo.blog.domain.Blog;
 import org.hako.dao.demo.blog.domain.Comment;
@@ -40,8 +41,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BlogService {
 
-  private BlogManager blogManager;
-  private CommentManager commentManager;
+  private EntityManager entityManager;
 
   /**
    * List recent blogs.
@@ -51,7 +51,8 @@ public class BlogService {
    * @return blogs
    */
   public List<Blog> listRecent(int offset, int max) {
-    return blogManager.list(new ListParams(offset, max, "dateCreated", false));
+    ListParams params = new ListParams(offset, max, "dateCreated", false);
+    return entityManager.list(Blog.class, params);
   }
 
   /**
@@ -61,11 +62,11 @@ public class BlogService {
    * @param content
    */
   public void save(String title, String content) {
-    Map<String, Object> props = new HashMap<String, Object>();
-    props.put("title", title);
-    props.put("content", content);
-    props.put("dateCreated", new Timestamp(System.currentTimeMillis()));
-    blogManager.save(props);
+    Blog blog = new Blog();
+    blog.setTitle(title);
+    blog.setContent(content);
+    blog.setDateCreated(new Timestamp(System.currentTimeMillis()));
+    entityManager.save(blog);
   }
 
 
@@ -76,7 +77,7 @@ public class BlogService {
    * @return some blog or none
    */
   public Option<Map<String, Object>> getForShow(Long id) {
-    Option<Blog> blogOption = blogManager.get(id);
+    Option<Blog> blogOption = entityManager.get(Blog.class, id);
     if (blogOption.hasValue()) {
       Blog blog = blogOption.get();
       Map<String, Object> blogProps = new HashMap<String, Object>();
@@ -84,8 +85,9 @@ public class BlogService {
       blogProps.put("title", blog.getTitle());
       blogProps.put("content", blog.getContent());
       blogProps.put("dateCreated", blog.getDateCreated());
-      blogProps.put("comments", commentManager.listBy(new ListParams(
-          "dateCommented", false), Restrictions.eq("blogId", blog.getId())));
+      blogProps.put("comments", entityManager.listBy(Comment.class,
+          new ListParams("dateCommented", false),
+          Restrictions.eq("blogId", blog.getId())));
       return new Some<Map<String, Object>>(blogProps);
     }
     return new None<Map<String, Object>>();
@@ -105,27 +107,17 @@ public class BlogService {
     comment.setContent(content);
     comment.setDateCommented(new Timestamp(System.currentTimeMillis()));
     comment.setUsername(username);
-    commentManager.save(comment);
+    entityManager.save(comment);
   }
 
   /**
-   * Setter method for property <tt>blogManager</tt>.
+   * Setter method for property <tt>entityManager</tt>.
    * 
-   * @param blogManager value to be assigned to property blogManager
+   * @param entityManager value to be assigned to property entityManager
    */
   @Autowired
-  public void setBlogManager(BlogManager blogManager) {
-    this.blogManager = blogManager;
-  }
-
-  /**
-   * Setter method for property <tt>commentManager</tt>.
-   * 
-   * @param commentManager value to be assigned to property commentManager
-   */
-  @Autowired
-  public void setCommentManager(CommentManager commentManager) {
-    this.commentManager = commentManager;
+  public void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
 }

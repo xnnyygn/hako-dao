@@ -18,6 +18,9 @@ package org.hako.dao.db.vendor;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Abstract database connector.
  * 
@@ -27,11 +30,13 @@ import java.sql.SQLException;
  */
 public abstract class AbstractDbVendor implements DbVendor {
 
+  private static final Log logger = LogFactory.getLog(AbstractDbVendor.class);
+
   public void releaseQuietly(Connection connection) {
     try {
       connection.close();
     } catch (SQLException e) {
-      // ignore exception
+      logger.warn("failed to close connection", e);
     }
   }
 

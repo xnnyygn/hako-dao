@@ -17,10 +17,10 @@ package org.hako.dao.userstory;
 
 import java.sql.Timestamp;
 
-import org.hako.dao.mapper.AnnotationMapper;
 import org.hako.dao.mapper.Blog;
 import org.hako.dao.mapper.BlogTags;
 import org.hako.dao.mapper.Comment;
+import org.hako.dao.mapper.EntityMapper;
 import org.hako.dao.mapper.Tag;
 import org.hako.dao.mapper.User;
 import org.hako.dao.mapping.EntityMeta;
@@ -44,12 +44,12 @@ import org.junit.Test;
  */
 public class BlogApp {
 
-  private static AnnotationMapper mapper = new AnnotationMapper();
-  private static EntityMeta entityBlog = mapper.setUp(Blog.class);
-  private static EntityMeta entityUser = mapper.setUp(User.class);
-  private static EntityMeta entityBlogTags = mapper.setUp(BlogTags.class);
-  private static EntityMeta entityTag = mapper.setUp(Tag.class);
-  private static EntityMeta entityComment = mapper.setUp(Comment.class);
+  private static EntityMapper mapper = new EntityMapper();
+  private static EntityMeta entityBlog = mapper.map(Blog.class);
+  private static EntityMeta entityUser = mapper.map(User.class);
+  private static EntityMeta entityBlogTags = mapper.map(BlogTags.class);
+  private static EntityMeta entityTag = mapper.map(Tag.class);
+  private static EntityMeta entityComment = mapper.map(Comment.class);
 
   @Test
   public void testShowBlogBlogAndUser() {
