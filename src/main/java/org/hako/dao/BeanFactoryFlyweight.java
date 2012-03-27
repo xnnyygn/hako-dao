@@ -39,6 +39,7 @@ public class BeanFactoryFlyweight {
    * @param clazz
    * @return bean factory
    */
+  // TODO maybe cause synchronize problem
   @SuppressWarnings("unchecked")
   public static <T> EntityFactory<T> getBeanFactory(Class<T> clazz) {
     if (!factoryCache.containsKey(clazz)) {

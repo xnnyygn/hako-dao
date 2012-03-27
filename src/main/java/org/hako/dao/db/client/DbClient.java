@@ -62,6 +62,15 @@ public interface DbClient {
   public Option<Object> selectObject(SelectClause clause);
 
   /**
+   * Select object of specified type.
+   * 
+   * @param clause
+   * @param clazz
+   * @return some object of none
+   */
+  public <T> Option<T> selectObject(SelectClause clause, Class<T> clazz);
+
+  /**
    * Perform SQL insert operation.
    * 
    * @param clause
@@ -93,7 +102,7 @@ public interface DbClient {
    * 
    * @param clause
    * @return count of deleted records
-   * @throws DatabaseException 
+   * @throws DatabaseException
    */
   public int delete(DeleteClause clause) throws DatabaseException;
 

@@ -41,7 +41,7 @@ import org.hako.util.object.ObjectUtils;
  * @version %I%, %G%
  * @since 1.1.0
  */
-// TODO add entity meta manager
+@Deprecated
 public class EntityManager<T, PK> {
 
   private final DbClient client;

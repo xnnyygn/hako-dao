@@ -33,6 +33,7 @@ import org.hako.dao.mapping.FieldMeta;
  * @version %I%, %G%
  * @since 1.1.0
  */
+@Deprecated
 public class AnnotationMapper {
 
   private static final Log logger = LogFactory.getLog(AnnotationMapper.class);
@@ -50,7 +51,6 @@ public class AnnotationMapper {
     EntityName entityName = new EntityName(tableName, alias);
     // setup fields
     List<FieldMeta> fields = new ArrayList<FieldMeta>();
-    // TODO REFACTOR ME
     for (Method method : clazz.getMethods()) {
       String methodName = method.getName();
       if (method.getParameterTypes().length == 0 && methodName.length() > 3

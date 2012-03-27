@@ -21,6 +21,7 @@ import org.hako.dao.mapper.Blog;
 import org.hako.dao.mapper.Comment;
 import org.hako.dao.mapper.EntityMapper;
 import org.hako.dao.mapping.EntityMeta;
+import org.hako.dao.restriction.Restrictions;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -47,6 +48,17 @@ public class EntityManagerTest {
   @Test
   public void testGet() {
     System.out.println(entityManager.get(Blog.class, 1l));
+  }
+
+  @Test
+  public void testCount() {
+    System.out.println(entityManager.count(Blog.class));
+  }
+
+  @Test
+  public void testFindBy() {
+    System.out.println(entityManager.findBy(Blog.class,
+        Restrictions.eq("id", 1l), Restrictions.eq("userId", 1l)));
   }
 
 }

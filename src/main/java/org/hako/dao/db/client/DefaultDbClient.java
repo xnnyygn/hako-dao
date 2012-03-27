@@ -182,6 +182,15 @@ public class DefaultDbClient implements DbClient {
     return new None<Object>();
   }
 
+  @SuppressWarnings("unchecked")
+  public <T> Option<T> selectObject(SelectClause clause, Class<T> clazz) {
+    Option<Object> objectOption = selectObject(clause);
+    if (objectOption.hasValue()) {
+      return new Some<T>((T) objectOption.get());
+    }
+    return new None<T>();
+  }
+
   public int insert(InsertClause clause) {
     return executeUpdate(clause);
   }
