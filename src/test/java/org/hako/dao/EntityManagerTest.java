@@ -58,6 +58,12 @@ public class EntityManagerTest {
   }
 
   @Test
+  public void testCountBy() {
+    System.out.println(entityManager.countBy(Blog.class,
+        Restrictions.eq("userId", 1l)));
+  }
+
+  @Test
   public void testFindBy() {
     System.out.println(entityManager.findBy(Blog.class,
         Restrictions.eq("id", 1l), Restrictions.eq("userId", 1l)));

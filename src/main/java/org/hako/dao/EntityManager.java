@@ -113,11 +113,27 @@ public class EntityManager {
    * 
    * @param clazz
    * @return count
+   * @see #countBy(Class, Restriction...)
    */
   public int count(Class<?> clazz) {
+    return countBy(clazz);
+  }
+
+  /**
+   * Count entities with restrictions.
+   * 
+   * @param clazz
+   * @param restrictions
+   * @return count
+   */
+  public int countBy(Class<?> clazz, Restriction... restrictions) {
+    EntityMeta entityMeta = getEntityMetaByClass(clazz);
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(Functions.countRow());
-    builder.from(getEntityMetaByClass(clazz).createTable(false));
+    builder.from(entityMeta.createTable());
+    if (restrictions.length > 0) {
+      builder.where(createConditions(Arrays.asList(restrictions), entityMeta));
+    }
     return client.selectObject(builder.toSelectClause(), Number.class).get()
         .intValue();
   }
