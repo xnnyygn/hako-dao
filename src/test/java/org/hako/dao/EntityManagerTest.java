@@ -16,6 +16,7 @@
 package org.hako.dao;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.hako.dao.mapper.Blog;
@@ -76,6 +77,13 @@ public class EntityManagerTest {
     blog.setDateCreated(new Timestamp(System.currentTimeMillis()));
     blog.setUserId(1l);
     entityManager.save(blog);
+  }
+
+  @Test
+  public void testUpdate() {
+    Map<String, Object> properties = new HashMap<String, Object>();
+    properties.put("title", "foo");
+    entityManager.update(Blog.class, properties, 1l);
   }
 
 }

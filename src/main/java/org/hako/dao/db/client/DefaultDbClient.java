@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
@@ -49,6 +51,7 @@ import org.hako.util.OptionUtils;
  */
 public class DefaultDbClient implements DbClient {
 
+  private static final Log logger = LogFactory.getLog(DefaultDbClient.class);
   protected final DbVendor connector;
   protected final boolean printSql;
 
@@ -300,9 +303,13 @@ public class DefaultDbClient implements DbClient {
             ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS));
     int count = params.size();
     int i = 0;
+    boolean debugEnabled = logger.isDebugEnabled();
     while (i < count) {
       Object value = params.get(i++);
       ps.setObject(i, value);
+      if (debugEnabled) {
+        logger.debug("set " + i + " = " + value);
+      }
     }
     return ps;
   }

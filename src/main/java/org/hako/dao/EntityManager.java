@@ -30,6 +30,7 @@ import org.hako.dao.restriction.Restriction;
 import org.hako.dao.sql.clause.insert.InsertClauseBuilder;
 import org.hako.dao.sql.clause.select.SelectClause;
 import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.clause.update.UpdateClauseBuilder;
 import org.hako.dao.sql.expression.condition.Condition;
 import org.hako.dao.sql.expression.condition.Conditions;
 import org.hako.dao.sql.expression.function.Functions;
@@ -190,6 +191,32 @@ public class EntityManager {
       }
     }
     client.insert(builder.toInsertClause());
+  }
+
+  public void update(Class<?> clazz, Map<String, Object> properties,
+      Serializable id) {
+  }
+
+  /**
+   * Update entity.
+   * 
+   * @param clazz
+   * @param properties
+   * @param pk primary key
+   */
+  public void update(Class<?> clazz, Map<String, Object> properties, Object pk) {
+    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+    UpdateClauseBuilder builder = new UpdateClauseBuilder();
+    builder.update(entityMeta.createTable());
+    for (FieldMeta field : entityMeta.getFields()) {
+      String name = field.getPropertyName();
+      if (properties.containsKey(name)) {
+        builder.set(field.getColumnName(), properties.get(name));
+      }
+    }
+    // TODO add support to no primary key limit
+    builder.where(entityMeta.createPkCondition(pk, false));
+    client.update(builder.toUpdateClause());
   }
 
 }

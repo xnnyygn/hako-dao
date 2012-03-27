@@ -34,7 +34,7 @@ public class ObjectUtils {
   private static final Log logger = LogFactory.getLog(ObjectUtils.class);
 
   /**
-   * Get properties from bean, including {@code null} value.
+   * Get properties from object, including {@code null} value.
    * 
    * @param object
    * @return properties
@@ -45,7 +45,7 @@ public class ObjectUtils {
   }
 
   /**
-   * Get properties from bean.
+   * Get properties from object.
    * 
    * @param object bean, may be {@code null}
    * @param emitNull should filter null value ?
@@ -53,13 +53,28 @@ public class ObjectUtils {
    */
   public static Map<String, Object> getProperties(Object object,
       boolean emitNull) {
+    if (object instanceof Map<?, ?>) {
+      return getPropertiesFromMap(object, emitNull);
+    }
+    return getPropertiesFromBean(object, emitNull);
+  }
+
+  /**
+   * Get properties from bean.
+   * 
+   * @param beanObject
+   * @param emitNull
+   * @return properties
+   */
+  private static Map<String, Object> getPropertiesFromBean(Object beanObject,
+      boolean emitNull) {
     Map<String, Object> properties = new HashMap<String, Object>();
-    if (object != null) {
-      List<Getter> getters = Getters.list(object.getClass());
+    if (beanObject != null) {
+      List<Getter> getters = Getters.list(beanObject.getClass());
       boolean debugEnabled = logger.isDebugEnabled();
       for (Getter getter : getters) {
         try {
-          Object value = getter.from(object);
+          Object value = getter.from(beanObject);
           if (!emitNull || value != null) {
             properties.put(getter.getPropertyName(), value);
           }
@@ -68,6 +83,28 @@ public class ObjectUtils {
           if (debugEnabled) {
             logger.debug("failed to get value from object", e);
           }
+        }
+      }
+    }
+    return properties;
+  }
+
+  /**
+   * Get properties from map and emit null if need.
+   * 
+   * @param mapObject
+   * @param emitNull
+   * @return properties
+   */
+  private static Map<String, Object> getPropertiesFromMap(Object mapObject,
+      boolean emitNull) {
+    Map<String, Object> properties = new HashMap<String, Object>();
+    if (mapObject != null) {
+      for (Map.Entry<?, ?> entry : ((Map<?, ?>) mapObject).entrySet()) {
+        Object key = entry.getKey();
+        Object value = entry.getValue();
+        if (!emitNull || (key != null && value != null)) {
+          properties.put((String) key, value);
         }
       }
     }
