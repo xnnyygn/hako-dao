@@ -13,33 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapper;
+package org.hako.dao;
 
-import org.hako.dao.mapping.EntityName;
+import org.hako.dao.db.client.DbClient;
 
 /**
- * Data dictionary strategy.
+ * Callback for query in {@link EntityManager}.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-public interface DataDictionaryStrategy {
+public interface QueryCallback<T> {
 
   /**
-   * Generate entity name and alias from class.
+   * Do query action.
    * 
-   * @param clazz
-   * @return entity name
+   * @param client data client
+   * @param entityMappings entity mappings
+   * @return result
    */
-  public EntityName generateEntityNameAndAlias(Class<?> clazz);
-
-  /**
-   * Generate column name from property name.
-   * 
-   * @param propertyName property name
-   * @return field name
-   */
-  public String generateColumnName(String propertyName);
+  public T doQuery(DbClient client, EntityMappings entityMappings);
 
 }

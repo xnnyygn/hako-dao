@@ -15,9 +15,6 @@
  */
 package org.hako.dao.mapper;
 
-import static org.apache.commons.lang.StringUtils.defaultIfBlank;
-import static org.apache.commons.lang.StringUtils.uncapitalize;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hako.dao.mapping.EntityMeta;
 import org.hako.dao.mapping.EntityName;
 import org.hako.dao.mapping.FieldMeta;
+import org.hako.dao.mapping.FieldMetaFactory;
 
 /**
  * Entity mapper.
@@ -41,8 +39,28 @@ import org.hako.dao.mapping.FieldMeta;
 public class EntityMapper {
 
   private static final Log logger = LogFactory.getLog(EntityMapper.class);
-  private DataDictionaryStrategy dataDictionaryStrategy =
-      new DefaultDataDictionaryStrategy();
+  private final EntityNameStrategy entityNameStrategy;
+  private final FieldMetaFactory fieldMetaFactory;
+
+  /**
+   * Create with default data dictionary strategy.
+   * 
+   * @see DefaultDataDictionaryStrategy
+   */
+  public EntityMapper() {
+    this(new DefaultDataDictionaryStrategy());
+  }
+
+  /**
+   * Create.
+   * 
+   * @param adapter
+   */
+  public EntityMapper(DataDictionaryStrategyAdapter adapter) {
+    super();
+    this.entityNameStrategy = adapter;
+    this.fieldMetaFactory = new FieldMetaFactory(adapter);
+  }
 
   /**
    * Map from class array.
@@ -54,7 +72,7 @@ public class EntityMapper {
   public Map<Class<?>, EntityMeta> map(Class<?>... classes) {
     return map(Arrays.asList(classes));
   }
-  
+
   /**
    * Map class.
    * 
@@ -93,7 +111,7 @@ public class EntityMapper {
     if (logger.isDebugEnabled()) {
       logger.debug("try to map entity [" + clazz.getName() + "]");
     }
-    return dataDictionaryStrategy.generateEntityNameAndAlias(clazz);
+    return entityNameStrategy.generateEntityNameAndAlias(clazz);
   }
 
   /**
@@ -107,47 +125,14 @@ public class EntityMapper {
     List<FieldMeta> fields = new ArrayList<FieldMeta>();
     for (Method method : clazz.getMethods()) {
       String methodName = method.getName();
-      if (method.getParameterTypes().length == 0 && methodName.length() > 3
-          && methodName.startsWith("get")
-          && method.isAnnotationPresent(Field.class)) {
-        fields.add(mapField(method));
+      if (method.getParameterTypes().length == 0
+          && method.isAnnotationPresent(Field.class)
+          && ((methodName.length() > 3 && methodName.startsWith("get")) || (methodName
+              .length() > 2 && methodName.startsWith("is")))) {
+        fields.add(fieldMetaFactory.create(method));
       }
     }
     return fields;
-  }
-
-  /**
-   * Map field.
-   * 
-   * @param method
-   * @return field
-   * @see DataDictionaryStrategy#generateColumnName(String)
-   */
-  private FieldMeta mapField(Method method) {
-    String propertyName = uncapitalize(method.getName().substring(3));
-    String defaultColumnName =
-        dataDictionaryStrategy.generateColumnName(propertyName);
-    String columnName =
-        defaultIfBlank(method.getAnnotation(Field.class).columnName(),
-            defaultColumnName);
-    if (logger.isDebugEnabled()) {
-      logger.debug("found field column name [" + columnName
-          + "] property name [" + propertyName + "]");
-    }
-    return new FieldMeta(columnName, propertyName,
-        method.isAnnotationPresent(Id.class));
-  }
-
-  /**
-   * Update data dictionary strategy. Default is
-   * {@link DefaultDataDictionaryStrategy}.
-   * 
-   * @param newDataDictionaryStrategy new strategy
-   * @see DefaultDataDictionaryStrategy
-   */
-  public void updateDataDictionaryStrategy(
-      DataDictionaryStrategy newDataDictionaryStrategy) {
-    this.dataDictionaryStrategy = newDataDictionaryStrategy;
   }
 
 }

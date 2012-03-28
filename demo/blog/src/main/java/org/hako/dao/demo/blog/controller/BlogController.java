@@ -15,13 +15,13 @@
  */
 package org.hako.dao.demo.blog.controller;
 
+import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
@@ -59,8 +59,9 @@ public class BlogController {
   public ModelAndView save(HttpServletRequest request) {
     String title = request.getParameter("title");
     String content = request.getParameter("content");
-    if (StringUtils.isNotBlank(title) && StringUtils.isNotBlank(content)) {
-      blogService.save(title, content);
+    String tags = defaultString(request.getParameter("tags"));
+    if (isNotBlank(title) && isNotBlank(content)) {
+      blogService.save(title, content, tags);
       return new ModelAndView(new RedirectView("/blog/list.htm", true));
     }
     return new ModelAndView("blog-create");
@@ -93,6 +94,13 @@ public class BlogController {
     return new ModelAndView(new RedirectView("/blog/list.htm", true));
   }
 
+  /**
+   * Get parameter of long type from HTTP request by name.
+   * 
+   * @param request
+   * @param name
+   * @return some parameter in long type or none
+   */
   private Option<Long> getLongParam(HttpServletRequest request, String name) {
     String value = request.getParameter(name);
     if (value != null) {

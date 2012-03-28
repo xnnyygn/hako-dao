@@ -13,30 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping;
+package org.hako.dao.mapper;
 
 /**
- * Field meta.
+ * Adapter for several data dictionary strategy.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-// TODO rename to field meta
-public interface FieldMeta {
-
-  /**
-   * Get column name of field.
-   * 
-   * @return column name
-   */
-  public String getColumnName();
-
-  /**
-   * Get property name of field.
-   * 
-   * @return property name
-   */
-  public String getPropertyName();
-
+public abstract class DataDictionaryStrategyAdapter implements ColumnStrategy,
+    EntityNameStrategy {
 }

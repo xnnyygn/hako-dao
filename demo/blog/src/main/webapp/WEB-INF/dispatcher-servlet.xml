@@ -45,6 +45,8 @@
 	           <value>org.hako.dao.demo.blog.domain.Blog</value>
 	           <value>org.hako.dao.demo.blog.domain.Comment</value>
 	           <value>org.hako.dao.demo.blog.domain.User</value>
+	           <value>org.hako.dao.demo.blog.domain.Tag</value>
+	           <value>org.hako.dao.demo.blog.domain.BlogTags</value>
 	       </list>
 	   </property>
 	   <property name="dbClient" ref="dbClient" />

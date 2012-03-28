@@ -13,30 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hako.dao.mapping;
+package org.hako.dao.mapper;
 
 /**
- * Field meta.
+ * Strategy of column.
  * 
  * @author xnnyygn
  * @version %I%, %G%
  * @since 1.1.0
  */
-// TODO rename to field meta
-public interface FieldMeta {
+public interface ColumnStrategy {
 
   /**
-   * Get column name of field.
+   * Generate column name from property name.
    * 
-   * @return column name
+   * @param propertyName property name
+   * @return field name
    */
-  public String getColumnName();
-
-  /**
-   * Get property name of field.
-   * 
-   * @return property name
-   */
-  public String getPropertyName();
+  public String generateNameFrom(String propertyName);
 
 }

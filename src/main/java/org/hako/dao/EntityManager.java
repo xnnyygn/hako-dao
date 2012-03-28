@@ -47,37 +47,18 @@ import org.hako.util.object.ObjectUtils;
 public class EntityManager {
 
   private final DbClient client;
-  // TODO wrap entity meta map with some class
-  private final Map<Class<?>, EntityMeta> entityMetaMap;
+  private final EntityMappings entityMappings;
 
   /**
    * Create.
    * 
    * @param client
-   * @param entityMetaMap
+   * @param entityMappings
    */
-  public EntityManager(DbClient client, Map<Class<?>, EntityMeta> entityMetaMap) {
+  public EntityManager(DbClient client, EntityMappings entityMappings) {
     super();
     this.client = client;
-    this.entityMetaMap = entityMetaMap;
-  }
-
-  /**
-   * Get entity meta by class. If not found, throw
-   * {@link MappingNotFoundException}.
-   * 
-   * @param clazz
-   * @return entity meta of class
-   * @throws MappingNotFoundException if entity meta not found
-   * @see #entityMetaMap
-   */
-  private EntityMeta getEntityMetaByClass(Class<?> clazz)
-      throws MappingNotFoundException {
-    if (!entityMetaMap.containsKey(clazz)) {
-      throw new MappingNotFoundException("mapping for class ["
-          + clazz.getName() + "] not found");
-    }
-    return entityMetaMap.get(clazz);
+    this.entityMappings = entityMappings;
   }
 
   /**
@@ -99,7 +80,7 @@ public class EntityManager {
    * @see BeanFactoryFlyweight#getBeanFactory(Class)
    */
   public <T> Option<T> get(Class<T> clazz, Serializable id) {
-    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+    EntityMeta entityMeta = entityMappings.findByClass(clazz);
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(entityMeta.createSelectionOfAllFields());
     builder.from(entityMeta.createTable());
@@ -127,7 +108,7 @@ public class EntityManager {
    * @return count
    */
   public int countBy(Class<?> clazz, Restriction... restrictions) {
-    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+    EntityMeta entityMeta = entityMappings.findByClass(clazz);
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(Functions.countRow());
     builder.from(entityMeta.createTable());
@@ -146,7 +127,7 @@ public class EntityManager {
    * @return some instance or none
    */
   public <T> Option<T> findBy(Class<T> clazz, Restriction... restrictions) {
-    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+    EntityMeta entityMeta = entityMappings.findByClass(clazz);
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(entityMeta.createSelectionOfAllFields());
     builder.from(entityMeta.createTable());
@@ -195,7 +176,7 @@ public class EntityManager {
    */
   public <T> List<T> listBy(Class<T> clazz, ListParams params,
       Restriction... restrictions) {
-    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+    EntityMeta entityMeta = entityMappings.findByClass(clazz);
     SelectClauseBuilder builder = new SelectClauseBuilder();
     builder.select(entityMeta.createSelectionOfAllFields());
     builder.from(entityMeta.createTable());
@@ -209,14 +190,25 @@ public class EntityManager {
   }
 
   /**
+   * Execute query.
+   * 
+   * @param callback
+   * @return result from callback
+   */
+  public <T> T executeQuery(QueryCallback<T> callback) {
+    return callback.doQuery(client, entityMappings);
+  }
+
+  /**
    * Save entity.
    * 
    * @param bean
+   * @return generated key or updated record count
    * @see #save(Class, Map)
    */
-  public void save(Object bean) {
+  public Object save(Object bean) {
     // TODO return persisted entity
-    save(bean.getClass(), ObjectUtils.getProperties(bean));
+    return save(bean.getClass(), ObjectUtils.getProperties(bean));
   }
 
   /**
@@ -224,9 +216,11 @@ public class EntityManager {
    * 
    * @param clazz
    * @param properties
+   * @return generated key or updated record count
    */
-  public void save(Class<?> clazz, Map<String, Object> properties) {
-    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+  // TODO support auto generated
+  public Object save(Class<?> clazz, Map<String, Object> properties) {
+    EntityMeta entityMeta = entityMappings.findByClass(clazz);
     InsertClauseBuilder builder = new InsertClauseBuilder();
     builder.insertInto(entityMeta.createTable(false));
     for (FieldMeta field : entityMeta.getFields()) {
@@ -234,10 +228,14 @@ public class EntityManager {
       if (properties.containsKey(name)) {
         builder.add(field.getColumnName(), properties.get(name));
       } else {
+        // TODO add default value to field meta
         builder.add(field.getColumnName(), Values.NULL);
       }
     }
-    client.insert(builder.toInsertClause());
+    if (entityMeta.isKeyGenerated()) {
+      return client.insertAndGet(builder.toInsertClause());
+    }
+    return client.insert(builder.toInsertClause());
   }
 
   public void update(Class<?> clazz, Map<String, Object> properties,
@@ -252,7 +250,7 @@ public class EntityManager {
    * @param pk primary key
    */
   public void update(Class<?> clazz, Map<String, Object> properties, Object pk) {
-    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+    EntityMeta entityMeta = entityMappings.findByClass(clazz);
     UpdateClauseBuilder builder = new UpdateClauseBuilder();
     builder.update(entityMeta.createTable());
     for (FieldMeta field : entityMeta.getFields()) {
@@ -273,7 +271,7 @@ public class EntityManager {
    * @param pk
    */
   public void deleteById(Class<?> clazz, Object pk) {
-    EntityMeta entityMeta = getEntityMetaByClass(clazz);
+    EntityMeta entityMeta = entityMappings.findByClass(clazz);
     DeleteClauseBuilder builder = new DeleteClauseBuilder();
     builder.deleteFrom(entityMeta.createTable(false));
     builder.where(entityMeta.createPkCondition(pk, false));

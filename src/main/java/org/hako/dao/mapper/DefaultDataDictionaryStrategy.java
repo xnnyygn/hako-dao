@@ -26,7 +26,8 @@ import org.hako.dao.mapping.EntityName;
  * @version %I%, %G%
  * @since 1.1.0
  */
-public class DefaultDataDictionaryStrategy implements DataDictionaryStrategy {
+public class DefaultDataDictionaryStrategy extends
+    DataDictionaryStrategyAdapter {
 
   /**
    * Use lower case of class simple name as default table name and alias. You
@@ -46,7 +47,7 @@ public class DefaultDataDictionaryStrategy implements DataDictionaryStrategy {
   /**
    * Dash separated style column name.
    */
-  public String generateColumnName(String propertyName) {
+  public String generateNameFrom(String propertyName) {
     StringBuilder builder = new StringBuilder();
     for (char c : propertyName.toCharArray()) {
       if (Character.isUpperCase(c)) {

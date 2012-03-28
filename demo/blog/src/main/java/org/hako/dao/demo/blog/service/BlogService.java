@@ -15,19 +15,33 @@
  */
 package org.hako.dao.demo.blog.service;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.hako.None;
 import org.hako.Option;
 import org.hako.Some;
 import org.hako.dao.EntityManager;
+import org.hako.dao.EntityMappings;
 import org.hako.dao.ListParams;
+import org.hako.dao.QueryCallback;
+import org.hako.dao.db.client.DbClient;
 import org.hako.dao.demo.blog.domain.Blog;
+import org.hako.dao.demo.blog.domain.BlogTags;
 import org.hako.dao.demo.blog.domain.Comment;
+import org.hako.dao.demo.blog.domain.Tag;
+import org.hako.dao.mapping.EntityMeta;
 import org.hako.dao.restriction.Restrictions;
+import org.hako.dao.sql.clause.select.SelectClauseBuilder;
+import org.hako.dao.sql.expression.Expression;
+import org.hako.dao.sql.expression.condition.Conditions;
+import org.hako.dao.sql.expression.value.Values;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,15 +74,98 @@ public class BlogService {
    * 
    * @param title
    * @param content
+   * @param tags
    */
-  public void save(String title, String content) {
+  public void save(String title, String content, String tags) {
+    // save blog
+    // TODO move to a method
     Blog blog = new Blog();
     blog.setTitle(title);
     blog.setContent(content);
     blog.setDateCreated(new Timestamp(System.currentTimeMillis()));
-    entityManager.save(blog);
+    Long blogId = (Long) entityManager.save(blog);
+    // save blog tags
+    saveBlogTags(blogId, findOrCreateTags(tags));
   }
 
+  /**
+   * Save blog tags.
+   * 
+   * @param blogId
+   * @param tagIds
+   * @see BlogTags
+   */
+  private void saveBlogTags(Long blogId, List<Long> tagIds) {
+    for (Long tagId : tagIds) {
+      entityManager.save(new BlogTags(blogId, tagId));
+    }
+  }
+
+  /**
+   * Find or create tags. If cannot find tag by text, create and save tag. Return
+   * id of tags.
+   * 
+   * @param tags comma separated tags
+   * @return id of tags
+   */
+  private List<Long> findOrCreateTags(String tags) {
+    List<Long> ids = new ArrayList<Long>();
+    for (String tag : filterNotBlankTags(tags)) {
+      ids.add(findOrCreateTag(tag));
+    }
+    return ids;
+  }
+
+  /**
+   * Find tag by text and create if not found
+   * 
+   * @param text
+   * @return
+   */
+  private Long findOrCreateTag(String text) {
+    Option<Long> tagIdOption = findTagByText(text);
+    if (tagIdOption.hasValue()) {
+      return tagIdOption.get();
+    }
+    return (Long) entityManager.save(new Tag(text));
+  }
+  
+  /**
+   * Find tag by text.
+   * 
+   * @param text
+   * @return some id or none
+   */
+  private Option<Long> findTagByText(final String text) {
+    return entityManager.executeQuery(new QueryCallback<Option<Long>>() {
+      public Option<Long> doQuery(DbClient client, EntityMappings entityMappings) {
+        SelectClauseBuilder builder = new SelectClauseBuilder();
+        EntityMeta tagMeta = entityMappings.findByClass(Tag.class);
+        builder.select(tagMeta.createColumnExpression("id"));
+        builder.from(tagMeta.createTable());
+        Expression textColumn = tagMeta.createColumnExpression("text");
+        builder.where(Conditions.eq(textColumn, Values.create(text)));
+        return client.selectObject(builder.toSelectClause(), Long.class);
+      }
+    });
+  }
+
+  /**
+   * Separated tags by comma and filter not blank ones.
+   * 
+   * @param tags
+   * @return not blank tags
+   * @see StringUtils#isNotBlank(String)
+   */
+  private List<String> filterNotBlankTags(String tags) {
+    List<String> notBlankTags = new ArrayList<String>();
+    for (String tag : tags.split("\\,")) {
+      if (isNotBlank(tag)) {
+        notBlankTags.add(tag);
+      }
+    }
+    return notBlankTags;
+  }
 
   /**
    * Get blog by id.

@@ -3,8 +3,9 @@ package org.hako.dao.spring;
 import java.util.List;
 
 import org.hako.dao.EntityManager;
+import org.hako.dao.EntityMappings;
 import org.hako.dao.db.client.DbClient;
-import org.hako.dao.mapper.DataDictionaryStrategy;
+import org.hako.dao.mapper.DataDictionaryStrategyAdapter;
 import org.hako.dao.mapper.DefaultDataDictionaryStrategy;
 import org.hako.dao.mapper.EntityMapper;
 import org.springframework.beans.factory.FactoryBean;
@@ -20,7 +21,7 @@ public class EntityManagerFactoryBean implements FactoryBean {
 
   private List<Class<?>> classes;
   private DbClient dbClient;
-  private DataDictionaryStrategy dataDictionaryStrategy =
+  private DataDictionaryStrategyAdapter dataDictionaryStrategy =
       new DefaultDataDictionaryStrategy();
 
   /**
@@ -31,9 +32,9 @@ public class EntityManagerFactoryBean implements FactoryBean {
    * @see org.springframework.beans.factory.FactoryBean#getObject()
    */
   public Object getObject() throws Exception {
-    EntityMapper entityMapper = new EntityMapper();
-    entityMapper.updateDataDictionaryStrategy(dataDictionaryStrategy);
-    return new EntityManager(dbClient, entityMapper.map(classes));
+    EntityMapper mapper = new EntityMapper(dataDictionaryStrategy);
+    EntityMappings mappings = new EntityMappings(mapper.map(classes));
+    return new EntityManager(dbClient, mappings);
   }
 
   public Class<?> getObjectType() {
@@ -51,7 +52,7 @@ public class EntityManagerFactoryBean implements FactoryBean {
    *        dataDictionaryStrategy
    */
   public void setDataDictionaryStrategy(
-      DataDictionaryStrategy dataDictionaryStrategy) {
+      DataDictionaryStrategyAdapter dataDictionaryStrategy) {
     this.dataDictionaryStrategy = dataDictionaryStrategy;
   }
 

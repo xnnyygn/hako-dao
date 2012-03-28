@@ -44,7 +44,8 @@ public class EntityManagerTest {
     Map<Class<?>, EntityMeta> entityMetaMap =
         entityMapper.map(Blog.class, Comment.class);
     entityManager =
-        new EntityManager(H2MemDbClientFlyweight.get(), entityMetaMap);
+        new EntityManager(H2MemDbClientFlyweight.get(), new EntityMappings(
+            entityMetaMap));
   }
 
   @Test
@@ -88,7 +89,7 @@ public class EntityManagerTest {
     blog.setContent("bar");
     blog.setDateCreated(new Timestamp(System.currentTimeMillis()));
     blog.setUserId(1l);
-    entityManager.save(blog);
+    System.out.println(entityManager.save(blog));
   }
 
   @Test

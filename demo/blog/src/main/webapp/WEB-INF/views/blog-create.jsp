@@ -24,6 +24,10 @@
 	               <textarea name="content" required="required"></textarea>
 	            </p>
 	            <p>
+	               <label for="tags">Tags(comma separated)</label><br />
+	               <input type="text" name="tags" />
+	            </p>
+	            <p>
 	               <button type="submit">Create</button>
 	            </p>
             </fieldset>

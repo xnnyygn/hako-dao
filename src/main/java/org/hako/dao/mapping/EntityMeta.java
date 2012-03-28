@@ -226,7 +226,7 @@ public class EntityMeta {
   private List<FieldMeta> filterPkFields() {
     List<FieldMeta> fields = new ArrayList<FieldMeta>();
     for (FieldMeta f : this.fields) {
-      if (f.isPk()) {
+      if (f instanceof PrimaryKeyMeta) {
         fields.add(f);
       }
     }
@@ -240,6 +240,23 @@ public class EntityMeta {
    */
   public List<FieldMeta> getFields() {
     return fields;
+  }
+
+  /**
+   * Check if key is generated. If primary key of entity is generated, return
+   * {@code true}, otherwise false.
+   * 
+   * @return true or false
+   * @see PrimaryKeyMeta#isGenearted()
+   */
+  public boolean isKeyGenerated() {
+    for (FieldMeta f : this.fields) {
+      // TODO use single class to contains field meta
+      if (f instanceof PrimaryKeyMeta && ((PrimaryKeyMeta) f).isGenearted()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public String toString() {

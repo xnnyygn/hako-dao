@@ -205,6 +205,14 @@ public class DefaultDbClient implements DbClient {
     return getGeneratedKey(ps);
   }
 
+  /**
+   * Get generated key from {@link PreparedStatement}.
+   * 
+   * @param ps
+   * @return
+   * @throws GetGeneratedKeyFailureException
+   */
+  // TODO support multiple auto generated key
   private Object getGeneratedKey(PreparedStatement ps)
       throws GetGeneratedKeyFailureException {
     try {
