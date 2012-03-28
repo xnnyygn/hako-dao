@@ -102,8 +102,8 @@ public class BlogService {
   }
 
   /**
-   * Find or create tags. If cannot find tag by text, create and save tag. Return
-   * id of tags.
+   * Find or create tags. If cannot find tag by text, create and save tag.
+   * Return id of tags.
    * 
    * @param tags comma separated tags
    * @return id of tags
@@ -129,7 +129,7 @@ public class BlogService {
     }
     return (Long) entityManager.save(new Tag(text));
   }
-  
+
   /**
    * Find tag by text.
    * 
